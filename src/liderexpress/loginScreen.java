@@ -23,6 +23,7 @@ public class loginScreen extends JFrame implements ActionListener{
         this.setSize(500, 130);
         this.setVisible(true);
         this.add(panelGeneral);
+        this.setDefaultCloseOperation(EXIT_ON_CLOSE);
         panelGeneral.add(panelnorte);
         panelGeneral.add(panelcentro);
         panelGeneral.add(panelsur);
