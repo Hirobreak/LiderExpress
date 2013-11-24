@@ -8,6 +8,8 @@ import javax.swing.*;
 import javax.swing.border.*;
 
 public class MainMenu extends JFrame implements ActionListener{
+        Cliente adminCliente = new Cliente("admin","admin","admin","admin","admin");
+        Orden adminOrden = new Orden("test","test","test","test","test","test",adminCliente);
         MenuBar entidades=new MenuBar();
         Menu cliente=new Menu("Cliente");
         Menu orden=new Menu("Orden");
@@ -112,9 +114,17 @@ public class MainMenu extends JFrame implements ActionListener{
     @Override
     public void actionPerformed(ActionEvent ae){
         if(ae.getSource()==cnuevo){
-            NuevoCliente clientenew=new NuevoCliente();
+            adminCliente.crearCliente();
         }
-        
+        if(ae.getSource()==ceditar){
+            adminCliente.modificarCliente(adminCliente);
+        }
+        if(ae.getSource()==onuevo){
+            adminOrden.crearOrden();
+        }
+        if(ae.getSource()==oeditar){
+            adminOrden.modificarOrden(adminOrden);
+        }
     }
     
 }

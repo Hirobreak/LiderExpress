@@ -37,10 +37,10 @@ public class loginScreen extends JFrame implements ActionListener{
     
     @Override
     public void actionPerformed(ActionEvent ae){
-        if(this.usuario.getText().equals("Pedro") && this.password.getText().equals("Andres")){
-            this.setVisible(false);
+        //if(this.usuario.getText().equals("Pedro") && this.password.getText().equals("Andres")){
+          //  this.setVisible(false);
             MainMenu menu=new MainMenu();
-        }
+       // }
     }
        
 }
