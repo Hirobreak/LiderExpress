@@ -27,7 +27,7 @@ public class Orden{
         this.cliente = cli;
     }
     
-    public void crearOrden(){ 
+    static public void crearOrden(){ 
         final JFrame jCrearOrden = new JFrame("Creacion de Orden");
         jCrearOrden.setSize(500, 300);
         jCrearOrden.setVisible(true);
@@ -86,7 +86,7 @@ public class Orden{
         });
     }
     
-    public void modificarOrden(Orden o){ 
+    static public void modificarOrden(Orden o){ 
         final JFrame jModOrden = new JFrame("Modificando Orden: "+o.id);
         jModOrden.setSize(500, 300);
         jModOrden.setVisible(true);
@@ -152,7 +152,7 @@ public class Orden{
         });
     }
     
-    public void eliminarOrden(ArrayList<Orden> ordenes){  
+    static public void eliminarOrden(ArrayList<Orden> ordenes){  
         JFrame jElimOrden = new JFrame("Eliminacion de Ordenes");
     }
     

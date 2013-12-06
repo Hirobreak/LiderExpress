@@ -28,7 +28,7 @@ public class Cliente{
         this.telf2=t2;
     }
     
-    public void crearCliente(){ 
+    static public void crearCliente(){ 
         final JFrame jCrearCliente = new JFrame("Creacion de Cliente");
         jCrearCliente.setSize(500, 300);
         jCrearCliente.setVisible(true);
@@ -84,7 +84,7 @@ public class Cliente{
         });
     }
     
-    public void modificarCliente(Cliente c){ 
+    static void modificarCliente(Cliente c){ 
         final JFrame jModCliente = new JFrame("Modificando Cliente: "+c.id);
         jModCliente.setSize(500, 300);
         jModCliente.setVisible(true);
@@ -138,7 +138,7 @@ public class Cliente{
         });
     }
     
-    public void eliminarCliente(ArrayList<Cliente> clientes){  
+    static void eliminarCliente(ArrayList<Cliente> clientes){  
         JFrame jElimCliente = new JFrame("Eliminacion de Clientes");
     }
     

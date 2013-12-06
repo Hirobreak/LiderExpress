@@ -8,8 +8,15 @@ import javax.swing.*;
 import javax.swing.border.*;
 
 public class MainMenu extends JFrame implements ActionListener{
+    
         Cliente adminCliente = new Cliente(1,"admin","admin","admin","admin", 123, 123);
         Orden adminOrden = new Orden(1,"test","test","test","test","test",1);
+        Mercaderia adminMercaderia = new Mercaderia(1,"test","test","test","test","test");
+        Empaquetado adminEmpaquetado = new Empaquetado(1,1,1,1);
+        Importacion adminImportacion = new Importacion(1,1,1,1,1,1);
+        Proveedor adminImportador = new Proveedor (1,"test",1,"test","test","test",1);
+        Trabajador adminTrabajador = new Trabajador(1,"test","test",1,1,1,"test");
+        
         MenuBar entidades=new MenuBar();
         Menu cliente=new Menu("Cliente");
         Menu orden=new Menu("Orden");
@@ -103,32 +110,47 @@ public class MainMenu extends JFrame implements ActionListener{
     @Override
     public void actionPerformed(ActionEvent ae){
         if(ae.getSource()==cnuevo){
-            adminCliente.crearCliente();
+            Cliente.crearCliente();
         }
         if(ae.getSource()==ceditar){
-            adminCliente.modificarCliente(adminCliente);
+            Cliente.modificarCliente(adminCliente);
         }
         if(ae.getSource()==onuevo){
-            adminOrden.crearOrden();
+            Orden.crearOrden();
         }
         if(ae.getSource()==oeditar){
-            adminOrden.modificarOrden(adminOrden);
+            Orden.modificarOrden(adminOrden);
         }
         if(ae.getSource()==mnuevo){
             Mercaderia.crearMerc();
         }
+        if(ae.getSource()==meditar){
+            Mercaderia.modMerc(adminMercaderia);
+        }
         if(ae.getSource()==enuevo){
             Empaquetado.crearEmpaq();
+        }
+        if(ae.getSource()==eeditar){
+            Empaquetado.modEmpaq(adminEmpaquetado);
         }
         if(ae.getSource()==innuevo){
             Importacion.crearImpo();
         }
+        if(ae.getSource()==ineditar){
+            Importacion.modImpo(adminImportacion);
+        }
         if(ae.getSource()==tnuevo){
             Trabajador.crearTrab();
+        }
+        if(ae.getSource()==teditar){
+            Trabajador.modTrab(adminTrabajador);
         }
         if(ae.getSource()==inuevo){
             Proveedor.crearProv();
         }
+        if(ae.getSource()==ieditar){
+            Proveedor.modProv(adminImportador);
+        }       
     }
     
 }
