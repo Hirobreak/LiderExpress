@@ -40,6 +40,7 @@ public class loginScreen extends JFrame implements ActionListener{
         //if(this.usuario.getText().equals("Pedro") && this.password.getText().equals("Andres")){
           //  this.setVisible(false);
             MainMenu menu=new MainMenu();
+            this.dispose();
        // }
     }
        

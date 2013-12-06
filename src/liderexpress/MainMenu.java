@@ -8,21 +8,19 @@ import javax.swing.*;
 import javax.swing.border.*;
 
 public class MainMenu extends JFrame implements ActionListener{
-        Cliente adminCliente = new Cliente("admin","admin","admin","admin","admin");
-        Orden adminOrden = new Orden("test","test","test","test","test","test",adminCliente);
+        Cliente adminCliente = new Cliente(1,"admin","admin","admin","admin", 123, 123);
+        Orden adminOrden = new Orden(1,"test","test","test","test","test",1);
         MenuBar entidades=new MenuBar();
         Menu cliente=new Menu("Cliente");
         Menu orden=new Menu("Orden");
         Menu mercaderia=new Menu("Mercaderia");
-        Menu ordenMerc=new Menu("OrdenMercaderia");
-        Menu envio=new Menu("Envio");
+        Menu envio=new Menu("Empaquetado");
         Menu importacion=new Menu("Importacion");
         Menu importador=new Menu("Importador");
         Menu trabajador=new Menu("Trabajador");
         MenuItem cnuevo, ceditar, celiminar, cbuscar;
         MenuItem onuevo, oeditar, oeliminar, obuscar;
         MenuItem mnuevo, meditar, meliminar, mbuscar;
-        MenuItem omnuevo, omeditar, omeliminar, ombuscar;
         MenuItem enuevo, eeditar, eeliminar, ebuscar;
         MenuItem innuevo, ineditar, ineliminar, inbuscar;
         MenuItem inuevo, ieditar, ieliminar, ibuscar;
@@ -62,14 +60,9 @@ public class MainMenu extends JFrame implements ActionListener{
         trabajador.add(teditar=new MenuItem("Editar"));
         trabajador.add(teliminar=new MenuItem("Eliminar"));
         trabajador.add(tbuscar=new MenuItem("Buscar"));
-        ordenMerc.add(omnuevo=new MenuItem("Nuevo"));
-        ordenMerc.add(omeditar=new MenuItem("Editar"));
-        ordenMerc.add(omeliminar=new MenuItem("Eliminar"));
-        ordenMerc.add(ombuscar=new MenuItem("Buscar"));
         entidades.add(cliente);
         entidades.add(orden);
         entidades.add(mercaderia);
-        entidades.add(ordenMerc);
         entidades.add(envio);
         entidades.add(importacion);
         entidades.add(importador);
@@ -104,10 +97,6 @@ public class MainMenu extends JFrame implements ActionListener{
         teditar.addActionListener(this);
         teliminar.addActionListener(this);
         tbuscar.addActionListener(this);
-        omnuevo.addActionListener(this);
-        omeditar.addActionListener(this);
-        omeliminar.addActionListener(this);
-        ombuscar.addActionListener(this);
             
     }
     
@@ -124,6 +113,21 @@ public class MainMenu extends JFrame implements ActionListener{
         }
         if(ae.getSource()==oeditar){
             adminOrden.modificarOrden(adminOrden);
+        }
+        if(ae.getSource()==mnuevo){
+            Mercaderia.crearMerc();
+        }
+        if(ae.getSource()==enuevo){
+            Empaquetado.crearEmpaq();
+        }
+        if(ae.getSource()==innuevo){
+            Importacion.crearImpo();
+        }
+        if(ae.getSource()==tnuevo){
+            Trabajador.crearTrab();
+        }
+        if(ae.getSource()==inuevo){
+            Proveedor.crearProv();
         }
     }
     
