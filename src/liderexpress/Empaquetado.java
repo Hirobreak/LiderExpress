@@ -137,5 +137,10 @@ public class Empaquetado {
             }
         });
         
-    }    
+    }  
+
+    public Object[] arreglo(){
+        Object[] arreglo={idcont, idmerca, idcaja, estado};
+        return arreglo;
+    }
 }

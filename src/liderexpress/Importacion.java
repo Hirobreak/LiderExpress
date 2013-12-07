@@ -147,4 +147,8 @@ public class Importacion {
             }
         });
     }
+    public Object[] arreglo(){
+        Object[] arreglo={trabajador, prov, dia, mes, año};
+        return arreglo;
+    }
 }

@@ -15,7 +15,7 @@ public class MainMenu extends JFrame implements ActionListener{
         Mercaderia adminMercaderia = new Mercaderia(1,"test","test","test","test","test");
         Empaquetado adminEmpaquetado = new Empaquetado(1,1,1,1);
         Importacion adminImportacion = new Importacion(1,1,1,1,1,1);
-        Proveedor adminImportador = new Proveedor (1,"test",1,"test","test","test",1);
+        Proveedor adminProveedor = new Proveedor (1,"test",1,"test","test","test",1);
         Trabajador adminTrabajador = new Trabajador(1,"test","test",1,1,1,"test");
         Object[][] arreglo;
         int entidad=0;
@@ -84,18 +84,38 @@ public class MainMenu extends JFrame implements ActionListener{
         }
         if(ae.getSource()==merca){
             entidad=3;
+            Object[] columns={"Estilo", "Marca", "Descripcion", "Composicion", "Origen"};
+            DefaultTableModel modelo3=new DefaultTableModel(null, columns);
+            modelo3.addRow(adminMercaderia.arreglo());
+            this.tabla.setModel(modelo3);
         }
         if(ae.getSource()==empaq){
             entidad=4;
+            Object[] columns={"Contenedor", "Mercaderia", "Caja", "Estado"};
+            DefaultTableModel modelo4=new DefaultTableModel(null, columns);
+            modelo4.addRow(adminEmpaquetado.arreglo());
+            this.tabla.setModel(modelo4);
         }
         if(ae.getSource()==impo){
             entidad=5;
+            Object[] columns={"Trabajador", "Proveedor", "Dia", "Mes", "Año"};
+            DefaultTableModel modelo5=new DefaultTableModel(null, columns);
+            modelo5.addRow(adminImportacion.arreglo());
+            this.tabla.setModel(modelo5);
         }
         if(ae.getSource()==provee){
             entidad=6;
+            Object[] columns={"Compañia", "RUP", "Pais", "Ciudad", "Dueño", "Telefono"};
+            DefaultTableModel modelo6=new DefaultTableModel(null, columns);
+            modelo6.addRow(adminProveedor.arreglo());
+            this.tabla.setModel(modelo6);
         }
         if(ae.getSource()==trab){
             entidad=7;
+            Object[] columns={"Nombre", "Cargo", "Cedula", "Telefono", "Salario", "E-Mail"};
+            DefaultTableModel modelo7=new DefaultTableModel(null, columns);
+            modelo7.addRow(adminTrabajador.arreglo());
+            this.tabla.setModel(modelo7);
         }
         
         if(ae.getSource()==nuevo && entidad==1){
@@ -135,7 +155,7 @@ public class MainMenu extends JFrame implements ActionListener{
             Importacion.modImpo(adminImportacion);
         }
         if(ae.getSource()==editar && entidad==6){
-            Proveedor.modProv(adminImportador);
+            Proveedor.modProv(adminProveedor);
         }
         if(ae.getSource()==editar && entidad==7){
             Trabajador.modTrab(adminTrabajador);

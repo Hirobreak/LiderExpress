@@ -149,4 +149,8 @@ public class Trabajador {
         
         
     }
+    public Object[] arreglo(){
+        Object[] arreglo={nombre, cargo, cedula, telefono, salario, mail};
+        return arreglo;
+    }
 }

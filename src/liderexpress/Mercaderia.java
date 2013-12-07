@@ -132,5 +132,9 @@ public class Mercaderia {
             }
         });
     }
+        public Object[] arreglo(){
+        Object[] arreglo={style, mark, desc, comp, origen};
+        return arreglo;
+    }   
     
 }
