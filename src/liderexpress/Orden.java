@@ -156,5 +156,9 @@ public class Orden{
         JFrame jElimOrden = new JFrame("Eliminacion de Ordenes");
     }
     
+    public Object[] arreglo(){
+        Object[] arreglo={pais, ciudad, tiempo, numero, estado, "Aun no se puede referenciar"};
+        return arreglo;
+    }  
 
 }

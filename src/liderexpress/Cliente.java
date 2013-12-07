@@ -142,5 +142,9 @@ public class Cliente{
         JFrame jElimCliente = new JFrame("Eliminacion de Clientes");
     }
     
+    public Object[] arreglo(){
+        Object[] arreglo={nombre, cedula, compa, ruc, telf1, telf2};
+        return arreglo;
+    }   
 
 }

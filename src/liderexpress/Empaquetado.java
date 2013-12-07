@@ -73,6 +73,16 @@ public class Empaquetado {
                 jCrearEmp.setVisible(false);
             }
         });
+        crearCont.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent e){
+                Contenedor.crearCont();
+            }
+        });
+        crearCaja.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent e){
+                Caja.crearCaja();
+            }
+        });
     }
     static public void modEmpaq(Empaquetado emp){
         final JFrame jModEmp = new JFrame("Modificar Empaquetado");
@@ -126,5 +136,6 @@ public class Empaquetado {
                 jModEmp.setVisible(false);
             }
         });
+        
     }    
 }
