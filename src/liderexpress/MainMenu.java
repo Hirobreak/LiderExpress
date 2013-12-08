@@ -21,15 +21,23 @@ public class MainMenu extends JFrame implements ActionListener{
         int entidad=0;
         MenuBar entidades=new MenuBar();
         Menu mostrar=new Menu("Mostrar");
-        Menu opciones=new Menu("Orden");
+        Menu opciones=new Menu("Opciones");
         MenuItem cliente, orden, merca, empaq, impo, provee, trab;
         MenuItem nuevo, editar, eliminar, buscar;
         DefaultTableModel model;
         JTable tabla;
+        JPanel panel;
     
     MainMenu(){
+
+        panel = new JPanel ();
+        panel.setBorder (BorderFactory.createTitledBorder (BorderFactory.createEtchedBorder (), "Tabla", TitledBorder.CENTER, TitledBorder.TOP));
+
+
         tabla=new JTable(model);
         this.setTitle("Bienvenido Usuario XYZ");
+
+        
         this.setSize(700, 300);
         this.setVisible(true);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -48,8 +56,9 @@ public class MainMenu extends JFrame implements ActionListener{
         entidades.add(opciones);
         setMenuBar(entidades);
         JScrollPane listScroller = new JScrollPane(tabla);
-        listScroller.setPreferredSize(new Dimension(250, 80));
-        add(listScroller);
+        listScroller.setPreferredSize(new Dimension(650, 200));
+        panel.add (listScroller);
+        add(panel);
         cliente.addActionListener(this);
         orden.addActionListener(this);
         merca.addActionListener(this);
@@ -70,6 +79,7 @@ public class MainMenu extends JFrame implements ActionListener{
     public void actionPerformed(ActionEvent ae){
         if(ae.getSource()==cliente){
             entidad=1;
+            this.panel.setBorder (BorderFactory.createTitledBorder (BorderFactory.createEtchedBorder (), "Clientes", TitledBorder.CENTER, TitledBorder.TOP));
             Object[] columns={"Nombre", "Cedula", "Compañia", "RUC", "Telf1", "Telf2"};
             DefaultTableModel modelo1=new DefaultTableModel(null, columns);
             modelo1.addRow(adminCliente.arreglo());
@@ -77,6 +87,7 @@ public class MainMenu extends JFrame implements ActionListener{
         }
         if(ae.getSource()==orden){
             entidad=2;
+            this.panel.setBorder (BorderFactory.createTitledBorder (BorderFactory.createEtchedBorder (), "Orden", TitledBorder.CENTER, TitledBorder.TOP));
             Object[] columns={"Pais", "Ciudad", "Tiempo", "Numero", "Estado", "Cliente"};
             DefaultTableModel modelo2=new DefaultTableModel(null, columns);
             modelo2.addRow(adminOrden.arreglo());
@@ -84,6 +95,7 @@ public class MainMenu extends JFrame implements ActionListener{
         }
         if(ae.getSource()==merca){
             entidad=3;
+            this.panel.setBorder (BorderFactory.createTitledBorder (BorderFactory.createEtchedBorder (), "Mercaderia", TitledBorder.CENTER, TitledBorder.TOP));
             Object[] columns={"Estilo", "Marca", "Descripcion", "Composicion", "Origen"};
             DefaultTableModel modelo3=new DefaultTableModel(null, columns);
             modelo3.addRow(adminMercaderia.arreglo());
@@ -91,6 +103,7 @@ public class MainMenu extends JFrame implements ActionListener{
         }
         if(ae.getSource()==empaq){
             entidad=4;
+            this.panel.setBorder (BorderFactory.createTitledBorder (BorderFactory.createEtchedBorder (), "Empaquetado", TitledBorder.CENTER, TitledBorder.TOP));
             Object[] columns={"Contenedor", "Mercaderia", "Caja", "Estado"};
             DefaultTableModel modelo4=new DefaultTableModel(null, columns);
             modelo4.addRow(adminEmpaquetado.arreglo());
@@ -98,6 +111,7 @@ public class MainMenu extends JFrame implements ActionListener{
         }
         if(ae.getSource()==impo){
             entidad=5;
+            this.panel.setBorder (BorderFactory.createTitledBorder (BorderFactory.createEtchedBorder (), "Importaciones", TitledBorder.CENTER, TitledBorder.TOP));
             Object[] columns={"Trabajador", "Proveedor", "Dia", "Mes", "Año"};
             DefaultTableModel modelo5=new DefaultTableModel(null, columns);
             modelo5.addRow(adminImportacion.arreglo());
@@ -105,6 +119,7 @@ public class MainMenu extends JFrame implements ActionListener{
         }
         if(ae.getSource()==provee){
             entidad=6;
+            this.panel.setBorder (BorderFactory.createTitledBorder (BorderFactory.createEtchedBorder (), "Proveedores", TitledBorder.CENTER, TitledBorder.TOP));
             Object[] columns={"Compañia", "RUP", "Pais", "Ciudad", "Dueño", "Telefono"};
             DefaultTableModel modelo6=new DefaultTableModel(null, columns);
             modelo6.addRow(adminProveedor.arreglo());
@@ -112,6 +127,7 @@ public class MainMenu extends JFrame implements ActionListener{
         }
         if(ae.getSource()==trab){
             entidad=7;
+            this.panel.setBorder (BorderFactory.createTitledBorder (BorderFactory.createEtchedBorder (), "Trabajadores", TitledBorder.CENTER, TitledBorder.TOP));
             Object[] columns={"Nombre", "Cargo", "Cedula", "Telefono", "Salario", "E-Mail"};
             DefaultTableModel modelo7=new DefaultTableModel(null, columns);
             modelo7.addRow(adminTrabajador.arreglo());
