@@ -28,7 +28,7 @@ public class Mercaderia {
         idorden=idor;
     }
     
-    static public void crearMerc(ArrayList<Orden> ordenes){ 
+    static public void crearMerc(final ArrayList<Orden> ordenes,final ArrayList<Mercaderia> mercaderias){ 
         final JFrame jCrearMerc = new JFrame("Creacion de Mercaderia");
         jCrearMerc.setSize(500, 300);
         jCrearMerc.setVisible(true);
@@ -48,12 +48,14 @@ public class Mercaderia {
         Label labelOrg=new Label("Origen:", Label.CENTER);
         Button guardar=new Button("Guardar");
         Button cancelar=new Button("Cancelar");
-        TextField txtEst=new TextField("Estilo", 20);
-        TextField txtMarc=new TextField("Marca", 20);
-        TextField txtDesc=new TextField("Descripción", 20);
-        TextField txtComp=new TextField("Composición", 20);
-        TextField txtOrg=new TextField("Origen", 20);
-        JComboBox listaOrd=new JComboBox();
+        final TextField txtEst=new TextField("Estilo", 20);
+        final TextField txtMarc=new TextField("Marca", 20);
+        final TextField txtDesc=new TextField("Descripción", 20);
+        final TextField txtComp=new TextField("Composición", 20);
+        final TextField txtOrg=new TextField("Origen", 20);
+        final JComboBox listaOrd=new JComboBox();
+        for(Orden o : ordenes)
+            listaOrd.addItem(o.numero);
         panelEst.add(labelEst);
         panelEst.add(txtEst);
         panelMarc.add(labelMarc);
@@ -78,6 +80,8 @@ public class Mercaderia {
         jCrearMerc.add(panelPrin);
         guardar.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e){
+                Mercaderia m = new Mercaderia(mercaderias.size()+1,txtEst.getText(),txtMarc.getText(),txtDesc.getText(),txtComp.getText(),txtOrg.getText(),ordenes.get(listaOrd.getSelectedIndex()).id);
+                mercaderias.add(m);
                 jCrearMerc.setVisible(false);
             }
         });

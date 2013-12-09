@@ -13,9 +13,9 @@ public class Caja {
     int dimension;
     int peso;
     int num;
-    int estado;
+    String estado;
     
-    Caja(int ids, int dim, int kilos, int estad, int nume){
+    Caja(int ids, int dim, int kilos, String estad, int nume){
         id=ids;
         num=nume;
         dimension=dim;
@@ -23,7 +23,7 @@ public class Caja {
         estado=estad;    
     }
     
-    static public void crearCaja(){
+    static public void crearCaja(final ArrayList<Caja> cajas){
         final JFrame jCrearCaja = new JFrame("Creacion de Con");
         jCrearCaja.setSize(500, 300);
         jCrearCaja.setVisible(true);
@@ -39,10 +39,10 @@ public class Caja {
         Label labelEstado=new Label("Estado:", Label.CENTER);
         Button guardar=new Button("Guardar");
         Button cancelar=new Button("Cancelar");
-        TextField txtNum=new TextField("#", 20);
-        TextField txtDim=new TextField("Nombre", 20);
-        TextField txtPeso=new TextField("Cargo", 20);
-        JComboBox bEstado=new JComboBox();
+        final TextField txtNum=new TextField("#", 20);
+        final TextField txtDim=new TextField("Nombre", 20);
+        final TextField txtPeso=new TextField("Cargo", 20);
+        final JComboBox bEstado=new JComboBox();
         bEstado.addItem("Enviado");
         bEstado.addItem("Recibido");
         bEstado.addItem("Desmontado");
@@ -63,6 +63,7 @@ public class Caja {
         jCrearCaja.add(panelPrin);
         guardar.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e){
+                Caja c = new Caja(cajas.size()+1,Integer.parseInt(txtDim.getText()),Integer.parseInt(txtPeso.getText()),bEstado.getSelectedItem().toString(),Integer.parseInt(txtNum.getText()));
                 jCrearCaja.setVisible(false);
             }
         });

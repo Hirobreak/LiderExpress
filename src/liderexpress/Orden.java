@@ -27,7 +27,7 @@ public class Orden{
         this.cliente = cli;
     }
     
-    static public void crearOrden(ArrayList<Cliente> clientes1, final ArrayList<Orden> ordenes){ 
+    static public void crearOrden(final ArrayList<Cliente> clientes1, final ArrayList<Orden> ordenes){ 
         final JFrame jCrearOrden = new JFrame("Creacion de Orden");
         jCrearOrden.setSize(500, 300);
         jCrearOrden.setVisible(true);
@@ -52,10 +52,10 @@ public class Orden{
         final TextField txtTiempo=new TextField("Tiempo de entrega", 20);
         final TextField txtNumero=new TextField("Numero de Rastreo", 20);
         final TextField txtEstado=new TextField("Estado", 20);
-        JComboBox clientes=new JComboBox();
+        final JComboBox clientes=new JComboBox();
         for(Cliente c : clientes1)
             clientes.addItem(c.nombre);
-        final Cliente asignado = clientes1.get(clientes.getSelectedIndex());
+        //final Cliente asignado = clientes1.get(clientes.getSelectedIndex());
         panelpais.add(labelpais);
         panelpais.add(txtPais);
         panelciud.add(labelciud);
@@ -80,7 +80,7 @@ public class Orden{
         jCrearOrden.add(panelPrin);
         guardar.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e){
-                Orden o = new Orden(ordenes.size()+1,txtPais.getText(),txtCiudad.getText(),txtTiempo.getText(),txtNumero.getText(),txtEstado.getText(),asignado.id);
+                Orden o = new Orden(ordenes.size()+1,txtPais.getText(),txtCiudad.getText(),txtTiempo.getText(),txtNumero.getText(),txtEstado.getText(),clientes1.get(clientes.getSelectedIndex()).id);
                 ordenes.add(o);
                 jCrearOrden.setVisible(false);
             }

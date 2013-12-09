@@ -17,13 +17,17 @@ public class MainMenu extends JFrame implements ActionListener{
         ArrayList<Importacion> importaciones = new ArrayList<Importacion>();
         ArrayList<Proveedor> proveedores = new ArrayList<Proveedor>();
         ArrayList<Trabajador> trabajadores = new ArrayList<Trabajador>();
+        ArrayList<Contenedor> contenedores = new ArrayList<Contenedor>();
+        ArrayList<Caja> cajas = new ArrayList<Caja>();
         Cliente adminCliente = new Cliente(1,"admin","admin","admin","admin", 123, 123);
         Orden adminOrden = new Orden(1,"test","test","test","test","test",1);
         Mercaderia adminMercaderia = new Mercaderia(1,"test","test","test","test","test", 1);
-        Empaquetado adminEmpaquetado = new Empaquetado(1,1,1,1);
+        Empaquetado adminEmpaquetado = new Empaquetado(1,1,1,1,"Desmontado");
         Importacion adminImportacion = new Importacion(1,1,1,1,1,1);
         Proveedor adminProveedor = new Proveedor (1,"test",1,"test","test","test",1);
         Trabajador adminTrabajador = new Trabajador(1,"test","test",1,1,1,"test");
+        Caja adminCaja = new Caja(1,1,1,"Enviado",1);
+        Contenedor adminContenedor = new Contenedor(1,1,1,1,1);
         Object[][] arreglo;
         int entidad=0;
         MenuBar entidades=new MenuBar();
@@ -43,6 +47,8 @@ public class MainMenu extends JFrame implements ActionListener{
         importaciones.add(adminImportacion);
         proveedores.add(adminProveedor);
         trabajadores.add(adminTrabajador);
+        contenedores.add(adminContenedor);
+        cajas.add(adminCaja);
         panel = new JPanel ();
         panel.setBorder (BorderFactory.createTitledBorder (BorderFactory.createEtchedBorder (), "Tabla", TitledBorder.CENTER, TitledBorder.TOP));
         panel.setLayout(new GridBagLayout());
@@ -163,16 +169,16 @@ public class MainMenu extends JFrame implements ActionListener{
             Orden.crearOrden(clientes,ordenes);
         }
         if(ae.getSource()==nuevo && entidad==3){
-            Mercaderia.crearMerc();
+            Mercaderia.crearMerc(ordenes,mercaderias);
         }
         if(ae.getSource()==nuevo && entidad==4){
-            Empaquetado.crearEmpaq();
+            Empaquetado.crearEmpaq(empaquetados,contenedores,mercaderias,cajas);
         }
         if(ae.getSource()==nuevo && entidad==5){
             Importacion.crearImpo();
         }
         if(ae.getSource()==nuevo && entidad==6){
-            Proveedor.crearProv();
+            Proveedor.crearProv(proveedores);
         }
         if(ae.getSource()==nuevo && entidad==7){
             Trabajador.crearTrab();

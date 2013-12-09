@@ -27,7 +27,7 @@ public class Proveedor {
         telf=telefo;
     }
     
-    static public void crearProv(){
+    static public void crearProv(final ArrayList<Proveedor> proveedores){
         final JFrame jCrearProv = new JFrame("Creacion de Importador");
         jCrearProv.setSize(500, 300);
         jCrearProv.setVisible(true);
@@ -45,12 +45,12 @@ public class Proveedor {
         Label labeltelf=new Label("Telefonos:", Label.CENTER);
         Button guardar=new Button("Guardar");
         Button cancelar=new Button("Cancelar");
-        TextField txtCom=new TextField("Nombre", 20);
-        TextField txtRUP=new TextField("Cargo", 20);
-        TextField txtDueño=new TextField("Contacto", 20);
-        TextField txtPais=new TextField("Pais", 20);
-        TextField txtTelf=new TextField("00000000", 20);
-        TextField txtCiudad=new TextField("Ciudad", 20);
+        final TextField txtCom=new TextField("Nombre", 20);
+        final TextField txtRUP=new TextField("Cargo", 20);
+        final TextField txtDueño=new TextField("Contacto", 20);
+        final TextField txtPais=new TextField("Pais", 20);
+        final TextField txtTelf=new TextField("00000000", 20);
+        final TextField txtCiudad=new TextField("Ciudad", 20);
         panelCom.add(labelCom);
         panelCom.add(txtCom);
         panelRup.add(labelRup);
@@ -73,6 +73,8 @@ public class Proveedor {
         jCrearProv.add(panelPrin);
         guardar.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e){
+                Proveedor c = new Proveedor(proveedores.size()+1,txtCom.getText(),Integer.parseInt(txtRUP.getText()),txtPais.getText(),txtCiudad.getText(),txtDueño.getText(),Integer.parseInt(txtTelf.getText()));
+                proveedores.add(c);
                 jCrearProv.setVisible(false);
             }
         });
