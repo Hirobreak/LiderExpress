@@ -91,6 +91,8 @@ public class Empaquetado {
         crearCaja.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e){
                 Caja.crearCaja(cajas);
+               // for(Caja c : cajas)
+                //    cajas1.addItem(c.num);
             }
         });
     }
