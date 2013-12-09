@@ -32,12 +32,14 @@ public class MainMenu extends JFrame implements ActionListener{
 
         panel = new JPanel ();
         panel.setBorder (BorderFactory.createTitledBorder (BorderFactory.createEtchedBorder (), "Tabla", TitledBorder.CENTER, TitledBorder.TOP));
-
-
+        panel.setLayout(new GridBagLayout());
+        GridBagConstraints c = new GridBagConstraints();
+        c.insets = new Insets(10,10,10,10);
+        c.fill = GridBagConstraints.BOTH;
+        c.weightx = 1;
+        c.weighty = 1;
         tabla=new JTable(model);
         this.setTitle("Bienvenido Usuario XYZ");
-
-        
         this.setSize(700, 300);
         this.setVisible(true);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -57,7 +59,7 @@ public class MainMenu extends JFrame implements ActionListener{
         setMenuBar(entidades);
         JScrollPane listScroller = new JScrollPane(tabla);
         listScroller.setPreferredSize(new Dimension(650, 200));
-        panel.add (listScroller);
+        panel.add (listScroller, c);
         add(panel);
         cliente.addActionListener(this);
         orden.addActionListener(this);
