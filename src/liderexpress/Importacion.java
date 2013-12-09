@@ -40,7 +40,6 @@ public class Importacion {
         Label labelFecha=new Label("Fecha:", Label.CENTER);
         Button guardar=new Button("Guardar");
         Button cancelar=new Button("Cancelar");
-        Button bCont=new Button("Contenedores");
         JComboBox superv=new JComboBox();
         JComboBox provee=new JComboBox();
         JComboBox cdia=new JComboBox();
@@ -63,13 +62,11 @@ public class Importacion {
         panelFecha.add(cdia);
         panelFecha.add(cmes);
         panelFecha.add(caño);
-        panelCont.add(bCont);
         panelboton.add(guardar);
         panelboton.add(cancelar);
         panelPrin.add(panelTrab);
         panelPrin.add(panelProv);
         panelPrin.add(panelFecha);
-        panelPrin.add(panelCont);
         panelPrin.add(panelboton);
         jCrearImpo.add(panelPrin);
         guardar.addActionListener(new ActionListener(){
@@ -148,7 +145,7 @@ public class Importacion {
         });
     }
     public Object[] arreglo(){
-        Object[] arreglo={trabajador, prov, dia, mes, año};
+        Object[] arreglo={id, trabajador, prov, dia, mes, año};
         return arreglo;
     }
 }

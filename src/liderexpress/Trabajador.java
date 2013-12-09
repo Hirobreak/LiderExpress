@@ -150,7 +150,7 @@ public class Trabajador {
         
     }
     public Object[] arreglo(){
-        Object[] arreglo={nombre, cargo, cedula, telefono, salario, mail};
+        Object[] arreglo={id, nombre, cargo, cedula, telefono, salario, mail};
         return arreglo;
     }
 }

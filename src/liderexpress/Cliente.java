@@ -89,26 +89,25 @@ public class Cliente{
         jModCliente.setSize(500, 300);
         jModCliente.setVisible(true);
         Panel panelPrin=new Panel(new GridLayout(6, 1));
-        Panel panelid=new Panel(new GridLayout(1, 2));
         Panel panelnombre=new Panel(new GridLayout(1, 2));
         Panel panelruc=new Panel(new GridLayout(1, 2));
         Panel panelcedula=new Panel(new GridLayout(1, 2));
         Panel panelcom=new Panel(new GridLayout(1, 2));
+        Panel paneltelf=new Panel(new GridLayout(1, 3));
         Panel panelboton=new Panel(new GridLayout(1, 2));
-        Label labelid=new Label("ID:", Label.CENTER);
         Label labelnom=new Label("Nombre:", Label.CENTER);
         Label labelruc=new Label("RUC:", Label.CENTER);
         Label labelced=new Label("Cedula:", Label.CENTER);
         Label labelcom=new Label("Compañia:", Label.CENTER);
+        Label labeltelf=new Label("Telefonos:", Label.CENTER);
         Button guardar=new Button("Guardar");
         Button cancelar=new Button("Cancelar");
-        TextField txtId=new TextField(String.valueOf(c.id), 20);
         TextField txtNombre=new TextField(c.nombre, 20);
-        TextField txtRuc=new TextField(c.ruc, 20);
-        TextField txtCedula=new TextField(c.cedula, 20);
+        TextField txtRuc=new TextField(String.valueOf(c.ruc), 20);
+        TextField txtCedula=new TextField(String.valueOf(c.cedula), 20);
         TextField txtCompa=new TextField(c.compa, 20);
-        panelid.add(labelid);
-        panelid.add(txtId);
+        TextField txtTelf1=new TextField(String.valueOf(c.telf1), 20);
+        TextField txtTelf2=new TextField(String.valueOf(c.telf2), 20);
         panelnombre.add(labelnom);
         panelnombre.add(txtNombre);
         panelcedula.add(labelced);
@@ -117,13 +116,16 @@ public class Cliente{
         panelcom.add(txtCompa);
         panelruc.add(labelruc);
         panelruc.add(txtRuc);
+        paneltelf.add(labeltelf);
+        paneltelf.add(txtTelf1);
+        paneltelf.add(txtTelf2);
         panelboton.add(guardar);
         panelboton.add(cancelar);
-        panelPrin.add(panelid);
         panelPrin.add(panelnombre);
         panelPrin.add(panelcedula);
         panelPrin.add(panelcom);
         panelPrin.add(panelruc);
+        panelPrin.add(paneltelf);
         panelPrin.add(panelboton);
         jModCliente.add(panelPrin);
         guardar.addActionListener(new ActionListener(){
@@ -143,7 +145,7 @@ public class Cliente{
     }
     
     public Object[] arreglo(){
-        Object[] arreglo={nombre, cedula, compa, ruc, telf1, telf2};
+        Object[] arreglo={id, nombre, cedula, compa, ruc, telf1, telf2};
         return arreglo;
     }   
 

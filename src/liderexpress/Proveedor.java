@@ -140,7 +140,7 @@ public class Proveedor {
         
     }    
         public Object[] arreglo(){
-        Object[] arreglo={compañia, rup, pais, ciudad, dueño, telf};
+        Object[] arreglo={id, compañia, rup, pais, ciudad, dueño, telf};
         return arreglo;
     }  
 }
