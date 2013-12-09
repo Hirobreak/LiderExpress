@@ -10,12 +10,12 @@ import javax.swing.border.*;
 
 public class Caja {
     int id;
-    int dimension;
+    String dimension;
     int peso;
-    int num;
+    String num;
     String estado;
     
-    Caja(int ids, int dim, int kilos, String estad, int nume){
+    Caja(int ids, String dim, int kilos, String estad, String nume){
         id=ids;
         num=nume;
         dimension=dim;
@@ -64,18 +64,20 @@ public class Caja {
         jCrearCaja.add(panelPrin);
         guardar.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e){
-                Caja c = new Caja(cajas.size()+1,Integer.parseInt(txtDim.getText()),Integer.parseInt(txtPeso.getText()),bEstado.getSelectedItem().toString(),Integer.parseInt(txtNum.getText()));
+                Caja c = new Caja(cajas.size()+1,txtDim.getText(),Integer.parseInt(txtPeso.getText()),bEstado.getSelectedItem().toString(),txtNum.getText());
                 cajas.add(c);
                 jCrearCaja.setVisible(false);
             }
         });
+        
         cancelar.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e){
                 jCrearCaja.setVisible(false);
             }
         });
-        
-        
     }
-    
+    public Object[] arreglo(){
+        Object[] arreglo={id, dimension, peso, estado, num};
+        return arreglo;
+    }   
 }

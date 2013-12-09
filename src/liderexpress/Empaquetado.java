@@ -27,6 +27,7 @@ public class Empaquetado {
         final JFrame jCrearEmp = new JFrame("Asignar Empaquetado");
         jCrearEmp.setSize(500, 300);
         jCrearEmp.setVisible(true);
+        Panel panelRefresh = new Panel(new GridLayout(2,2));
         Panel panelPrin=new Panel(new GridLayout(5, 1));
         Panel panelMerc=new Panel(new GridLayout(1, 2));
         Panel panelCaja=new Panel(new GridLayout(1, 3));
@@ -39,15 +40,13 @@ public class Empaquetado {
         Label labelest=new Label("Estado", Label.CENTER);
         Button guardar=new Button("Guardar");
         Button cancelar=new Button("Cancelar");
-        Button crearCaja=new Button("Crear");
-        Button crearCont=new Button("Crear");
         final JComboBox estados=new JComboBox();
         estados.addItem("Embarcado");
         estados.addItem("Desmontado");
         final JComboBox mercas=new JComboBox();
         for(Mercaderia m : mercs)
             mercas.addItem(m.id);
-        final JComboBox cajas1=new JComboBox();
+         final JComboBox cajas1=new JComboBox();
         for(Caja c : cajas)
             cajas1.addItem(c.num);
         final JComboBox contens=new JComboBox();
@@ -56,10 +55,8 @@ public class Empaquetado {
         panelMerc.add(labelMerc);
         panelMerc.add(mercas);
         panelCaja.add(labelCaja);
-        panelCaja.add(crearCaja);
         panelCaja.add(cajas1);
         panelCont.add(labelCont);
-        panelCont.add(crearCont);
         panelCont.add(contens);
         panelEst.add(labelest);
         panelEst.add(estados);
@@ -70,6 +67,7 @@ public class Empaquetado {
         panelPrin.add(panelCont);
         panelPrin.add(panelEst);
         panelPrin.add(panelboton);
+        panelPrin.add(panelRefresh);
         jCrearEmp.add(panelPrin);
         guardar.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e){
@@ -81,18 +79,6 @@ public class Empaquetado {
         cancelar.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e){
                 jCrearEmp.setVisible(false);
-            }
-        });
-        crearCont.addActionListener(new ActionListener(){
-            public void actionPerformed(ActionEvent e){
-                Contenedor.crearCont();
-            }
-        });
-        crearCaja.addActionListener(new ActionListener(){
-            public void actionPerformed(ActionEvent e){
-                Caja.crearCaja(cajas);
-               // for(Caja c : cajas)
-                //    cajas1.addItem(c.num);
             }
         });
     }

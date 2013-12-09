@@ -27,7 +27,7 @@ public class Trabajador {
         mail=correo;
     }
     
-    static public void crearTrab(){
+    static public void crearTrab(final ArrayList<Trabajador>trabs){
         final JFrame jCrearT = new JFrame("Creacion de Trabajador");
         jCrearT.setSize(500, 300);
         jCrearT.setVisible(true);
@@ -47,12 +47,12 @@ public class Trabajador {
         Label labeltelf=new Label("Telefonos:", Label.CENTER);
         Button guardar=new Button("Guardar");
         Button cancelar=new Button("Cancelar");
-        TextField txtNombre=new TextField("Nombre", 20);
-        TextField txtCargo=new TextField("Cargo", 20);
-        TextField txtCedula=new TextField("Cedula", 20);
-        TextField txtSalario=new TextField("$", 20);
-        TextField txtTelf=new TextField("00000000", 20);
-        TextField txtCorreo=new TextField("ejemplo@yatusabe.com", 20);
+        final TextField txtNombre=new TextField("Nombre", 20);
+        final TextField txtCargo=new TextField("Cargo", 20);
+        final TextField txtCedula=new TextField("Cedula", 20);
+        final TextField txtSalario=new TextField("$", 20);
+        final TextField txtTelf=new TextField("00000000", 20);
+        final TextField txtCorreo=new TextField("ejemplo@yatusabe.com", 20);
         panelnombre.add(labelnom);
         panelnombre.add(txtNombre);
         panelced.add(labelced);
@@ -77,6 +77,8 @@ public class Trabajador {
         jCrearT.add(panelPrin);
         guardar.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e){
+                Trabajador t = new Trabajador(trabs.size()+1,txtNombre.getText(),txtCargo.getText(),Integer.parseInt(txtCedula.getText()),Integer.parseInt(txtTelf.getText()),Integer.parseInt(txtSalario.getText()),txtCorreo.getText());
+                trabs.add(t);
                 jCrearT.setVisible(false);
             }
         });
@@ -152,5 +154,8 @@ public class Trabajador {
     public Object[] arreglo(){
         Object[] arreglo={id, nombre, cargo, cedula, telefono, salario, mail};
         return arreglo;
+    }
+    public int intParse(String s){
+        return Integer.parseInt(s);
     }
 }

@@ -9,12 +9,12 @@ import javax.swing.border.*;
 
 public class Contenedor {
     int id;
-    int dimension;
+    String dimension;
     int peso;
-    int estado;
+    String estado;
     int idImpo;
     
-    Contenedor(int ids, int dim, int kilos, int estad, int impo){
+    Contenedor(int ids, String dim, int kilos, String estad, int impo){
         id=ids;
         dimension=dim;
         peso=kilos;
@@ -22,7 +22,7 @@ public class Contenedor {
         idImpo=impo;
     }
     
-    static public void crearCont(){
+    static public void crearCont(final ArrayList<Contenedor>conts,final ArrayList<Importacion>imps){
         final JFrame jCrearCont = new JFrame("Creacion de Con");
         jCrearCont.setSize(500, 300);
         jCrearCont.setVisible(true);
@@ -38,10 +38,12 @@ public class Contenedor {
         Label labelImpo=new Label("Importación: ", Label.CENTER);
         Button guardar=new Button("Guardar");
         Button cancelar=new Button("Cancelar");
-        TextField txtDim=new TextField("Nombre", 20);
-        TextField txtPeso=new TextField("Cargo", 20);
-        JComboBox bEstado=new JComboBox();
-        JComboBox impos=new JComboBox();
+        final TextField txtDim=new TextField("", 20);
+        final TextField txtPeso=new TextField("", 20);
+        final JComboBox bEstado=new JComboBox();
+        final JComboBox impos=new JComboBox();
+        for(Importacion i : imps)
+            impos.addItem(i.id);
         bEstado.addItem("Enviado");
         bEstado.addItem("Recibido");
         bEstado.addItem("Desmontado");
@@ -63,6 +65,8 @@ public class Contenedor {
         jCrearCont.add(panelPrin);
         guardar.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e){
+                Contenedor c = new Contenedor(conts.size()+1,txtDim.getText(),Integer.parseInt(txtPeso.getText()),bEstado.getSelectedItem().toString(),imps.get(impos.getSelectedIndex()).id);
+                conts.add(c);
                 jCrearCont.setVisible(false);
             }
         });
@@ -74,5 +78,8 @@ public class Contenedor {
         
         
     }
-    
+    public Object[] arreglo(){
+        Object[] arreglo={id, dimension, peso, estado, idImpo};
+        return arreglo;
+    }   
 }

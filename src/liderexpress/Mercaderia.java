@@ -28,7 +28,7 @@ public class Mercaderia {
         idorden=idor;
     }
     
-    static public void crearMerc(final ArrayList<Orden> ordenes,final ArrayList<Mercaderia> mercaderias){ 
+   static public void crearMerc(final ArrayList<Orden> ordenes,final ArrayList<Mercaderia> mercaderias){ 
         final JFrame jCrearMerc = new JFrame("Creacion de Mercaderia");
         jCrearMerc.setSize(500, 300);
         jCrearMerc.setVisible(true);

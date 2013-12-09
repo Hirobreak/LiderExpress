@@ -26,14 +26,14 @@ public class MainMenu extends JFrame implements ActionListener{
         Importacion adminImportacion = new Importacion(1,1,1,1,1,1);
         Proveedor adminProveedor = new Proveedor (1,"test",1,"test","test","test",1);
         Trabajador adminTrabajador = new Trabajador(1,"test","test",1,1,1,"test");
-        Caja adminCaja = new Caja(1,1,1,"Enviado",1);
-        Contenedor adminContenedor = new Contenedor(1,1,1,1,1);
+        Caja adminCaja = new Caja(1,"10x10x10",1,"Enviado","RR45");
+        Contenedor adminContenedor = new Contenedor(1,"20x20x100",1,"Enviado",1);
         Object[][] arreglo;
         int entidad=0;
         MenuBar entidades=new MenuBar();
         Menu mostrar=new Menu("Mostrar");
         Menu opciones=new Menu("Opciones");
-        MenuItem cliente, orden, merca, empaq, impo, provee, trab;
+        MenuItem cliente, orden, merca, empaq, impo, provee, trab, caja, contenedor;
         MenuItem nuevo, editar, eliminar, buscar;
         DefaultTableModel model;
         JTable tabla;
@@ -69,6 +69,8 @@ public class MainMenu extends JFrame implements ActionListener{
         mostrar.add(impo=new MenuItem("Importacion"));
         mostrar.add(provee=new MenuItem("Proveedor"));
         mostrar.add(trab=new MenuItem("Trabajador"));
+        mostrar.add(caja=new MenuItem("Caja"));
+        mostrar.add(contenedor = new MenuItem("Contenedor"));
         opciones.add(nuevo=new MenuItem("Nuevo"));
         opciones.add(editar=new MenuItem("Editar"));
         opciones.add(eliminar=new MenuItem("Eliminar"));
@@ -87,6 +89,8 @@ public class MainMenu extends JFrame implements ActionListener{
         impo.addActionListener(this);
         provee.addActionListener(this);
         trab.addActionListener(this);
+        caja.addActionListener(this);
+        contenedor.addActionListener(this);
         cliente.addActionListener(this);
         nuevo.addActionListener(this);
         editar.addActionListener(this);
@@ -161,6 +165,24 @@ public class MainMenu extends JFrame implements ActionListener{
 			modelo7.addRow(t.arreglo());
             this.tabla.setModel(modelo7);
         }
+        if(ae.getSource()==caja){
+            entidad=8;
+            this.panel.setBorder (BorderFactory.createTitledBorder (BorderFactory.createEtchedBorder (), "Cajas", TitledBorder.CENTER, TitledBorder.TOP));
+            Object[] columns={"id", "Dimensiones", "Peso", "Estado", "Numero"};
+            DefaultTableModel modelo8=new DefaultTableModel(null, columns);
+            for(Caja c : cajas)
+                modelo8.addRow(c.arreglo());
+            this.tabla.setModel(modelo8);
+        }
+        if(ae.getSource()==contenedor){
+            entidad=9;
+            this.panel.setBorder (BorderFactory.createTitledBorder (BorderFactory.createEtchedBorder (), "Contenedores", TitledBorder.CENTER, TitledBorder.TOP));
+            Object[] columns={"id", "Dimensiones", "Peso", "Estado", "Importacion"};
+            DefaultTableModel modelo9=new DefaultTableModel(null, columns);
+            for(Contenedor c : contenedores)
+                modelo9.addRow(c.arreglo());
+            this.tabla.setModel(modelo9);
+        }
         
         if(ae.getSource()==nuevo && entidad==1){
             Cliente.crearCliente(clientes);
@@ -175,13 +197,19 @@ public class MainMenu extends JFrame implements ActionListener{
             Empaquetado.crearEmpaq(empaquetados,contenedores,mercaderias,cajas);
         }
         if(ae.getSource()==nuevo && entidad==5){
-            Importacion.crearImpo();
+            Importacion.crearImpo(importaciones, trabajadores, proveedores);
         }
         if(ae.getSource()==nuevo && entidad==6){
             Proveedor.crearProv(proveedores);
         }
         if(ae.getSource()==nuevo && entidad==7){
-            Trabajador.crearTrab();
+            Trabajador.crearTrab(trabajadores);
+        }
+        if(ae.getSource()==nuevo && entidad==8){
+            Caja.crearCaja(cajas);
+        }
+        if(ae.getSource()==nuevo && entidad==9){
+            Contenedor.crearCont(contenedores, importaciones);
         }
         if(ae.getSource()==editar && entidad==1){
             int fila = tabla.getSelectedRow();

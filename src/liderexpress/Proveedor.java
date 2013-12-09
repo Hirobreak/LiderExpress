@@ -46,7 +46,7 @@ public class Proveedor {
         Button guardar=new Button("Guardar");
         Button cancelar=new Button("Cancelar");
         final TextField txtCom=new TextField("Nombre", 20);
-        final TextField txtRUP=new TextField(20);
+        final TextField txtRUP=new TextField("Cargo", 20);
         final TextField txtDueño=new TextField("Contacto", 20);
         final TextField txtPais=new TextField("Pais", 20);
         final TextField txtTelf=new TextField("00000000", 20);

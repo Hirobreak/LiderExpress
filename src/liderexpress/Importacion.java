@@ -25,7 +25,7 @@ public class Importacion {
         año=a;
     }
     
-    static public void crearImpo(){
+    static public void crearImpo(final ArrayList<Importacion>imps,final ArrayList<Trabajador>trabs,final ArrayList<Proveedor>provs){
         final JFrame jCrearImpo = new JFrame("Creacion de Importación");
         jCrearImpo.setSize(500, 300);
         jCrearImpo.setVisible(true);
@@ -40,11 +40,15 @@ public class Importacion {
         Label labelFecha=new Label("Fecha:", Label.CENTER);
         Button guardar=new Button("Guardar");
         Button cancelar=new Button("Cancelar");
-        JComboBox superv=new JComboBox();
-        JComboBox provee=new JComboBox();
-        JComboBox cdia=new JComboBox();
-        JComboBox cmes=new JComboBox();
-        JComboBox caño=new JComboBox();
+        final JComboBox superv=new JComboBox();
+        for(Trabajador t : trabs)
+            superv.addItem(t.nombre);
+        final JComboBox provee=new JComboBox();
+        for(Proveedor p : provs)
+            provee.addItem(p.compañia);
+        final JComboBox cdia=new JComboBox();
+        final JComboBox cmes=new JComboBox();
+        final JComboBox caño=new JComboBox();
         for (int i=2000; i<2015; i++){
             caño.addItem(i);
         }
@@ -71,6 +75,8 @@ public class Importacion {
         jCrearImpo.add(panelPrin);
         guardar.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e){
+                Importacion i = new Importacion(imps.size()+1,trabs.get(superv.getSelectedIndex()).id,provs.get(provee.getSelectedIndex()).id,(int)cdia.getSelectedItem(),(int)cmes.getSelectedItem(),(int)caño.getSelectedItem());
+                imps.add(i);
                 jCrearImpo.setVisible(false);
             }
         });
