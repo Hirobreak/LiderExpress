@@ -24,7 +24,7 @@ public class Caja {
     }
     
     static public void crearCaja(final ArrayList<Caja> cajas){
-        final JFrame jCrearCaja = new JFrame("Creacion de Con");
+        final JFrame jCrearCaja = new JFrame("Creacion de Caja");
         jCrearCaja.setSize(500, 300);
         jCrearCaja.setVisible(true);
         Panel panelPrin=new Panel(new GridLayout(4, 1));
@@ -56,6 +56,7 @@ public class Caja {
         panelEstado.add(bEstado);
         panelboton.add(guardar);
         panelboton.add(cancelar);
+        panelPrin.add(panelNum);
         panelPrin.add(panelDim);
         panelPrin.add(panelPeso);
         panelPrin.add(panelEstado);
@@ -64,6 +65,7 @@ public class Caja {
         guardar.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e){
                 Caja c = new Caja(cajas.size()+1,Integer.parseInt(txtDim.getText()),Integer.parseInt(txtPeso.getText()),bEstado.getSelectedItem().toString(),Integer.parseInt(txtNum.getText()));
+                cajas.add(c);
                 jCrearCaja.setVisible(false);
             }
         });
