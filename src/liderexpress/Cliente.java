@@ -86,7 +86,8 @@ public class Cliente{
         });
     }
     
-    static void modificarCliente(Cliente c){ 
+    static void modificarCliente(final ArrayList<Cliente> clientes, final int pos){ 
+        Cliente c = clientes.get(pos);
         final JFrame jModCliente = new JFrame("Modificando Cliente: "+c.id);
         jModCliente.setSize(500, 300);
         jModCliente.setVisible(true);
@@ -104,12 +105,12 @@ public class Cliente{
         Label labeltelf=new Label("Telefonos:", Label.CENTER);
         Button guardar=new Button("Guardar");
         Button cancelar=new Button("Cancelar");
-        TextField txtNombre=new TextField(c.nombre, 20);
-        TextField txtRuc=new TextField(String.valueOf(c.ruc), 20);
-        TextField txtCedula=new TextField(String.valueOf(c.cedula), 20);
-        TextField txtCompa=new TextField(c.compa, 20);
-        TextField txtTelf1=new TextField(String.valueOf(c.telf1), 20);
-        TextField txtTelf2=new TextField(String.valueOf(c.telf2), 20);
+        final TextField txtNombre=new TextField(c.nombre, 20);
+        final TextField txtRuc=new TextField(String.valueOf(c.ruc), 20);
+        final TextField txtCedula=new TextField(String.valueOf(c.cedula), 20);
+        final TextField txtCompa=new TextField(c.compa, 20);
+        final TextField txtTelf1=new TextField(String.valueOf(c.telf1), 20);
+        final TextField txtTelf2=new TextField(String.valueOf(c.telf2), 20);
         panelnombre.add(labelnom);
         panelnombre.add(txtNombre);
         panelcedula.add(labelced);
@@ -132,6 +133,9 @@ public class Cliente{
         jModCliente.add(panelPrin);
         guardar.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e){
+                Cliente mod = new Cliente(pos+1,txtNombre.getText(),txtRuc.getText(),txtCedula.getText(),txtCompa.getText(),Integer.parseInt(txtTelf1.getText()),Integer.parseInt(txtTelf2.getText()));
+                clientes.remove(pos);
+                clientes.add(pos, mod);
                 jModCliente.setVisible(false);
             }
         });
@@ -142,8 +146,62 @@ public class Cliente{
         });
     }
     
-    static void eliminarCliente(ArrayList<Cliente> clientes){  
-        JFrame jElimCliente = new JFrame("Eliminacion de Clientes");
+    static void eliminarCliente(final ArrayList<Cliente> clientes, final int pos){
+        Cliente c = clientes.get(pos);
+        final JFrame jElimCliente = new JFrame("Eliminacion de Cliente");
+        jElimCliente.setSize(500, 300);
+        jElimCliente.setVisible(true);
+        Panel panelPrin=new Panel(new GridLayout(6, 1));
+        Panel panelnombre=new Panel(new GridLayout(1, 2));
+        Panel panelruc=new Panel(new GridLayout(1, 2));
+        Panel panelcedula=new Panel(new GridLayout(1, 2));
+        Panel panelcom=new Panel(new GridLayout(1, 2));
+        Panel paneltelf=new Panel(new GridLayout(1, 3));
+        Panel panelboton=new Panel(new GridLayout(1, 2));
+        Label labelnom=new Label("Nombre:", Label.CENTER);
+        Label labelruc=new Label("RUC:", Label.CENTER);
+        Label labelced=new Label("Cedula:", Label.CENTER);
+        Label labelcom=new Label("Compañia:", Label.CENTER);
+        Label labeltelf=new Label("Telefonos:", Label.CENTER);
+        Button guardar=new Button("Eliminar");
+        Button cancelar=new Button("Cancelar");
+        Label txtNombre=new Label(c.nombre, Label.CENTER);
+        Label txtRuc=new Label(String.valueOf(c.ruc), Label.CENTER);
+        Label txtCedula=new Label(String.valueOf(c.cedula), Label.CENTER);
+        Label txtCompa=new Label(c.compa, Label.CENTER);
+        Label txtTelf1=new Label(String.valueOf(c.telf1), Label.CENTER);
+        Label txtTelf2=new Label(String.valueOf(c.telf2), Label.CENTER);
+        panelnombre.add(labelnom);
+        panelnombre.add(txtNombre);
+        panelcedula.add(labelced);
+        panelcedula.add(txtCedula);
+        panelcom.add(labelcom);
+        panelcom.add(txtCompa);
+        panelruc.add(labelruc);
+        panelruc.add(txtRuc);
+        paneltelf.add(labeltelf);
+        paneltelf.add(txtTelf1);
+        paneltelf.add(txtTelf2);
+        panelboton.add(guardar);
+        panelboton.add(cancelar);
+        panelPrin.add(panelnombre);
+        panelPrin.add(panelcedula);
+        panelPrin.add(panelcom);
+        panelPrin.add(panelruc);
+        panelPrin.add(paneltelf);
+        panelPrin.add(panelboton);
+        jElimCliente.add(panelPrin);
+        guardar.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent e){
+                clientes.remove(pos);
+                jElimCliente.setVisible(false);
+            }
+        });
+        cancelar.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent e){
+                jElimCliente.setVisible(false);
+            }
+        });
     }
     
     public Object[] arreglo(){

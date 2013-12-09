@@ -92,7 +92,6 @@ public class MainMenu extends JFrame implements ActionListener{
         editar.addActionListener(this);
         eliminar.addActionListener(this);
         buscar.addActionListener(this);
-        
             
     }
     
@@ -106,6 +105,7 @@ public class MainMenu extends JFrame implements ActionListener{
             for(Cliente c : clientes)
                 modelo1.addRow(c.arreglo());
             this.tabla.setModel(modelo1);
+
         }
         if(ae.getSource()==orden){
             entidad=2;
@@ -184,27 +184,60 @@ public class MainMenu extends JFrame implements ActionListener{
             Trabajador.crearTrab();
         }
         if(ae.getSource()==editar && entidad==1){
-            Cliente.modificarCliente(adminCliente);
+            int fila = tabla.getSelectedRow();
+            Cliente.modificarCliente(clientes, fila);
         }
         if(ae.getSource()==editar && entidad==2){
-            Orden.modificarOrden(adminOrden);
+            int fila = tabla.getSelectedRow();
+            Orden.modificarOrden(clientes, ordenes, fila);
         }
         if(ae.getSource()==editar && entidad==3){
-            Mercaderia.modMerc(adminMercaderia);
+            int fila = tabla.getSelectedRow();
+            Mercaderia.modMerc(ordenes,mercaderias, fila);
         }
         if(ae.getSource()==editar && entidad==4){
+            int fila = tabla.getSelectedRow();
             Empaquetado.modEmpaq(adminEmpaquetado);
         }
         if(ae.getSource()==editar && entidad==5){
+            int fila = tabla.getSelectedRow();
             Importacion.modImpo(adminImportacion);
         }
         if(ae.getSource()==editar && entidad==6){
-            Proveedor.modProv(adminProveedor);
+            int fila = tabla.getSelectedRow();
+            Proveedor.modProv(proveedores, fila);
         }
         if(ae.getSource()==editar && entidad==7){
+            int fila = tabla.getSelectedRow();
             Trabajador.modTrab(adminTrabajador);
         }
-        
-        
+        if(ae.getSource()==eliminar && entidad==1){
+            int fila = tabla.getSelectedRow();
+            Cliente.eliminarCliente(clientes, fila);
+        }
+        if(ae.getSource()==eliminar && entidad==2){
+            int fila = tabla.getSelectedRow();
+            Orden.eliminarOrden(ordenes, fila);
+        }
+        if(ae.getSource()==eliminar && entidad==3){
+            int fila = tabla.getSelectedRow();
+            Mercaderia.eliminarMerc(mercaderias, fila);
+        }
+        if(ae.getSource()==eliminar && entidad==4){
+            int fila = tabla.getSelectedRow();
+            //Empaquetado.eliminarEmpaq(adminEmpaquetado);
+        }
+        if(ae.getSource()==eliminar && entidad==5){
+            int fila = tabla.getSelectedRow();
+            //Importacion.eliminarImpo(adminImportacion);
+        }
+        if(ae.getSource()==eliminar && entidad==6){
+            int fila = tabla.getSelectedRow();
+            Proveedor.eliminarProv(proveedores, fila);
+        }
+        if(ae.getSource()==eliminar && entidad==7){
+            int fila = tabla.getSelectedRow();
+            //Trabajador.eliminarTrab(adminTrabajador);
+        }
     }
 }

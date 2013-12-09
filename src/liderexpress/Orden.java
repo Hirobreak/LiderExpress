@@ -92,7 +92,8 @@ public class Orden{
         });
     }
     
-    static public void modificarOrden(Orden o){ 
+    static public void modificarOrden(final ArrayList<Cliente> clientes1, final ArrayList<Orden> ordenes, final int pos){
+        Orden o = ordenes.get(pos);
         final JFrame jModOrden = new JFrame("Modificando Orden: "+o.id);
         jModOrden.setSize(500, 300);
         jModOrden.setVisible(true);
@@ -112,12 +113,15 @@ public class Orden{
         Label labelestado=new Label("Estado:", Label.CENTER);
         Button guardar=new Button("Guardar");
         Button cancelar=new Button("Cancelar");
-        TextField txtPais=new TextField(o.pais, 20);
-        TextField txtCiudad=new TextField(o.ciudad, 20);
-        TextField txtTiempo=new TextField(o.tiempo, 20);
-        TextField txtNumero=new TextField(o.numero, 20);
-        TextField txtEstado=new TextField(o.estado, 20);
-        JComboBox clientes=new JComboBox();
+        final TextField txtPais=new TextField(o.pais, 20);
+        final TextField txtCiudad=new TextField(o.ciudad, 20);
+        final TextField txtTiempo=new TextField(o.tiempo, 20);
+        final TextField txtNumero=new TextField(o.numero, 20);
+        final TextField txtEstado=new TextField(o.estado, 20);
+        final JComboBox clientes=new JComboBox();
+        for(Cliente c : clientes1)
+            clientes.addItem(c.nombre);
+        //final Cliente asignado = clientes1.get(clientes.getSelectedIndex());
         panelpais.add(labelpais);
         panelpais.add(txtPais);
         panelciud.add(labelciud);
@@ -142,6 +146,9 @@ public class Orden{
         jModOrden.add(panelPrin);
         guardar.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e){
+                Orden mod = new Orden(pos+1,txtPais.getText(),txtCiudad.getText(),txtTiempo.getText(),txtNumero.getText(),txtEstado.getText(),clientes1.get(clientes.getSelectedIndex()).id);
+                ordenes.remove(pos);
+                ordenes.add(pos, mod);
                 jModOrden.setVisible(false);
             }
         });
@@ -152,8 +159,62 @@ public class Orden{
         });
     }
     
-    static public void eliminarOrden(ArrayList<Orden> ordenes){  
-        JFrame jElimOrden = new JFrame("Eliminacion de Ordenes");
+    static public void eliminarOrden(final ArrayList<Orden> ordenes, final int pos){  
+        Orden o = ordenes.get(pos);
+        final JFrame jElimOrden = new JFrame("Eliminacion de Ordenes");
+        jElimOrden.setSize(500, 300);
+        jElimOrden.setVisible(true);
+        Panel panelPrin=new Panel(new GridLayout(7, 1));
+        Panel panelpais=new Panel(new GridLayout(1, 2));
+        Panel panelciud=new Panel(new GridLayout(1, 2));
+        Panel paneltiem=new Panel(new GridLayout(1, 2));
+        Panel panelnum=new Panel(new GridLayout(1, 2));
+        Panel panelestado=new Panel(new GridLayout(1, 2));
+        Panel panelclien=new Panel(new GridLayout(1, 2));
+        Panel panelboton=new Panel(new GridLayout(1, 2));
+        Label labelpais=new Label("Pais:", Label.CENTER);
+        Label labelciud=new Label("Ciudad:", Label.CENTER);
+        Label labeltiem=new Label("Tiempo Entrega:", Label.CENTER);
+        Label labelnum=new Label("# Rastreo:", Label.CENTER);
+        Label labelestado=new Label("Estado:", Label.CENTER);
+        Button guardar=new Button("Eliminar");
+        Button cancelar=new Button("Cancelar");
+        Label txtPais=new Label(o.pais, Label.CENTER);
+        Label txtCiudad=new Label(o.ciudad, Label.CENTER);
+        Label txtTiempo=new Label(o.tiempo, Label.CENTER);
+        Label txtNumero=new Label(o.numero, Label.CENTER);
+        Label txtEstado=new Label(o.estado, Label.CENTER);
+        panelpais.add(labelpais);
+        panelpais.add(txtPais);
+        panelciud.add(labelciud);
+        panelciud.add(txtCiudad);
+        paneltiem.add(labeltiem);
+        paneltiem.add(txtTiempo);
+        panelnum.add(labelnum);
+        panelnum.add(txtNumero);
+        panelestado.add(labelestado);
+        panelestado.add(txtEstado);
+        panelboton.add(guardar);
+        panelboton.add(cancelar);
+        panelPrin.add(panelpais);
+        panelPrin.add(panelciud);
+        panelPrin.add(paneltiem);
+        panelPrin.add(panelnum);
+        panelPrin.add(panelestado);
+        panelPrin.add(panelclien);
+        panelPrin.add(panelboton);
+        jElimOrden.add(panelPrin);
+        guardar.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent e){
+                ordenes.remove(pos);
+                jElimOrden.setVisible(false);
+            }
+        });
+        cancelar.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent e){
+                jElimOrden.setVisible(false);
+            }
+        });
     }
     
     public Object[] arreglo(){
