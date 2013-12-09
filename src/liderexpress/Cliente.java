@@ -28,7 +28,7 @@ public class Cliente{
         this.telf2=t2;
     }
     
-    static public void crearCliente(){ 
+    static public void crearCliente(final ArrayList<Cliente> clientes){ 
         final JFrame jCrearCliente = new JFrame("Creacion de Cliente");
         jCrearCliente.setSize(500, 300);
         jCrearCliente.setVisible(true);
@@ -46,12 +46,12 @@ public class Cliente{
         Label labeltelf=new Label("Telefonos:", Label.CENTER);
         Button guardar=new Button("Guardar");
         Button cancelar=new Button("Cancelar");
-        TextField txtNombre=new TextField("Nombre", 20);
-        TextField txtRuc=new TextField("RUC", 20);
-        TextField txtCedula=new TextField("Cedula", 20);
-        TextField txtCompa=new TextField("Compañia", 20);
-        TextField txtTelf1=new TextField("00000000", 20);
-        TextField txtTelf2=new TextField("00000000", 20);
+        final TextField txtNombre=new TextField("Nombre", 20);
+        final TextField txtRuc=new TextField("RUC", 20);
+        final TextField txtCedula=new TextField("Cedula", 20);
+        final TextField txtCompa=new TextField("Compañia", 20);
+        final TextField txtTelf1=new TextField("00000000", 20);
+        final TextField txtTelf2=new TextField("00000000", 20);
         panelnombre.add(labelnom);
         panelnombre.add(txtNombre);
         panelcedula.add(labelced);
@@ -74,6 +74,8 @@ public class Cliente{
         jCrearCliente.add(panelPrin);
         guardar.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e){
+                Cliente c = new Cliente(clientes.size()+1,txtNombre.getText(),txtRuc.getText(),txtCedula.getText(),txtCompa.getText(),Integer.parseInt(txtTelf1.getText()),Integer.parseInt(txtTelf2.getText()));
+                clientes.add(c);
                 jCrearCliente.setVisible(false);
             }
         });

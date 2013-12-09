@@ -27,7 +27,7 @@ public class Orden{
         this.cliente = cli;
     }
     
-    static public void crearOrden(){ 
+    static public void crearOrden(ArrayList<Cliente> clientes1, final ArrayList<Orden> ordenes){ 
         final JFrame jCrearOrden = new JFrame("Creacion de Orden");
         jCrearOrden.setSize(500, 300);
         jCrearOrden.setVisible(true);
@@ -47,12 +47,15 @@ public class Orden{
         Label labelestado=new Label("Estado:", Label.CENTER);
         Button guardar=new Button("Guardar");
         Button cancelar=new Button("Cancelar");
-        TextField txtPais=new TextField("Pais de origen", 20);
-        TextField txtCiudad=new TextField("Ciudad de origen", 20);
-        TextField txtTiempo=new TextField("Tiempo de entrega", 20);
-        TextField txtNumero=new TextField("Numero de Rastreo", 20);
-        TextField txtEstado=new TextField("Estado", 20);
+        final TextField txtPais=new TextField("Pais de origen", 20);
+        final TextField txtCiudad=new TextField("Ciudad de origen", 20);
+        final TextField txtTiempo=new TextField("Tiempo de entrega", 20);
+        final TextField txtNumero=new TextField("Numero de Rastreo", 20);
+        final TextField txtEstado=new TextField("Estado", 20);
         JComboBox clientes=new JComboBox();
+        for(Cliente c : clientes1)
+            clientes.addItem(c.nombre);
+        final Cliente asignado = clientes1.get(clientes.getSelectedIndex());
         panelpais.add(labelpais);
         panelpais.add(txtPais);
         panelciud.add(labelciud);
@@ -77,6 +80,8 @@ public class Orden{
         jCrearOrden.add(panelPrin);
         guardar.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e){
+                Orden o = new Orden(ordenes.size()+1,txtPais.getText(),txtCiudad.getText(),txtTiempo.getText(),txtNumero.getText(),txtEstado.getText(),asignado.id);
+                ordenes.add(o);
                 jCrearOrden.setVisible(false);
             }
         });
@@ -152,7 +157,7 @@ public class Orden{
     }
     
     public Object[] arreglo(){
-        Object[] arreglo={id, pais, ciudad, tiempo, numero, estado, "Aun no se puede referenciar"};
+        Object[] arreglo={id, pais, ciudad, tiempo, numero, estado, cliente};
         return arreglo;
     }  
 

@@ -4,12 +4,19 @@ package liderexpress;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import javax.swing.*;
 import javax.swing.border.*;
 import javax.swing.table.DefaultTableModel;
 
 public class MainMenu extends JFrame implements ActionListener{
-    
+        ArrayList<Cliente> clientes = new ArrayList<Cliente>();
+        ArrayList<Orden> ordenes = new ArrayList<Orden>();
+        ArrayList<Mercaderia> mercaderias = new ArrayList<Mercaderia>();
+        ArrayList<Empaquetado> empaquetados = new ArrayList<Empaquetado>();
+        ArrayList<Importacion> importaciones = new ArrayList<Importacion>();
+        ArrayList<Proveedor> proveedores = new ArrayList<Proveedor>();
+        ArrayList<Trabajador> trabajadores = new ArrayList<Trabajador>();
         Cliente adminCliente = new Cliente(1,"admin","admin","admin","admin", 123, 123);
         Orden adminOrden = new Orden(1,"test","test","test","test","test",1);
         Mercaderia adminMercaderia = new Mercaderia(1,"test","test","test","test","test", 1);
@@ -29,7 +36,13 @@ public class MainMenu extends JFrame implements ActionListener{
         JPanel panel;
     
     MainMenu(){
-
+        clientes.add(adminCliente);
+        ordenes.add(adminOrden);
+        mercaderias.add(adminMercaderia);
+        empaquetados.add(adminEmpaquetado);
+        importaciones.add(adminImportacion);
+        proveedores.add(adminProveedor);
+        trabajadores.add(adminTrabajador);
         panel = new JPanel ();
         panel.setBorder (BorderFactory.createTitledBorder (BorderFactory.createEtchedBorder (), "Tabla", TitledBorder.CENTER, TitledBorder.TOP));
         panel.setLayout(new GridBagLayout());
@@ -84,7 +97,8 @@ public class MainMenu extends JFrame implements ActionListener{
             this.panel.setBorder (BorderFactory.createTitledBorder (BorderFactory.createEtchedBorder (), "Clientes", TitledBorder.CENTER, TitledBorder.TOP));
             Object[] columns={"id", "Nombre", "Cedula", "Compañia", "RUC", "Telf1", "Telf2"};
             DefaultTableModel modelo1=new DefaultTableModel(null, columns);
-            modelo1.addRow(adminCliente.arreglo());
+            for(Cliente c : clientes)
+                modelo1.addRow(c.arreglo());
             this.tabla.setModel(modelo1);
         }
         if(ae.getSource()==orden){
@@ -92,7 +106,8 @@ public class MainMenu extends JFrame implements ActionListener{
             this.panel.setBorder (BorderFactory.createTitledBorder (BorderFactory.createEtchedBorder (), "Orden", TitledBorder.CENTER, TitledBorder.TOP));
             Object[] columns={"id", "Pais", "Ciudad", "Tiempo", "Numero", "Estado", "Cliente"};
             DefaultTableModel modelo2=new DefaultTableModel(null, columns);
-            modelo2.addRow(adminOrden.arreglo());
+            for(Orden o : ordenes)
+                    modelo2.addRow(o.arreglo());
             this.tabla.setModel(modelo2);
         }
         if(ae.getSource()==merca){
@@ -100,7 +115,8 @@ public class MainMenu extends JFrame implements ActionListener{
             this.panel.setBorder (BorderFactory.createTitledBorder (BorderFactory.createEtchedBorder (), "Mercaderia", TitledBorder.CENTER, TitledBorder.TOP));
             Object[] columns={"id", "Estilo", "Marca", "Descripcion", "Composicion", "Origen", "idOrden"};
             DefaultTableModel modelo3=new DefaultTableModel(null, columns);
-            modelo3.addRow(adminMercaderia.arreglo());
+            for(Mercaderia m : mercaderias)
+                    modelo3.addRow(m.arreglo());
             this.tabla.setModel(modelo3);
         }
         if(ae.getSource()==empaq){
@@ -108,7 +124,8 @@ public class MainMenu extends JFrame implements ActionListener{
             this.panel.setBorder (BorderFactory.createTitledBorder (BorderFactory.createEtchedBorder (), "Empaquetado", TitledBorder.CENTER, TitledBorder.TOP));
             Object[] columns={"id", "Contenedor", "Mercaderia", "Caja", "Estado"};
             DefaultTableModel modelo4=new DefaultTableModel(null, columns);
-            modelo4.addRow(adminEmpaquetado.arreglo());
+            for(Empaquetado e : empaquetados)
+                    modelo4.addRow(e.arreglo());
             this.tabla.setModel(modelo4);
         }
         if(ae.getSource()==impo){
@@ -116,7 +133,8 @@ public class MainMenu extends JFrame implements ActionListener{
             this.panel.setBorder (BorderFactory.createTitledBorder (BorderFactory.createEtchedBorder (), "Importaciones", TitledBorder.CENTER, TitledBorder.TOP));
             Object[] columns={"id", "Trabajador", "Proveedor", "Dia", "Mes", "Año"};
             DefaultTableModel modelo5=new DefaultTableModel(null, columns);
-            modelo5.addRow(adminImportacion.arreglo());
+            for(Importacion i : importaciones)
+                    modelo5.addRow(i.arreglo());
             this.tabla.setModel(modelo5);
         }
         if(ae.getSource()==provee){
@@ -124,7 +142,8 @@ public class MainMenu extends JFrame implements ActionListener{
             this.panel.setBorder (BorderFactory.createTitledBorder (BorderFactory.createEtchedBorder (), "Proveedores", TitledBorder.CENTER, TitledBorder.TOP));
             Object[] columns={"id", "Compañia", "RUP", "Pais", "Ciudad", "Dueño", "Telefono"};
             DefaultTableModel modelo6=new DefaultTableModel(null, columns);
-            modelo6.addRow(adminProveedor.arreglo());
+            for(Proveedor p : proveedores)
+			modelo6.addRow(p.arreglo());
             this.tabla.setModel(modelo6);
         }
         if(ae.getSource()==trab){
@@ -132,15 +151,16 @@ public class MainMenu extends JFrame implements ActionListener{
             this.panel.setBorder (BorderFactory.createTitledBorder (BorderFactory.createEtchedBorder (), "Trabajadores", TitledBorder.CENTER, TitledBorder.TOP));
             Object[] columns={"id", "Nombre", "Cargo", "Cedula", "Telefono", "Salario", "E-Mail"};
             DefaultTableModel modelo7=new DefaultTableModel(null, columns);
-            modelo7.addRow(adminTrabajador.arreglo());
+            for(Trabajador t : trabajadores)
+			modelo7.addRow(t.arreglo());
             this.tabla.setModel(modelo7);
         }
         
         if(ae.getSource()==nuevo && entidad==1){
-            Cliente.crearCliente();
+            Cliente.crearCliente(clientes);
         }
         if(ae.getSource()==nuevo && entidad==2){
-            Orden.crearOrden();
+            Orden.crearOrden(clientes,ordenes);
         }
         if(ae.getSource()==nuevo && entidad==3){
             Mercaderia.crearMerc();
