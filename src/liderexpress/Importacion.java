@@ -5,10 +5,11 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.Date;
 import javax.swing.*;
 import javax.swing.border.*;
 
-public class Importacion {
+public class Importacion{
     int id;
     int trabajador;
     int prov;
@@ -154,4 +155,9 @@ public class Importacion {
         Object[] arreglo={id, trabajador, prov, dia, mes, año};
         return arreglo;
     }
+    
+    public Date devolverFecha(){
+        return new Date(año, mes, dia);
+    }
+    
 }

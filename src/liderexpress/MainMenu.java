@@ -5,6 +5,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.Date;
 import javax.swing.*;
 import javax.swing.border.*;
 import javax.swing.table.DefaultTableModel;
@@ -19,11 +20,12 @@ public class MainMenu extends JFrame implements ActionListener{
         ArrayList<Trabajador> trabajadores = new ArrayList<Trabajador>();
         ArrayList<Contenedor> contenedores = new ArrayList<Contenedor>();
         ArrayList<Caja> cajas = new ArrayList<Caja>();
+        int idc=0;
         Cliente adminCliente = new Cliente(1,"admin","admin","admin","admin", 123, 123);
         Orden adminOrden = new Orden(1,"test","test","test","test","test",1);
-        Mercaderia adminMercaderia = new Mercaderia(1,"test","test","test","test","test", 1);
+        Mercaderia adminMercaderia = new Mercaderia(1,"test","test","test","test","test", 1, 10, 15, 10);
         Empaquetado adminEmpaquetado = new Empaquetado(1,1,1,1,"Desmontado");
-        Importacion adminImportacion = new Importacion(1,1,1,1,1,1);
+        Importacion adminImportacion = new Importacion(1,1,1,1,1,2010);
         Proveedor adminProveedor = new Proveedor (1,"test",1,"test","test","test",1);
         Trabajador adminTrabajador = new Trabajador(1,"test","test",1,1,1,"test");
         Caja adminCaja = new Caja(1,"10x10x10",1,"Enviado","RR45");
@@ -33,11 +35,16 @@ public class MainMenu extends JFrame implements ActionListener{
         MenuBar entidades=new MenuBar();
         Menu mostrar=new Menu("Mostrar");
         Menu opciones=new Menu("Opciones");
+        Menu consulta=new Menu("Consultas");
+        Menu accion=new Menu("No hay posible Accion");
         MenuItem cliente, orden, merca, empaq, impo, provee, trab, caja, contenedor;
         MenuItem nuevo, editar, eliminar, buscar;
+        MenuItem client, impor;
+        MenuItem exe;
         DefaultTableModel model;
         JTable tabla;
         JPanel panel;
+        
     
     MainMenu(){
         clientes.add(adminCliente);
@@ -75,8 +82,13 @@ public class MainMenu extends JFrame implements ActionListener{
         opciones.add(editar=new MenuItem("Editar"));
         opciones.add(eliminar=new MenuItem("Eliminar"));
         opciones.add(buscar=new MenuItem("Buscar"));
+        consulta.add(client=new MenuItem("Clientes"));
+        consulta.add(impor=new MenuItem("Importaciones Por Fecha"));
+        accion.add(exe=new MenuItem("Ejecutar"));
         entidades.add(mostrar);
         entidades.add(opciones);
+        entidades.add(consulta);
+        entidades.add(accion);
         setMenuBar(entidades);
         JScrollPane listScroller = new JScrollPane(tabla);
         listScroller.setPreferredSize(new Dimension(650, 200));
@@ -96,7 +108,8 @@ public class MainMenu extends JFrame implements ActionListener{
         editar.addActionListener(this);
         eliminar.addActionListener(this);
         buscar.addActionListener(this);
-            
+        impor.addActionListener(this);
+        exe.addActionListener(this);
     }
     
     @Override
@@ -109,7 +122,7 @@ public class MainMenu extends JFrame implements ActionListener{
             for(Cliente c : clientes)
                 modelo1.addRow(c.arreglo());
             this.tabla.setModel(modelo1);
-
+            accion.setLabel("Mostrar Ordenes");
         }
         if(ae.getSource()==orden){
             entidad=2;
@@ -119,11 +132,12 @@ public class MainMenu extends JFrame implements ActionListener{
             for(Orden o : ordenes)
                     modelo2.addRow(o.arreglo());
             this.tabla.setModel(modelo2);
+            accion.setLabel("Detalle");
         }
         if(ae.getSource()==merca){
             entidad=3;
             this.panel.setBorder (BorderFactory.createTitledBorder (BorderFactory.createEtchedBorder (), "Mercaderia", TitledBorder.CENTER, TitledBorder.TOP));
-            Object[] columns={"id", "Estilo", "Marca", "Descripcion", "Composicion", "Origen", "idOrden"};
+            Object[] columns={"id", "Estilo", "Marca", "Descripcion", "Composicion", "Origen", "Precio Compra", "PVP", "Cantidad", "idOrden"};
             DefaultTableModel modelo3=new DefaultTableModel(null, columns);
             for(Mercaderia m : mercaderias)
                     modelo3.addRow(m.arreglo());
@@ -267,5 +281,97 @@ public class MainMenu extends JFrame implements ActionListener{
             int fila = tabla.getSelectedRow();
             //Trabajador.eliminarTrab(adminTrabajador);
         }
+        if(ae.getSource()==impor){
+            intervalo();
+        }
+        if(ae.getSource()==exe && entidad==2){
+            Factura.mostrarFact();
+        }
+        if(ae.getSource()==exe && entidad==1){
+            idc=clientes.get((int)tabla.getSelectedRow()).id;
+            this.panel.setBorder (BorderFactory.createTitledBorder (BorderFactory.createEtchedBorder (), "Ordenes de " + clientes.get(idc-1).nombre, TitledBorder.CENTER, TitledBorder.TOP));
+            Object[] columns={"id", "Pais", "Ciudad", "Tiempo", "Numero", "Estado", "Cliente"};
+            DefaultTableModel modelo2=new DefaultTableModel(null, columns);
+            for(Orden o : ordenes)
+                if(o.cliente==idc){
+                    modelo2.addRow(o.arreglo());
+                }
+            this.tabla.setModel(modelo2);
+            accion.setLabel("Detalle");
+            entidad=2;
+        }
+        
+        
+    }
+    
+    public void intervalo(){
+        final JFrame interImpo = new JFrame("Seleccione Periodo de Tiempo Para Consulta");
+        interImpo.setSize(500, 150);
+        interImpo.setVisible(true);
+        Panel panelPrin=new Panel(new GridLayout(3, 1));
+        Panel panelIni=new Panel(new GridLayout(1, 4));
+        Panel panelFin=new Panel(new GridLayout(1, 4));
+        Panel panelboton=new Panel(new GridLayout(1, 2));
+        Label labelIni=new Label("Fecha Inicial:", Label.CENTER);
+        Label labelFin=new Label("Fecha Final:", Label.CENTER);
+        Button guardar=new Button("Consultar");
+        Button cancelar=new Button("Cancelar");
+        final JComboBox cdia=new JComboBox();
+        final JComboBox cmes=new JComboBox();
+        final JComboBox caño=new JComboBox();
+        for (int i=2000; i<2015; i++){
+            caño.addItem(i);
+        }
+        for (int j=1; j<13; j++){
+            cmes.addItem(j);
+        }
+        for (int i=1; i<32; i++){
+            cdia.addItem(i);
+        }
+        final JComboBox cfdia=new JComboBox();
+        final JComboBox cfmes=new JComboBox();
+        final JComboBox cfaño=new JComboBox();
+        for (int i=2000; i<2015; i++){
+            cfaño.addItem(i);
+        }
+        for (int j=1; j<13; j++){
+            cfmes.addItem(j);
+        }
+        for (int i=1; i<32; i++){
+            cfdia.addItem(i);
+        }
+        panelIni.add(labelIni);
+        panelIni.add(caño);
+        panelIni.add(cmes);
+        panelIni.add(cdia);
+        panelFin.add(labelFin);
+        panelFin.add(cfaño);
+        panelFin.add(cfmes);
+        panelFin.add(cfdia);
+        panelboton.add(guardar);
+        panelboton.add(cancelar);
+        panelPrin.add(panelIni);
+        panelPrin.add(panelFin);
+        panelPrin.add(panelboton);
+        interImpo.add(panelPrin);   
+        guardar.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent e){
+                entidad=0;
+                panel.setBorder (BorderFactory.createTitledBorder (BorderFactory.createEtchedBorder (), "Importaciones", TitledBorder.CENTER, TitledBorder.TOP));
+                Object[] columns={"id", "Trabajador", "Proveedor", "Dia", "Mes", "Año"};
+                DefaultTableModel modelo5=new DefaultTableModel(null, columns);
+                for(Importacion i : importaciones)
+                    if(i.devolverFecha().before(new Date((int)cfaño.getSelectedItem(), (int)cfmes.getSelectedItem(),(int)cfdia.getSelectedItem())) && i.devolverFecha().after(new Date((int)caño.getSelectedItem(), (int)cmes.getSelectedItem(),(int)cdia.getSelectedItem()))){
+                        modelo5.addRow(i.arreglo());
+                    }
+                tabla.setModel(modelo5);
+                interImpo.dispose();
+            }
+        });
+        cancelar.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent e){
+                interImpo.dispose();
+            }
+        });
     }
 }
