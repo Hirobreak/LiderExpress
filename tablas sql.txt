@@ -1,0 +1,145 @@
+CREATE DATABASE liderexpress;
+
+CREATE TABLE liderexpress.cliente(
+	id_cliente DECIMAL(5) PRIMARY KEY,
+	nombre VARCHAR(40),
+	cedula VARCHAR(20),
+	ruc VARCHAR(20),
+	compania VARCHAR(30),
+	telf VARCHAR(20),
+	CONSTRAINT cons1 CHECK (nombre<>'' AND cedula<>'' AND ruc<>'' AND compania<>'' AND telf<>'')
+); 
+
+CREATE TABLE liderexpress.orden(
+	id_orden DECIMAL(5) PRIMARY KEY,
+	id_cliente DECIMAL(5),
+	pais VARCHAR(20),
+	ciudad VARCHAR(20),
+	fecha DATE,
+	t_entrega INTEGER(4),
+	estado VARCHAR(20),
+	num_rastreo VARCHAR(20),
+	FOREIGN KEY(id_cliente) REFERENCES cliente(id_cliente),
+	CONSTRAINT cons2 CHECK (pais<>'' AND ciudad<>'' AND fecha<>'' AND t_entrega<>'' AND estado<>'' AND num_rastreo<>'')
+); 
+
+CREATE TABLE liderexpress.factura2(
+	id_factura DECIMAL(5) PRIMARY KEY,
+	valor_p FLOAT(20),
+	iva FLOAT(5),
+	descuento FLOAT(20),
+	fecha DATE,
+	valor_final FLOAT(20),
+	id_orden DECIMAL(5),
+	FOREIGN KEY(id_orden) REFERENCES orden(id_orden),
+	CONSTRAINT cons3 CHECK (valor_p<>'' AND iva<>'' AND descuento<>'' AND fecha<>'' AND valor_final<>'')
+); 
+
+CREATE TABLE liderexpress.pago2(
+	id_pago DECIMAL(5) PRIMARY KEY,
+	cantidad DECIMAL(20),
+	tipo VARCHAR(20),
+	interes FLOAT(10),
+	fecha DATE,
+	id_factura DECIMAL(5),
+	FOREIGN KEY(id_factura) REFERENCES factura2(id_factura),
+	CONSTRAINT cons4 CHECK (cantidad<>'' AND tipo<>'' AND interes<>'' AND fecha<>'')
+); 
+
+CREATE TABLE liderexpress.mercaderia(
+	id_merca DECIMAL(5) PRIMARY KEY,
+	estilo VARCHAR(20),
+	marca VARCHAR(20),
+	dsc VARCHAR(20),
+	compos VARCHAR(20),
+	cantidad DECIMAL(5),
+	origen VARCHAR(20),
+	precio_venta FLOAT(10),
+	precio_compra FLOAT(10),
+	id_orden DECIMAL(5),
+	FOREIGN KEY(id_orden) REFERENCES orden(id_orden),
+	CONSTRAINT cons5 CHECK (estilo<>'' AND marca<>'' AND dsc<>'' AND compos<>'' AND cantidad<>'' AND origen<>'' AND precio_venta<>'' AND precio_compra<>'')
+); 
+
+CREATE TABLE liderexpress.proveedor(
+	id_proveedor DECIMAL(5) PRIMARY KEY,
+	compania VARCHAR(40),
+	rup VARCHAR(20),
+	pais VARCHAR(20),
+	ciudad VARCHAR(30),
+	dueño VARCHAR(20),
+	telf VARCHAR(20),
+	CONSTRAINT cons6 CHECK (compania<>'' AND rup<>'' AND pais<>'' AND ciudad<>'' AND dueño<>'' AND telf<>'')
+); 
+
+CREATE TABLE liderexpress.trabajador(
+	id_trabajador DECIMAL(5) PRIMARY KEY,
+	nombre VARCHAR(40),
+	cedula VARCHAR(20),
+	puesto VARCHAR(20),
+	telf VARCHAR(30),
+	sueldo FLOAT(10),
+	mail VARCHAR(20),
+	CONSTRAINT cons6 CHECK (nombre<>'' AND cedula<>'' AND puesto<>'' AND telf<>'' AND sueldo<>'' AND mail<>'')
+); 
+
+CREATE TABLE liderexpress.caja(
+	id_caja DECIMAL(5) PRIMARY KEY,
+	num VARCHAR(10),
+	peso VARCHAR(10),
+	estado VARCHAR(20),
+	dim VARCHAR(10),
+	CONSTRAINT cons6 CHECK (num<>'' AND peso<>'' AND estado<>'' AND dim<>'')
+);
+
+CREATE TABLE liderexpress.contenedor(
+	id_contenedor DECIMAL(5) PRIMARY KEY,
+	dim VARCHAR(10),
+	peso VARCHAR(10),
+	estado VARCHAR(20),
+	id_import DECIMAL(5),
+	FOREIGN KEY(id_import) REFERENCES importacion(id_import),
+	CONSTRAINT cons6 CHECK (dim<>'' AND peso<>'' AND estado<>'')
+);
+
+CREATE TABLE liderexpress.pago1(
+	id_pago DECIMAL(5) PRIMARY KEY,
+	cantidad DECIMAL(20),
+	tipo VARCHAR(20),
+	id_factura DECIMAL(5),
+	fecha DATE,
+	FOREIGN KEY(id_factura) REFERENCES factura1(id_factura),
+	CONSTRAINT cons3 CHECK (cantidad<>'' AND tipo<>'' AND fecha<>'')
+); 
+
+CREATE TABLE liderexpress.factura1(
+	id_factura DECIMAL(5) PRIMARY KEY,
+	valor_p FLOAT(20),
+	iva FLOAT(5),
+	descuento FLOAT(20),
+	fecha DATE,
+	valor_final FLOAT(20),
+	id_import DECIMAL(5),
+	FOREIGN KEY(id_import) REFERENCES importacion(id_import),
+	CONSTRAINT cons3 CHECK (valor_p<>'' AND iva<>'' AND descuento<>'' AND fecha<>'' AND valor_final<>'')
+); 
+
+CREATE TABLE liderexpress.importacion(
+	id_import DECIMAL(5) PRIMARY KEY,
+	id_trabajador DECIMAL(5),
+	id_proveedor DECIMAL(5),
+	fecha DATE,
+	FOREIGN KEY(id_trabajador) REFERENCES trabajador(id_trabajador),
+	FOREIGN KEY(id_proveedor) REFERENCES proveedor(id_proveedor),
+	CONSTRAINT cons3 CHECK (fecha<>'')
+); 
+
+CREATE TABLE liderexpress.empaquetado(
+	id_empaquetado DECIMAL(5) PRIMARY KEY,
+	id_merca DECIMAL(5),
+	id_caja DECIMAL(5),
+	estado VARCHAR(20),
+	FOREIGN KEY(id_merca) REFERENCES mercaderia(id_merca),
+	FOREIGN KEY(id_caja) REFERENCES caja(id_caja),
+	CONSTRAINT cons9 CHECK (estado<>'')
+);
