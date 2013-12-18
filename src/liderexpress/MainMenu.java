@@ -9,6 +9,8 @@ import java.util.Date;
 import javax.swing.*;
 import javax.swing.border.*;
 import javax.swing.table.DefaultTableModel;
+import java.sql.*;
+import java.util.*;
 
 public class MainMenu extends JFrame implements ActionListener{
         ArrayList<Cliente> clientes = new ArrayList<Cliente>();
@@ -47,6 +49,7 @@ public class MainMenu extends JFrame implements ActionListener{
         
     
     MainMenu(){
+        
         clientes.add(adminCliente);
         ordenes.add(adminOrden);
         mercaderias.add(adminMercaderia);
@@ -109,6 +112,7 @@ public class MainMenu extends JFrame implements ActionListener{
         eliminar.addActionListener(this);
         buscar.addActionListener(this);
         impor.addActionListener(this);
+        client.addActionListener(this);
         exe.addActionListener(this);
     }
     
@@ -300,6 +304,9 @@ public class MainMenu extends JFrame implements ActionListener{
             accion.setLabel("Detalle");
             entidad=2;
         }
+        if(ae.getSource()==client){
+            consultaClient();
+        }
         
         
     }
@@ -371,6 +378,56 @@ public class MainMenu extends JFrame implements ActionListener{
         cancelar.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e){
                 interImpo.dispose();
+            }
+        });
+    }
+    public void consultaClient(){
+        final JFrame consClien = new JFrame("Escriba Cedula/Nombre Cliente");
+        consClien.setSize(500, 100);
+        consClien.setVisible(true);
+        Panel panelPrin=new Panel(new GridLayout(3, 1));
+        Panel panelced=new Panel(new GridLayout(1, 2));
+        Panel panelnom=new Panel(new GridLayout(1, 2));
+        Panel panelboton=new Panel(new GridLayout(1, 2));
+        Label labelnom=new Label("Nombre:", Label.CENTER);
+        Label labelced=new Label("Cedula:", Label.CENTER);
+        final TextField txtced=new TextField("", 20);
+        final TextField txtnom=new TextField("", 20);
+        Button guardar=new Button("Consultar");
+        Button cancelar=new Button("Cancelar");
+        panelced.add(labelced);
+        panelced.add(txtced);
+        panelnom.add(labelnom);
+        panelnom.add(txtnom);
+        panelboton.add(guardar);
+        panelboton.add(cancelar);
+        panelPrin.add(panelnom);
+        panelPrin.add(panelced);
+        panelPrin.add(panelboton);
+        consClien.add(panelPrin);   
+        guardar.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent e){
+                entidad=0;
+                panel.setBorder (BorderFactory.createTitledBorder (BorderFactory.createEtchedBorder (), "Importaciones", TitledBorder.CENTER, TitledBorder.TOP));
+                Object[] columns={"id", "Nombre", "Cedula", "Ruc", "Compañia", "Telf1"};
+                DefaultTableModel modelo5=new DefaultTableModel(null, columns);
+                try{
+                    ResultSet rs=Cliente.ConsultaCliente(txtnom.getText(), txtced.getText());
+                    
+                    while(rs.next()){
+                        Object[] fila={rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6)};
+                        modelo5.addRow(fila);
+                    }
+                }catch(Exception ex){
+                    
+                }
+                tabla.setModel(modelo5);
+                consClien.dispose();
+            }
+        });
+        cancelar.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent e){
+                consClien.dispose();
             }
         });
     }

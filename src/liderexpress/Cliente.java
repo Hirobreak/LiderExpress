@@ -7,6 +7,12 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import javax.swing.*;
 import javax.swing.border.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.*;
+import java.sql.ResultSet;
+import com.mysql.jdbc.CallableStatement;
 
 public class Cliente{
     int id;
@@ -16,6 +22,9 @@ public class Cliente{
     String compa;
     int telf1;
     int telf2;
+    static C_ConexionSQL connect=new C_ConexionSQL();
+    static Conex c;
+    Connection conexion;
 
 
     Cliente(int id, String nom, String ruc, String ced, String comp, int t1, int t2){
@@ -74,8 +83,7 @@ public class Cliente{
         jCrearCliente.add(panelPrin);
         guardar.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e){
-                Cliente c = new Cliente(clientes.size()+1,txtNombre.getText(),txtRuc.getText(),txtCedula.getText(),txtCompa.getText(),Integer.parseInt(txtTelf1.getText()),Integer.parseInt(txtTelf2.getText()));
-                clientes.add(c);
+                NuevoCliente(txtNombre.getText(), txtCedula.getText(), txtRuc.getText(), txtCompa.getText(), txtTelf1.getText());
                 jCrearCliente.setVisible(false);
             }
         });
@@ -85,6 +93,42 @@ public class Cliente{
             }
         });
     }
+    
+    public static void NuevoCliente(String nombre, String cedula, String ruc, String emp, String telf){
+        try {
+            Connection con=connect.Conexion_SQL();
+            Statement sentencia=con.createStatement();
+            //String query="INSERT INTO cliente VALUES(1, '"+ nombre+"','"+cedula+"','"+ruc+"','"+emp+"','"+telf+"')";
+            String query="INSERT INTO cliente VALUES("+ String.valueOf((int)(Math.random()*100)) +",'"+nombre+"', '"+cedula+"', '"+ruc+"', '"+emp+"', '"+telf+"');";
+            sentencia.executeUpdate(query);
+        }catch(SQLException e){
+            JOptionPane.showMessageDialog(null, "Error dato");
+        }
+        //return fa;
+    }
+    public static ResultSet ConsultaCliente(String nombre, String cedula){
+        ResultSet rs = null;
+        try {
+            String query;
+            Connection con=connect.Conexion_SQL();
+            Statement sentencia=con.createStatement();
+            if (cedula.equals("")){
+                query="SELECT cliente.* FROM cliente WHERE cliente.nombre LIKE '"+nombre+"';";
+            }else if (nombre.equals("")){
+                query="SELECT cliente.* FROM cliente WHERE cliente.cedula LIKE '"+cedula+"';";
+            }else{
+                query="SELECT cliente.* FROM cliente WHERE cliente.nombre LIKE '"+nombre+"' AND cliente.cedula LIKE '" +cedula+"';";
+            }
+
+            rs=sentencia.executeQuery(query);
+            
+        }catch(SQLException e){
+            JOptionPane.showMessageDialog(null, "Error dato");
+        }
+        return rs;
+
+    }
+    
     
     static void modificarCliente(final ArrayList<Cliente> clientes, final int pos){ 
         Cliente c = clientes.get(pos);
