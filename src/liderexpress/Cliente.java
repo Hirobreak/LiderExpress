@@ -129,6 +129,21 @@ public class Cliente{
 
     }
     
+    public static ResultSet todosClientes(){
+        ResultSet rs = null;
+        try {
+            String query;
+            Connection con=connect.Conexion_SQL();
+            Statement sentencia=con.createStatement();
+            query="SELECT cliente.* FROM cliente;";
+            rs=sentencia.executeQuery(query);
+            
+        }catch(SQLException e){
+            JOptionPane.showMessageDialog(null, "Error dato");
+        }
+        return rs;
+    }
+    
     
     static void modificarCliente(final ArrayList<Cliente> clientes, final int pos){ 
         Cliente c = clientes.get(pos);

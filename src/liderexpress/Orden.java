@@ -4,14 +4,21 @@ package liderexpress;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Date;
 import javax.swing.*;
 import javax.swing.border.*;
+import static liderexpress.Cliente.connect;
 
 public class Orden{
     int id;
     String pais;
     String ciudad;
+    Date fecha;
     String tiempo;
     String numero;
     String estado;
@@ -41,6 +48,7 @@ public class Orden{
         Panel panelboton=new Panel(new GridLayout(1, 2));
         Label labelpais=new Label("Pais:", Label.CENTER);
         Label labelciud=new Label("Ciudad:", Label.CENTER);
+        Label labelfecha=new Label("Fecha:", Label.CENTER);
         Label labeltiem=new Label("Tiempo Entrega:", Label.CENTER);
         Label labelnum=new Label("# Rastreo:", Label.CENTER);
         Label labelclien=new Label("Cliente:", Label.CENTER);
@@ -53,8 +61,17 @@ public class Orden{
         final TextField txtNumero=new TextField("Numero de Rastreo", 20);
         final TextField txtEstado=new TextField("Estado", 20);
         final JComboBox clientes=new JComboBox();
-        for(Cliente c : clientes1)
-            clientes.addItem(c.nombre);
+        try{
+          ResultSet rs = Cliente.todosClientes();
+          while(rs.next()){
+              int id = rs.getInt(1);
+              String nombre = rs.getString(2);
+              clientes.addItem(id+" - "+nombre);
+          }  
+        }catch(Exception ex){
+                    
+        }
+        
         //final Cliente asignado = clientes1.get(clientes.getSelectedIndex());
         panelpais.add(labelpais);
         panelpais.add(txtPais);
@@ -158,7 +175,18 @@ public class Orden{
             }
         });
     }
-    
+    public static void nuevaOrden(String pais, String ciudad, int id_cliente, String tiempo, String numero, String estado){
+        try {
+            Connection con=connect.Conexion_SQL();
+            Statement sentencia=con.createStatement();
+            //String query="INSERT INTO cliente VALUES(1, '"+ nombre+"','"+cedula+"','"+ruc+"','"+emp+"','"+telf+"')";
+            String query="INSERT INTO orden VALUES("+ String.valueOf((int)(Math.random()*100)) +",'"+String.valueOf(id_cliente)+"', '"+tiempo+"', '"+numero+"', '"+estado+"');";
+            sentencia.executeUpdate(query);
+        }catch(SQLException e){
+            JOptionPane.showMessageDialog(null, "Error dato");
+        }
+        //return fa;
+    }
     static public void eliminarOrden(final ArrayList<Orden> ordenes, final int pos){  
         Orden o = ordenes.get(pos);
         final JFrame jElimOrden = new JFrame("Eliminacion de Ordenes");

@@ -31,7 +31,7 @@ public class Conex {
         
         try {
             Class.forName("com.mysql.jdbc.Driver");
-            conexion = DriverManager.getConnection(connectionUrl, "root", "megaman7");
+            conexion = DriverManager.getConnection(connectionUrl, "root", "admin");
             
             
         } catch (SQLException ex) {
