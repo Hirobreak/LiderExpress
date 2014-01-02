@@ -99,7 +99,7 @@ public class Cliente{
             Connection con=connect.Conexion_SQL();
             Statement sentencia=con.createStatement();
             //String query="INSERT INTO cliente VALUES(1, '"+ nombre+"','"+cedula+"','"+ruc+"','"+emp+"','"+telf+"')";
-            String query="INSERT INTO cliente VALUES("+ String.valueOf((int)(Math.random()*100)) +",'"+nombre+"', '"+cedula+"', '"+ruc+"', '"+emp+"', '"+telf+"');";
+            String query="INSERT INTO cliente VALUES("+newID()+",'"+nombre+"', '"+cedula+"', '"+ruc+"', '"+emp+"', '"+telf+"');";
             sentencia.executeUpdate(query);
         }catch(SQLException e){
             JOptionPane.showMessageDialog(null, "Error dato");
@@ -144,6 +144,27 @@ public class Cliente{
         return rs;
     }
     
+        public static int newID(){
+        int id = 0;
+        ResultSet rs = null;
+        try {
+            Connection con=connect.Conexion_SQL();
+            Statement sentencia=con.createStatement();
+            String query="SELECT max(cliente.id_cliente)+1 as maxID FROM cliente;";
+            rs = sentencia.executeQuery(query);
+            try{
+                while(rs.next())
+                    id = rs.getInt("maxID");
+            }catch(SQLException e){  
+            }
+            System.out.println(id);
+            return id;
+        }
+        catch(SQLException e){
+            JOptionPane.showMessageDialog(null, "Error dato ID");
+        }
+        return id;
+    }
     
     static void modificarCliente(final ArrayList<Cliente> clientes, final int pos){ 
         Cliente c = clientes.get(pos);
