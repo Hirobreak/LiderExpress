@@ -41,6 +41,7 @@ public class Orden{
         Panel panelPrin=new Panel(new GridLayout(7, 1));
         Panel panelpais=new Panel(new GridLayout(1, 2));
         Panel panelciud=new Panel(new GridLayout(1, 2));
+        Panel panelfecha = new Panel(new GridLayout(1,2));
         Panel paneltiem=new Panel(new GridLayout(1, 2));
         Panel panelnum=new Panel(new GridLayout(1, 2));
         Panel panelestado=new Panel(new GridLayout(1, 2));
@@ -55,11 +56,23 @@ public class Orden{
         Label labelestado=new Label("Estado:", Label.CENTER);
         Button guardar=new Button("Guardar");
         Button cancelar=new Button("Cancelar");
-        final TextField txtPais=new TextField("Pais de origen", 20);
-        final TextField txtCiudad=new TextField("Ciudad de origen", 20);
-        final TextField txtTiempo=new TextField("Tiempo de entrega", 20);
-        final TextField txtNumero=new TextField("Numero de Rastreo", 20);
-        final TextField txtEstado=new TextField("Estado", 20);
+        final TextField txtPais=new TextField("", 20);
+        final TextField txtCiudad=new TextField("", 20);
+        final JComboBox txtAño=new JComboBox();
+        final JComboBox txtMes=new JComboBox();
+        final JComboBox txtDia=new JComboBox();
+        for (int i=2000; i<2015; i++){
+            txtAño.addItem(i);
+        }
+        for (int j=1; j<13; j++){
+            txtMes.addItem(j);
+        }
+        for (int i=1; i<32; i++){
+            txtDia.addItem(i);
+        }
+        final TextField txtTiempo=new TextField("", 20);
+        final TextField txtNumero=new TextField("", 20);
+        final TextField txtEstado=new TextField("", 20);
         final JComboBox clientes=new JComboBox();
         try{
           ResultSet rs = Cliente.todosClientes();
@@ -77,6 +90,10 @@ public class Orden{
         panelpais.add(txtPais);
         panelciud.add(labelciud);
         panelciud.add(txtCiudad);
+        panelfecha.add(labelfecha);
+        panelfecha.add(txtAño);
+        panelfecha.add(txtMes);
+        panelfecha.add(txtDia);
         paneltiem.add(labeltiem);
         paneltiem.add(txtTiempo);
         panelnum.add(labelnum);
@@ -89,6 +106,7 @@ public class Orden{
         panelboton.add(cancelar);
         panelPrin.add(panelpais);
         panelPrin.add(panelciud);
+        panelPrin.add(panelfecha);
         panelPrin.add(paneltiem);
         panelPrin.add(panelnum);
         panelPrin.add(panelestado);
@@ -97,8 +115,11 @@ public class Orden{
         jCrearOrden.add(panelPrin);
         guardar.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e){
-                Orden o = new Orden(ordenes.size()+1,txtPais.getText(),txtCiudad.getText(),txtTiempo.getText(),txtNumero.getText(),txtEstado.getText(),clientes1.get(clientes.getSelectedIndex()).id);
-                ordenes.add(o);
+                String cliente = clientes.getSelectedItem().toString();
+                String cliente1[] = cliente.split("\\ ");
+                String id_cliente = cliente1[0];
+                System.out.print((int)(txtAño.getSelectedItem())+"-"+(int)(txtMes.getSelectedItem())+"-"+(int)(txtDia.getSelectedItem())+" -- "+id_cliente);
+                nuevaOrden(id_cliente,txtPais.getText(),txtCiudad.getText(),txtAño.getSelectedItem().toString(),txtMes.getSelectedItem().toString(),txtDia.getSelectedItem().toString(),txtTiempo.getText(),txtEstado.getText(),txtNumero.getText());
                 jCrearOrden.setVisible(false);
             }
         });
@@ -175,12 +196,12 @@ public class Orden{
             }
         });
     }
-    public static void nuevaOrden(String pais, String ciudad, int id_cliente, String tiempo, String numero, String estado){
+    public static void nuevaOrden(String id_cliente,String pais, String ciudad, String año, String mes, String dia, String tiempo, String estado, String numero){
         try {
             Connection con=connect.Conexion_SQL();
             Statement sentencia=con.createStatement();
             //String query="INSERT INTO cliente VALUES(1, '"+ nombre+"','"+cedula+"','"+ruc+"','"+emp+"','"+telf+"')";
-            String query="INSERT INTO orden VALUES("+ String.valueOf((int)(Math.random()*100)) +",'"+String.valueOf(id_cliente)+"', '"+tiempo+"', '"+numero+"', '"+estado+"');";
+            String query="INSERT INTO orden VALUES("+(int)(Math.random()*100)+","+id_cliente+",'"+pais+"','"+ciudad+"','"+año+"-"+mes+"-"+dia+"',"+tiempo+",'"+estado+"','"+numero+"');";
             sentencia.executeUpdate(query);
         }catch(SQLException e){
             JOptionPane.showMessageDialog(null, "Error dato");
