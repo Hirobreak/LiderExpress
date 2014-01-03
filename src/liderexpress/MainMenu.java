@@ -179,10 +179,16 @@ public class MainMenu extends JFrame implements ActionListener{
         if(ae.getSource()==impo){
             entidad=5;
             this.panel.setBorder (BorderFactory.createTitledBorder (BorderFactory.createEtchedBorder (), "Importaciones", TitledBorder.CENTER, TitledBorder.TOP));
-            Object[] columns={"id", "Trabajador", "Proveedor", "Dia", "Mes", "Año"};
+            Object[] columns={"id", "Trabajador", "Proveedor", "Fecha"};
             DefaultTableModel modelo5=new DefaultTableModel(null, columns);
-            for(Importacion i : importaciones)
-                    modelo5.addRow(i.arreglo());
+            ResultSet rs = Importacion.todasImport();
+            try {
+                while(rs.next()){
+                    Object[] fila={rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4)};
+                    modelo5.addRow(fila);
+                }
+            } catch (SQLException ex) {
+            }
             this.tabla.setModel(modelo5);
         }
         if(ae.getSource()==provee){

@@ -4,10 +4,16 @@ package liderexpress;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Date;
 import javax.swing.*;
 import javax.swing.border.*;
+import static liderexpress.Cliente.connect;
+import static liderexpress.Proveedor.newID;
 
 public class Importacion{
     int id;
@@ -42,11 +48,27 @@ public class Importacion{
         Button guardar=new Button("Guardar");
         Button cancelar=new Button("Cancelar");
         final JComboBox superv=new JComboBox();
-        for(Trabajador t : trabs)
-            superv.addItem(t.nombre);
+                try{
+          ResultSet rs = Trabajador.todosTrab();
+          while(rs.next()){
+              int id = rs.getInt(1);
+              String nombre = rs.getString(2);
+              superv.addItem(id+" - "+nombre);
+          }  
+        }catch(Exception ex){
+                    
+        }
         final JComboBox provee=new JComboBox();
-        for(Proveedor p : provs)
-            provee.addItem(p.compañia);
+                try{
+          ResultSet rs = Proveedor.todosProv();
+          while(rs.next()){
+              int id = rs.getInt(1);
+              String comp = rs.getString(2);
+              provee.addItem(id+" - "+comp);
+          }  
+        }catch(Exception ex){
+                    
+        }
         final JComboBox cdia=new JComboBox();
         final JComboBox cmes=new JComboBox();
         final JComboBox caño=new JComboBox();
@@ -76,8 +98,13 @@ public class Importacion{
         jCrearImpo.add(panelPrin);
         guardar.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e){
-                Importacion i = new Importacion(imps.size()+1,trabs.get(superv.getSelectedIndex()).id,provs.get(provee.getSelectedIndex()).id,(int)cdia.getSelectedItem(),(int)cmes.getSelectedItem(),(int)caño.getSelectedItem());
-                imps.add(i);
+                String sup = superv.getSelectedItem().toString();
+                String sup1[] = sup.split("\\ ");
+                String id_trab = sup1[0];
+                String prov = provee.getSelectedItem().toString();
+                String prov1[] = prov.split("\\ ");
+                String id_proveedor = prov1[0];
+                nuevaImp(id_trab,id_proveedor,caño.getSelectedItem().toString(),cmes.getSelectedItem().toString(),cdia.getSelectedItem().toString());
                 jCrearImpo.setVisible(false);
             }
         });
@@ -86,6 +113,56 @@ public class Importacion{
                 jCrearImpo.setVisible(false);
             }
         });
+    }
+    
+    public static void nuevaImp(String id_trab, String id_prov, String año, String mes, String dia){
+        try {
+            Connection con=connect.Conexion_SQL();
+            Statement sentencia=con.createStatement();
+            String query="INSERT INTO importacion VALUES("+newID()+",'"+id_trab+"', '"+id_prov+"','"+año+"-"+mes+"-"+dia+"');";
+            sentencia.executeUpdate(query);
+        }catch(SQLException e){
+            JOptionPane.showMessageDialog(null, "Error dato");
+        }
+        //return fa;
+    } 
+    
+    public static ResultSet todasImport(){
+        ResultSet rs = null;
+        try {
+            String query;
+            Connection con=connect.Conexion_SQL();
+            Statement sentencia=con.createStatement();
+            query="SELECT importacion.* FROM importacion;";
+            rs=sentencia.executeQuery(query);
+            
+        }catch(SQLException e){
+            JOptionPane.showMessageDialog(null, "Error dato");
+        }
+        return rs;
+    }
+    
+    public static int newID(){
+        int id = 1;
+        ResultSet rs = null;
+        try {
+            Connection con=connect.Conexion_SQL();
+            Statement sentencia=con.createStatement();
+            String query="SELECT max(importacion.id_import)+1 as maxID FROM importacion;";
+            rs = sentencia.executeQuery(query);
+            try{
+                while(rs.next())
+                    id = rs.getInt("maxID");
+            }catch(SQLException e){  
+            }
+            if(id==0)
+                id++;
+            return id;
+        }
+        catch(SQLException e){
+            JOptionPane.showMessageDialog(null, "Error dato ID");
+        }
+        return id;
     }
     
     static public void modImpo(Importacion im){
