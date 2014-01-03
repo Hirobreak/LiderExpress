@@ -285,6 +285,7 @@ public class Cliente{
     }
     
     public Object[] arreglo(){
+        
         Object[] arreglo={id, nombre, cedula, compa, ruc, telf1, telf2};
         return arreglo;
     }   

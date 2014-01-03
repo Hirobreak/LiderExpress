@@ -120,7 +120,6 @@ public class Orden{
                 String cliente = clientes.getSelectedItem().toString();
                 String cliente1[] = cliente.split("\\ ");
                 String id_cliente = cliente1[0];
-                //System.out.print((int)(txtAño.getSelectedItem())+"-"+(int)(txtMes.getSelectedItem())+"-"+(int)(txtDia.getSelectedItem())+" -- "+id_cliente);
                 nuevaOrden(id_cliente,txtPais.getText(),txtCiudad.getText(),txtAño.getSelectedItem().toString(),txtMes.getSelectedItem().toString(),txtDia.getSelectedItem().toString(),txtTiempo.getText(),txtEstado.getText(),txtNumero.getText());
                 jCrearOrden.setVisible(false);
             }
@@ -130,6 +129,56 @@ public class Orden{
                 jCrearOrden.setVisible(false);
             }
         });
+    }
+    
+        public static int newID(){
+        int id = 0;
+        ResultSet rs = null;
+        try {
+            Connection con=connect.Conexion_SQL();
+            Statement sentencia=con.createStatement();
+            String query="SELECT max(orden.id_orden)+1 as maxID FROM orden;";
+            rs = sentencia.executeQuery(query);
+            try{
+                while(rs.next())
+                    id = rs.getInt("maxID");
+            }catch(SQLException e){  
+            }
+            System.out.println(id);
+            return id;
+        }
+        catch(SQLException e){
+            JOptionPane.showMessageDialog(null, "Error dato ID");
+        }
+        return id;
+    }    
+    
+    public static void nuevaOrden(String id_cliente,String pais, String ciudad, String año, String mes, String dia, String tiempo, String estado, String numero){
+        try {
+            Connection con=connect.Conexion_SQL();
+            Statement sentencia=con.createStatement();
+            //String query="INSERT INTO cliente VALUES(1, '"+ nombre+"','"+cedula+"','"+ruc+"','"+emp+"','"+telf+"')";
+            String query="INSERT INTO orden VALUES("+newID()+","+id_cliente+",'"+pais+"','"+ciudad+"','"+año+"-"+mes+"-"+dia+"',"+tiempo+",'"+estado+"','"+numero+"');";
+            sentencia.executeUpdate(query);
+        }catch(SQLException e){
+            JOptionPane.showMessageDialog(null, "Error dato Orden");
+        }
+        //return fa;
+    }
+    
+    public static ResultSet todasOrdenes(){
+        ResultSet rs = null;
+        try {
+            String query;
+            Connection con=connect.Conexion_SQL();
+            Statement sentencia=con.createStatement();
+            query="SELECT orden.* FROM orden;";
+            rs=sentencia.executeQuery(query);
+            
+        }catch(SQLException e){
+            JOptionPane.showMessageDialog(null, "Error dato");
+        }
+        return rs;
     }
     
     static public void modificarOrden(final ArrayList<Cliente> clientes1, final ArrayList<Orden> ordenes, final int pos){
@@ -199,40 +248,7 @@ public class Orden{
         });
     }
     
-    public static int newID(){
-        int id = 0;
-        ResultSet rs = null;
-        try {
-            Connection con=connect.Conexion_SQL();
-            Statement sentencia=con.createStatement();
-            String query="SELECT max(orden.id_orden)+1 as maxID FROM orden;";
-            rs = sentencia.executeQuery(query);
-            try{
-                while(rs.next())
-                    id = rs.getInt("maxID");
-            }catch(SQLException e){  
-            }
-            System.out.println(id);
-            return id;
-        }
-        catch(SQLException e){
-            JOptionPane.showMessageDialog(null, "Error dato ID");
-        }
-        return id;
-    }    
-    
-    public static void nuevaOrden(String id_cliente,String pais, String ciudad, String año, String mes, String dia, String tiempo, String estado, String numero){
-        try {
-            Connection con=connect.Conexion_SQL();
-            Statement sentencia=con.createStatement();
-            //String query="INSERT INTO cliente VALUES(1, '"+ nombre+"','"+cedula+"','"+ruc+"','"+emp+"','"+telf+"')";
-            String query="INSERT INTO orden VALUES("+newID()+","+id_cliente+",'"+pais+"','"+ciudad+"','"+año+"-"+mes+"-"+dia+"',"+tiempo+",'"+estado+"','"+numero+"');";
-            sentencia.executeUpdate(query);
-        }catch(SQLException e){
-            JOptionPane.showMessageDialog(null, "Error dato Orden");
-        }
-        //return fa;
-    }
+
     static public void eliminarOrden(final ArrayList<Orden> ordenes, final int pos){  
         Orden o = ordenes.get(pos);
         final JFrame jElimOrden = new JFrame("Eliminacion de Ordenes");

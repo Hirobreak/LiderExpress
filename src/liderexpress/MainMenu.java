@@ -11,6 +11,8 @@ import javax.swing.border.*;
 import javax.swing.table.DefaultTableModel;
 import java.sql.*;
 import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class MainMenu extends JFrame implements ActionListener{
         ArrayList<Cliente> clientes = new ArrayList<Cliente>();
@@ -123,28 +125,46 @@ public class MainMenu extends JFrame implements ActionListener{
             this.panel.setBorder (BorderFactory.createTitledBorder (BorderFactory.createEtchedBorder (), "Clientes", TitledBorder.CENTER, TitledBorder.TOP));
             Object[] columns={"id", "Nombre", "Cedula", "Compañia", "RUC", "Telf1", "Telf2"};
             DefaultTableModel modelo1=new DefaultTableModel(null, columns);
-            for(Cliente c : clientes)
-                modelo1.addRow(c.arreglo());
+            ResultSet rs = Cliente.todosClientes();
+            try {
+                while(rs.next()){
+                    Object[] fila={rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6)};
+                    modelo1.addRow(fila);
+                }
+            } catch (SQLException ex) {
+            }
             this.tabla.setModel(modelo1);
             accion.setLabel("Mostrar Ordenes");
         }
         if(ae.getSource()==orden){
             entidad=2;
             this.panel.setBorder (BorderFactory.createTitledBorder (BorderFactory.createEtchedBorder (), "Orden", TitledBorder.CENTER, TitledBorder.TOP));
-            Object[] columns={"id", "Pais", "Ciudad", "Tiempo", "Numero", "Estado", "Cliente"};
+            Object[] columns={"id", "Cliente", "Pais", "Ciudad", "Fecha", "Tiempo", "Estado", "Numero"};
             DefaultTableModel modelo2=new DefaultTableModel(null, columns);
-            for(Orden o : ordenes)
-                    modelo2.addRow(o.arreglo());
+           ResultSet rs = Orden.todasOrdenes();
+            try {
+                while(rs.next()){
+                    Object[] fila={rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6), rs.getString(7), rs.getString(8)};
+                    modelo2.addRow(fila);
+                }
+            } catch (SQLException ex) {
+            }
             this.tabla.setModel(modelo2);
             accion.setLabel("Detalle");
         }
         if(ae.getSource()==merca){
             entidad=3;
             this.panel.setBorder (BorderFactory.createTitledBorder (BorderFactory.createEtchedBorder (), "Mercaderia", TitledBorder.CENTER, TitledBorder.TOP));
-            Object[] columns={"id", "Estilo", "Marca", "Descripcion", "Composicion", "Origen", "Precio Compra", "PVP", "Cantidad", "idOrden"};
+            Object[] columns={"id", "Estilo", "Marca", "Descripcion", "Composicion", "Cantidad", "Origen", "PVP", "Precio Compra",  "idOrden"};
             DefaultTableModel modelo3=new DefaultTableModel(null, columns);
-            for(Mercaderia m : mercaderias)
-                    modelo3.addRow(m.arreglo());
+            ResultSet rs = Mercaderia.todasMercas();
+            try {
+                while(rs.next()){
+                    Object[] fila={rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6), rs.getString(7), rs.getString(8), rs.getString(9), rs.getString(10)};
+                    modelo3.addRow(fila);
+                }
+            } catch (SQLException ex) {
+            }
             this.tabla.setModel(modelo3);
         }
         if(ae.getSource()==empaq){

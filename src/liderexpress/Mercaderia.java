@@ -4,9 +4,14 @@ package liderexpress;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import javax.swing.*;
 import javax.swing.border.*;
+import static liderexpress.Cliente.connect;
 
 
 public class Mercaderia {
@@ -69,8 +74,17 @@ public class Mercaderia {
         final TextField txtpc=new TextField("0.00", 20);
         final TextField txtcant=new TextField("0", 20);
         final JComboBox listaOrd=new JComboBox();
-        for(Orden o : ordenes)
-            listaOrd.addItem(o.numero);
+        try{
+          ResultSet rs = Orden.todasOrdenes();
+          while(rs.next()){
+              int id = rs.getInt(1);
+              String idOrden = rs.getString(1);
+              String idCliente = rs.getString(2);
+              listaOrd.addItem("Orden: "+idOrden+" - Cliente: "+idCliente);
+          }  
+        }catch(Exception ex){
+                    
+        }
         panelEst.add(labelEst);
         panelEst.add(txtEst);
         panelMarc.add(labelMarc);
@@ -104,8 +118,11 @@ public class Mercaderia {
         jCrearMerc.add(panelPrin);
         guardar.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e){
-                Mercaderia m = new Mercaderia(mercaderias.size()+1,txtEst.getText(),txtMarc.getText(),txtDesc.getText(),txtComp.getText(),txtOrg.getText(),ordenes.get(listaOrd.getSelectedIndex()).id, Float.parseFloat(txtpp.getText()), Float.parseFloat(txtpc.getText()), Integer.parseInt(txtcant.getText()));
-                mercaderias.add(m);
+                String orden = listaOrd.getSelectedItem().toString();
+                String orden1[] = orden.split("\\ ");
+                String id_orden = orden1[1];
+                System.out.println(id_orden);
+                nuevaMerca(txtEst.getText(),txtMarc.getText(),txtDesc.getText(),txtComp.getText(),txtcant.getText(),txtOrg.getText(), txtpp.getText(), txtpc.getText(),id_orden);
                 jCrearMerc.setVisible(false);
             }
         });
@@ -115,6 +132,55 @@ public class Mercaderia {
             }
         });
     }
+    
+    public static void nuevaMerca(String estilo,String marca, String dsc, String compos, String cantidad, String origen, String p_venta, String p_compra, String id_orden){
+        try {
+            Connection con=connect.Conexion_SQL();
+            Statement sentencia=con.createStatement();
+            String query="INSERT INTO mercaderia VALUES("+newID()+",'"+estilo+"','"+marca+"','"+dsc+"','"+compos+"',"+cantidad+",'"+origen+"',"+p_venta+","+p_compra+","+id_orden+");";
+            sentencia.executeUpdate(query);
+        }catch(SQLException e){
+            JOptionPane.showMessageDialog(null, "Error dato Mercaderia");
+        }
+    }
+    
+    public static int newID(){
+        int id = 0;
+        ResultSet rs = null;
+        try {
+            Connection con=connect.Conexion_SQL();
+            Statement sentencia=con.createStatement();
+            String query="SELECT max(mercaderia.id_merca)+1 as maxID FROM mercaderia;";
+            rs = sentencia.executeQuery(query);
+            try{
+                while(rs.next())
+                    id = rs.getInt("maxID");
+            }catch(SQLException e){  
+            }
+            System.out.println(id);
+            return id;
+        }
+        catch(SQLException e){
+            JOptionPane.showMessageDialog(null, "Error dato ID");
+        }
+        return id;
+    }    
+    
+    public static ResultSet todasMercas(){
+        ResultSet rs = null;
+        try {
+            String query;
+            Connection con=connect.Conexion_SQL();
+            Statement sentencia=con.createStatement();
+            query="SELECT mercaderia.* FROM mercaderia;";
+            rs=sentencia.executeQuery(query);
+            
+        }catch(SQLException e){
+            JOptionPane.showMessageDialog(null, "Error dato");
+        }
+        return rs;
+    }
+   
     static public void modMerc(final ArrayList<Orden> ordenes,final ArrayList<Mercaderia> mercaderias, final int pos){
         Mercaderia m = mercaderias.get(pos);
         final JFrame jModMerc = new JFrame("Creacion de Mercaderia");
