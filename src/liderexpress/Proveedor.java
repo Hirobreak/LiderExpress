@@ -4,9 +4,15 @@ package liderexpress;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import javax.swing.*;
 import javax.swing.border.*;
+import static liderexpress.Cliente.connect;
+import static liderexpress.Trabajador.newID;
 
 public class Proveedor {
     int id;
@@ -46,7 +52,7 @@ public class Proveedor {
         Button guardar=new Button("Guardar");
         Button cancelar=new Button("Cancelar");
         final TextField txtCom=new TextField("Nombre", 20);
-        final TextField txtRUP=new TextField("Cargo", 20);
+        final TextField txtRUP=new TextField("RUP", 20);
         final TextField txtDueño=new TextField("Contacto", 20);
         final TextField txtPais=new TextField("Pais", 20);
         final TextField txtTelf=new TextField("00000000", 20);
@@ -73,8 +79,7 @@ public class Proveedor {
         jCrearProv.add(panelPrin);
         guardar.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e){
-                Proveedor c = new Proveedor(proveedores.size()+1,txtCom.getText(),Integer.parseInt(txtRUP.getText()),txtPais.getText(),txtCiudad.getText(),txtDueño.getText(),Integer.parseInt(txtTelf.getText()));
-                proveedores.add(c);
+                nuevoProv(txtCom.getText(),txtRUP.getText(),txtPais.getText(),txtCiudad.getText(),txtDueño.getText(),txtTelf.getText());
                 jCrearProv.setVisible(false);
             }
         });
@@ -85,6 +90,58 @@ public class Proveedor {
         });
         
     }
+    
+        public static void nuevoProv(String comp, String rup, String pais, String ciudad, String dueño, String telf){
+        try {
+            Connection con=connect.Conexion_SQL();
+            Statement sentencia=con.createStatement();
+            String query="INSERT INTO proveedor VALUES("+newID()+",'"+comp+"', '"+rup+"', '"+pais+"', '"+ciudad+"', '"+dueño+"', '"+telf+"');";
+            sentencia.executeUpdate(query);
+        }catch(SQLException e){
+            JOptionPane.showMessageDialog(null, "Error dato");
+        }
+        //return fa;
+    } 
+    
+    public static ResultSet todosProv(){
+        ResultSet rs = null;
+        try {
+            String query;
+            Connection con=connect.Conexion_SQL();
+            Statement sentencia=con.createStatement();
+            query="SELECT proveedor.* FROM proveedor;";
+            rs=sentencia.executeQuery(query);
+            
+        }catch(SQLException e){
+            JOptionPane.showMessageDialog(null, "Error dato");
+        }
+        return rs;
+    }
+    
+    public static int newID(){
+        int id = 1;
+        ResultSet rs = null;
+        try {
+            Connection con=connect.Conexion_SQL();
+            Statement sentencia=con.createStatement();
+            String query="SELECT max(proveedor.id_proveedor)+1 as maxID FROM proveedor;";
+            rs = sentencia.executeQuery(query);
+            try{
+                while(rs.next())
+                    id = rs.getInt("maxID");
+            }catch(SQLException e){  
+            }
+            if(id==0)
+                id++;
+            return id;
+        }
+        catch(SQLException e){
+            JOptionPane.showMessageDialog(null, "Error dato ID");
+        }
+        return id;
+    }
+    
+    
     static public void modProv(final ArrayList<Proveedor> proveedores, final int pos){
         Proveedor  prov = proveedores.get(pos);
         final JFrame jModProv = new JFrame("Modificacion de Importador");

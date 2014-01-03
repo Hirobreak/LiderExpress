@@ -4,9 +4,14 @@ package liderexpress;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import javax.swing.*;
 import javax.swing.border.*;
+import static liderexpress.Cliente.connect;
 
 public class Trabajador {
     int id;
@@ -77,8 +82,7 @@ public class Trabajador {
         jCrearT.add(panelPrin);
         guardar.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e){
-                Trabajador t = new Trabajador(trabs.size()+1,txtNombre.getText(),txtCargo.getText(),Integer.parseInt(txtCedula.getText()),Integer.parseInt(txtTelf.getText()),Integer.parseInt(txtSalario.getText()),txtCorreo.getText());
-                trabs.add(t);
+                nuevoTrab(txtNombre.getText(),txtCedula.getText(),txtCargo.getText(),txtTelf.getText(),txtSalario.getText(),txtCorreo.getText());
                 jCrearT.setVisible(false);
             }
         });
@@ -86,10 +90,60 @@ public class Trabajador {
             public void actionPerformed(ActionEvent e){
                 jCrearT.setVisible(false);
             }
-        });
-        
-        
+        });    
     }
+    
+    public static void nuevoTrab(String nombre, String cedula, String puesto, String telf, String sueldo, String mail){
+        try {
+            Connection con=connect.Conexion_SQL();
+            Statement sentencia=con.createStatement();
+            String query="INSERT INTO trabajador VALUES("+newID()+",'"+nombre+"', '"+cedula+"', '"+puesto+"', '"+telf+"', "+sueldo+", '"+mail+"');";
+            sentencia.executeUpdate(query);
+        }catch(SQLException e){
+            JOptionPane.showMessageDialog(null, "Error dato");
+        }
+        //return fa;
+    } 
+    
+    public static ResultSet todosTrab(){
+        ResultSet rs = null;
+        try {
+            String query;
+            Connection con=connect.Conexion_SQL();
+            Statement sentencia=con.createStatement();
+            query="SELECT trabajador.* FROM trabajador;";
+            rs=sentencia.executeQuery(query);
+            
+        }catch(SQLException e){
+            JOptionPane.showMessageDialog(null, "Error dato");
+        }
+        return rs;
+    }
+    
+    public static int newID(){
+        int id = 1;
+        ResultSet rs = null;
+        try {
+            Connection con=connect.Conexion_SQL();
+            Statement sentencia=con.createStatement();
+            String query="SELECT max(trabajador.id_trabajador)+1 as maxID FROM trabajador;";
+            rs = sentencia.executeQuery(query);
+            try{
+                while(rs.next())
+                    id = rs.getInt("maxID");
+            }catch(SQLException e){  
+            }
+            if(id==0)
+                id++;
+            return id;
+        }
+        catch(SQLException e){
+            JOptionPane.showMessageDialog(null, "Error dato ID");
+        }
+        return id;
+    }
+        
+        
     static public void modTrab(Trabajador tr){
         final JFrame jModT = new JFrame("Modificacion de Trabajador");
         jModT.setSize(500, 300);
@@ -158,4 +212,6 @@ public class Trabajador {
     public int intParse(String s){
         return Integer.parseInt(s);
     }
+    
+    
 }

@@ -132,7 +132,7 @@ public class Orden{
     }
     
         public static int newID(){
-        int id = 0;
+        int id = 1;
         ResultSet rs = null;
         try {
             Connection con=connect.Conexion_SQL();
@@ -144,7 +144,8 @@ public class Orden{
                     id = rs.getInt("maxID");
             }catch(SQLException e){  
             }
-            System.out.println(id);
+            if(id==0)
+                id++;
             return id;
         }
         catch(SQLException e){

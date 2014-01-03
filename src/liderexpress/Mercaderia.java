@@ -157,7 +157,8 @@ public class Mercaderia {
                     id = rs.getInt("maxID");
             }catch(SQLException e){  
             }
-            System.out.println(id);
+            if(id==0)
+                id++;
             return id;
         }
         catch(SQLException e){

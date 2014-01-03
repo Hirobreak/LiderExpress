@@ -123,7 +123,7 @@ public class MainMenu extends JFrame implements ActionListener{
         if(ae.getSource()==cliente){
             entidad=1;
             this.panel.setBorder (BorderFactory.createTitledBorder (BorderFactory.createEtchedBorder (), "Clientes", TitledBorder.CENTER, TitledBorder.TOP));
-            Object[] columns={"id", "Nombre", "Cedula", "Compañia", "RUC", "Telf1", "Telf2"};
+            Object[] columns={"id", "Nombre", "Cedula", "Compañia", "RUC", "Telefono"};
             DefaultTableModel modelo1=new DefaultTableModel(null, columns);
             ResultSet rs = Cliente.todosClientes();
             try {
@@ -190,17 +190,29 @@ public class MainMenu extends JFrame implements ActionListener{
             this.panel.setBorder (BorderFactory.createTitledBorder (BorderFactory.createEtchedBorder (), "Proveedores", TitledBorder.CENTER, TitledBorder.TOP));
             Object[] columns={"id", "Compañia", "RUP", "Pais", "Ciudad", "Dueño", "Telefono"};
             DefaultTableModel modelo6=new DefaultTableModel(null, columns);
-            for(Proveedor p : proveedores)
-			modelo6.addRow(p.arreglo());
+            ResultSet rs = Proveedor.todosProv();
+            try {
+                while(rs.next()){
+                    Object[] fila={rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6), rs.getString(7)};
+                    modelo6.addRow(fila);
+                }
+            } catch (SQLException ex) {
+            }
             this.tabla.setModel(modelo6);
         }
         if(ae.getSource()==trab){
             entidad=7;
             this.panel.setBorder (BorderFactory.createTitledBorder (BorderFactory.createEtchedBorder (), "Trabajadores", TitledBorder.CENTER, TitledBorder.TOP));
-            Object[] columns={"id", "Nombre", "Cargo", "Cedula", "Telefono", "Salario", "E-Mail"};
+            Object[] columns={"id", "Nombre", "Cedula", "Puesto", "Telefono", "Sueldo", "E-Mail"};
             DefaultTableModel modelo7=new DefaultTableModel(null, columns);
-            for(Trabajador t : trabajadores)
-			modelo7.addRow(t.arreglo());
+            ResultSet rs = Trabajador.todosTrab();
+            try {
+                while(rs.next()){
+                    Object[] fila={rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6), rs.getString(7)};
+                    modelo7.addRow(fila);
+                }
+            } catch (SQLException ex) {
+            }
             this.tabla.setModel(modelo7);
         }
         if(ae.getSource()==caja){

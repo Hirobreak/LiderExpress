@@ -52,7 +52,7 @@ public class Cliente{
         Label labelruc=new Label("RUC:", Label.CENTER);
         Label labelced=new Label("Cedula:", Label.CENTER);
         Label labelcom=new Label("Compañia:", Label.CENTER);
-        Label labeltelf=new Label("Telefonos:", Label.CENTER);
+        Label labeltelf=new Label("Telefono:", Label.CENTER);
         Button guardar=new Button("Guardar");
         Button cancelar=new Button("Cancelar");
         final TextField txtNombre=new TextField("Nombre", 20);
@@ -60,7 +60,6 @@ public class Cliente{
         final TextField txtCedula=new TextField("Cedula", 20);
         final TextField txtCompa=new TextField("Compañia", 20);
         final TextField txtTelf1=new TextField("00000000", 20);
-        final TextField txtTelf2=new TextField("00000000", 20);
         panelnombre.add(labelnom);
         panelnombre.add(txtNombre);
         panelcedula.add(labelced);
@@ -71,7 +70,6 @@ public class Cliente{
         panelruc.add(txtRuc);
         paneltelf.add(labeltelf);
         paneltelf.add(txtTelf1);
-        paneltelf.add(txtTelf2);
         panelboton.add(guardar);
         panelboton.add(cancelar);
         panelPrin.add(panelnombre);
@@ -98,13 +96,11 @@ public class Cliente{
         try {
             Connection con=connect.Conexion_SQL();
             Statement sentencia=con.createStatement();
-            //String query="INSERT INTO cliente VALUES(1, '"+ nombre+"','"+cedula+"','"+ruc+"','"+emp+"','"+telf+"')";
             String query="INSERT INTO cliente VALUES("+newID()+",'"+nombre+"', '"+cedula+"', '"+ruc+"', '"+emp+"', '"+telf+"');";
             sentencia.executeUpdate(query);
         }catch(SQLException e){
             JOptionPane.showMessageDialog(null, "Error dato");
         }
-        //return fa;
     }
     public static ResultSet ConsultaCliente(String nombre, String cedula){
         ResultSet rs = null;
@@ -145,7 +141,7 @@ public class Cliente{
     }
     
         public static int newID(){
-        int id = 0;
+        int id = 1;
         ResultSet rs = null;
         try {
             Connection con=connect.Conexion_SQL();
@@ -157,7 +153,8 @@ public class Cliente{
                     id = rs.getInt("maxID");
             }catch(SQLException e){  
             }
-            System.out.println(id);
+            if(id==0)
+                id++;
             return id;
         }
         catch(SQLException e){
