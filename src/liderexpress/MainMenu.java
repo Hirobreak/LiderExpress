@@ -172,8 +172,14 @@ public class MainMenu extends JFrame implements ActionListener{
             this.panel.setBorder (BorderFactory.createTitledBorder (BorderFactory.createEtchedBorder (), "Empaquetado", TitledBorder.CENTER, TitledBorder.TOP));
             Object[] columns={"id", "Contenedor", "Mercaderia", "Caja", "Estado"};
             DefaultTableModel modelo4=new DefaultTableModel(null, columns);
-            for(Empaquetado e : empaquetados)
-                    modelo4.addRow(e.arreglo());
+            ResultSet rs = Empaquetado.todosEmpaqs();
+            try {
+                while(rs.next()){
+                    Object[] fila={rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5)};
+                    modelo4.addRow(fila);
+                }
+            } catch (SQLException ex) {
+            }
             this.tabla.setModel(modelo4);
         }
         if(ae.getSource()==impo){
@@ -224,10 +230,16 @@ public class MainMenu extends JFrame implements ActionListener{
         if(ae.getSource()==caja){
             entidad=8;
             this.panel.setBorder (BorderFactory.createTitledBorder (BorderFactory.createEtchedBorder (), "Cajas", TitledBorder.CENTER, TitledBorder.TOP));
-            Object[] columns={"id", "Dimensiones", "Peso", "Estado", "Numero"};
+            Object[] columns={"id", "Numero", "Peso", "Estado", "Dimensiones"};
             DefaultTableModel modelo8=new DefaultTableModel(null, columns);
-            for(Caja c : cajas)
-                modelo8.addRow(c.arreglo());
+            ResultSet rs = Caja.todasCajas();
+            try {
+                while(rs.next()){
+                    Object[] fila={rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5)};
+                    modelo8.addRow(fila);
+                }
+            } catch (SQLException ex) {
+            }
             this.tabla.setModel(modelo8);
         }
         if(ae.getSource()==contenedor){
@@ -235,8 +247,14 @@ public class MainMenu extends JFrame implements ActionListener{
             this.panel.setBorder (BorderFactory.createTitledBorder (BorderFactory.createEtchedBorder (), "Contenedores", TitledBorder.CENTER, TitledBorder.TOP));
             Object[] columns={"id", "Dimensiones", "Peso", "Estado", "Importacion"};
             DefaultTableModel modelo9=new DefaultTableModel(null, columns);
-            for(Contenedor c : contenedores)
-                modelo9.addRow(c.arreglo());
+            ResultSet rs = Contenedor.todosConts();
+            try {
+                while(rs.next()){
+                    Object[] fila={rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5)};
+                    modelo9.addRow(fila);
+                }
+            } catch (SQLException ex) {
+            }
             this.tabla.setModel(modelo9);
         }
         

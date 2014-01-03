@@ -4,9 +4,15 @@ package liderexpress;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import javax.swing.*;
 import javax.swing.border.*;
+import static liderexpress.Cliente.connect;
+import static liderexpress.Importacion.newID;
 
 public class Caja {
     int id;
@@ -64,8 +70,7 @@ public class Caja {
         jCrearCaja.add(panelPrin);
         guardar.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e){
-                Caja c = new Caja(cajas.size()+1,txtDim.getText(),Integer.parseInt(txtPeso.getText()),bEstado.getSelectedItem().toString(),txtNum.getText());
-                cajas.add(c);
+                nuevaCaja(txtNum.getText(),txtPeso.getText(),bEstado.getSelectedItem().toString(),txtDim.getText());
                 jCrearCaja.setVisible(false);
             }
         });
@@ -76,6 +81,57 @@ public class Caja {
             }
         });
     }
+    
+        public static void nuevaCaja(String num, String peso, String estado, String dim){
+        try {
+            Connection con=connect.Conexion_SQL();
+            Statement sentencia=con.createStatement();
+            String query="INSERT INTO caja VALUES("+newID()+",'"+num+"', '"+peso+"', '"+estado+"', '"+dim+"');";
+            sentencia.executeUpdate(query);
+        }catch(SQLException e){
+            JOptionPane.showMessageDialog(null, "Error dato");
+        }
+        //return fa;
+    } 
+    
+    public static ResultSet todasCajas(){
+        ResultSet rs = null;
+        try {
+            String query;
+            Connection con=connect.Conexion_SQL();
+            Statement sentencia=con.createStatement();
+            query="SELECT caja.* FROM caja;";
+            rs=sentencia.executeQuery(query);
+            
+        }catch(SQLException e){
+            JOptionPane.showMessageDialog(null, "Error dato");
+        }
+        return rs;
+    }
+    
+    public static int newID(){
+        int id = 1;
+        ResultSet rs = null;
+        try {
+            Connection con=connect.Conexion_SQL();
+            Statement sentencia=con.createStatement();
+            String query="SELECT max(caja.id_caja)+1 as maxID FROM caja;";
+            rs = sentencia.executeQuery(query);
+            try{
+                while(rs.next())
+                    id = rs.getInt("maxID");
+            }catch(SQLException e){  
+            }
+            if(id==0)
+                id++;
+            return id;
+        }
+        catch(SQLException e){
+            JOptionPane.showMessageDialog(null, "Error dato ID");
+        }
+        return id;
+    }
+    
     public Object[] arreglo(){
         Object[] arreglo={id, dimension, peso, estado, num};
         return arreglo;

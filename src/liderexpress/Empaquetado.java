@@ -4,9 +4,15 @@ package liderexpress;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import javax.swing.*;
 import javax.swing.border.*;
+import static liderexpress.Cliente.connect;
+import static liderexpress.Importacion.newID;
 
 public class Empaquetado {
     int id;
@@ -25,7 +31,7 @@ public class Empaquetado {
     
     static public void crearEmpaq(final ArrayList<Empaquetado> empaqs,final ArrayList<Contenedor>conts,final ArrayList<Mercaderia>mercs,final ArrayList<Caja>cajas){
         final JFrame jCrearEmp = new JFrame("Asignar Empaquetado");
-        jCrearEmp.setSize(500, 300);
+        jCrearEmp.setSize(800, 200);
         jCrearEmp.setVisible(true);
         Panel panelRefresh = new Panel(new GridLayout(2,2));
         Panel panelPrin=new Panel(new GridLayout(5, 1));
@@ -44,14 +50,39 @@ public class Empaquetado {
         estados.addItem("Embarcado");
         estados.addItem("Desmontado");
         final JComboBox mercas=new JComboBox();
-        for(Mercaderia m : mercs)
-            mercas.addItem(m.id);
-         final JComboBox cajas1=new JComboBox();
-        for(Caja c : cajas)
-            cajas1.addItem(c.num);
+        try{
+          ResultSet rs = Mercaderia.todasMercas();
+          while(rs.next()){
+              int id = rs.getInt(1);
+              String estilo = rs.getString(2);
+              mercas.addItem(id+" - "+estilo);
+          }  
+        }catch(Exception ex){
+                    
+        }
+        final JComboBox cajas1=new JComboBox();
+        try{
+          ResultSet rs = Caja.todasCajas();
+          while(rs.next()){
+              int id = rs.getInt(1);
+              String numero = rs.getString(2);
+              cajas1.addItem(id+" - "+numero);
+          }  
+        }catch(Exception ex){
+                    
+        }
         final JComboBox contens=new JComboBox();
-        for(Contenedor c : conts)
-            contens.addItem(c.id);
+        try{
+          ResultSet rs = Contenedor.todosConts();
+          while(rs.next()){
+              int id = rs.getInt(1);
+              String dimensiones = rs.getString(2);
+              String estado = rs.getString(4);
+              contens.addItem(id+" - "+dimensiones+" - "+estado);
+          }  
+        }catch(Exception ex){
+                    
+        }
         panelMerc.add(labelMerc);
         panelMerc.add(mercas);
         panelCaja.add(labelCaja);
@@ -71,8 +102,16 @@ public class Empaquetado {
         jCrearEmp.add(panelPrin);
         guardar.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e){
-                Empaquetado em = new Empaquetado(empaqs.size()+1,conts.get(contens.getSelectedIndex()).id,mercs.get(mercas.getSelectedIndex()).id,cajas.get(cajas1.getSelectedIndex()).id,estados.getSelectedItem().toString());
-                empaqs.add(em);
+                String cont = contens.getSelectedItem().toString();
+                String cont1[] = cont.split("\\ ");
+                String id_cont = cont1[0];
+                String merc = mercas.getSelectedItem().toString();
+                String merc1[] = merc.split("\\ ");
+                String id_merc = merc1[0];
+                String caja = cajas1.getSelectedItem().toString();
+                String caja1[] = caja.split("\\ ");
+                String id_caja = caja1[0];
+                nuevoEmpaq(id_cont,id_merc,id_caja,estados.getSelectedItem().toString());
                 jCrearEmp.setVisible(false);
             }
         });
@@ -82,6 +121,58 @@ public class Empaquetado {
             }
         });
     }
+    
+        public static void nuevoEmpaq(String id_cont, String id_merc, String id_caja, String estado){
+        try {
+            Connection con=connect.Conexion_SQL();
+            Statement sentencia=con.createStatement();
+            String query="INSERT INTO empaquetado VALUES("+newID()+","+id_cont+", "+id_merc+", "+id_caja+",'"+estado+"');";
+            sentencia.executeUpdate(query);
+        }catch(SQLException e){
+            JOptionPane.showMessageDialog(null, "Error dato");
+        }
+        //return fa;
+    } 
+    
+    public static ResultSet todosEmpaqs(){
+        ResultSet rs = null;
+        try {
+            String query;
+            Connection con=connect.Conexion_SQL();
+            Statement sentencia=con.createStatement();
+            query="SELECT empaquetado.* FROM empaquetado;";
+            rs=sentencia.executeQuery(query);
+            
+        }catch(SQLException e){
+            JOptionPane.showMessageDialog(null, "Error dato");
+        }
+        return rs;
+    }
+    
+    public static int newID(){
+        int id = 1;
+        ResultSet rs = null;
+        try {
+            Connection con=connect.Conexion_SQL();
+            Statement sentencia=con.createStatement();
+            String query="SELECT max(empaquetado.id_empaquetado)+1 as maxID FROM empaquetado;";
+            rs = sentencia.executeQuery(query);
+            try{
+                while(rs.next())
+                    id = rs.getInt("maxID");
+            }catch(SQLException e){  
+            }
+            if(id==0)
+                id++;
+            return id;
+        }
+        catch(SQLException e){
+            JOptionPane.showMessageDialog(null, "Error dato ID");
+        }
+        return id;
+    }
+    
+    
     static public void modEmpaq(Empaquetado emp){
         final JFrame jModEmp = new JFrame("Modificar Empaquetado");
         jModEmp.setSize(500, 300);

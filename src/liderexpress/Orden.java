@@ -86,8 +86,6 @@ public class Orden{
         }catch(Exception ex){
                     
         }
-        
-        //final Cliente asignado = clientes1.get(clientes.getSelectedIndex());
         panelpais.add(labelpais);
         panelpais.add(txtPais);
         panelciud.add(labelciud);
