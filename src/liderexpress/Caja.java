@@ -29,7 +29,8 @@ public class Caja {
         estado=estad;    
     }
     
-    static public void crearCaja(final ArrayList<Caja> cajas){
+    static public int crearCaja(final MainMenu m){
+        int i = 1;
         final JFrame jCrearCaja = new JFrame("Creacion de Caja");
         jCrearCaja.setSize(500, 300);
         jCrearCaja.setVisible(true);
@@ -72,17 +73,18 @@ public class Caja {
             public void actionPerformed(ActionEvent e){
                 nuevaCaja(txtNum.getText(),txtPeso.getText(),bEstado.getSelectedItem().toString(),txtDim.getText());
                 jCrearCaja.setVisible(false);
+                m.paintCajas();
             }
         });
-        
         cancelar.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e){
                 jCrearCaja.setVisible(false);
             }
         });
+        return i;
     }
     
-        public static void nuevaCaja(String num, String peso, String estado, String dim){
+    public static void nuevaCaja(String num, String peso, String estado, String dim){
         try {
             Connection con=connect.Conexion_SQL();
             Statement sentencia=con.createStatement();
@@ -91,8 +93,36 @@ public class Caja {
         }catch(SQLException e){
             JOptionPane.showMessageDialog(null, "Error dato");
         }
-        //return fa;
     } 
+    
+    public static void eliminarCaja(int id_caja){
+        ResultSet rs = null;
+        boolean tieneEmpaq = false;
+        int confirm = JOptionPane.showConfirmDialog(null, "Esta seguro que desea eliminar Caja ID: "+id_caja+"?","ALERTA",JOptionPane.INFORMATION_MESSAGE);
+        if(confirm==JOptionPane.OK_OPTION){
+            try{
+                Connection con=connect.Conexion_SQL();
+                Statement sentencia=con.createStatement();
+                ResultSet empaqs = Empaquetado.todosEmpaqs();
+                try{
+                    while(empaqs.next()){
+                        if(empaqs.getInt(4)==id_caja){
+                            tieneEmpaq=true;
+                            JOptionPane.showMessageDialog(null,"Error al intentar eliminar Caja ID: "+id_caja+"\nCaja ID: "+id_caja+" tiene asignada un Empaquetado ID: "+empaqs.getInt(1));
+                        }
+                    }
+                }catch(SQLException e){}   
+            }catch(SQLException e){}
+            if(tieneEmpaq==false){
+                try {
+                    Connection con=connect.Conexion_SQL();
+                    Statement sentencia=con.createStatement();
+                    String query="DELETE FROM caja WHERE caja.id_caja="+id_caja+";";
+                    sentencia.executeUpdate(query);
+                }catch(SQLException e){}
+            }
+        }
+    }
     
     public static ResultSet todasCajas(){
         ResultSet rs = null;

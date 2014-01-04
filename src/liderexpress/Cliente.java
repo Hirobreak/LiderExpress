@@ -37,7 +37,7 @@ public class Cliente{
         this.telf2=t2;
     }
     
-    static public void crearCliente(final ArrayList<Cliente> clientes){ 
+    static public void crearCliente(final MainMenu m){ 
         final JFrame jCrearCliente = new JFrame("Creacion de Cliente");
         jCrearCliente.setSize(500, 300);
         jCrearCliente.setVisible(true);
@@ -83,6 +83,7 @@ public class Cliente{
             public void actionPerformed(ActionEvent e){
                 NuevoCliente(txtNombre.getText(), txtCedula.getText(), txtRuc.getText(), txtCompa.getText(), txtTelf1.getText());
                 jCrearCliente.setVisible(false);
+                m.paintClientes();
             }
         });
         cancelar.addActionListener(new ActionListener(){

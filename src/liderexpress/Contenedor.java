@@ -28,7 +28,7 @@ public class Contenedor {
         idImpo=impo;
     }
     
-    static public void crearCont(final ArrayList<Contenedor>conts,final ArrayList<Importacion>imps){
+    static public void crearCont(final MainMenu m){
         final JFrame jCrearCont = new JFrame("Creacion de Con");
         jCrearCont.setSize(500, 300);
         jCrearCont.setVisible(true);
@@ -84,6 +84,7 @@ public class Contenedor {
                 String id_imp = imp1[0];
                 nuevoCont(txtDim.getText(),txtPeso.getText(),bEstado.getSelectedItem().toString(),id_imp);
                 jCrearCont.setVisible(false);
+                m.paintConts();
             }
         });
         cancelar.addActionListener(new ActionListener(){

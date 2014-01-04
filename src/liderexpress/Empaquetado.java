@@ -29,7 +29,7 @@ public class Empaquetado {
         estado=est;
     }
     
-    static public void crearEmpaq(final ArrayList<Empaquetado> empaqs,final ArrayList<Contenedor>conts,final ArrayList<Mercaderia>mercs,final ArrayList<Caja>cajas){
+    static public void crearEmpaq(final MainMenu m){
         final JFrame jCrearEmp = new JFrame("Asignar Empaquetado");
         jCrearEmp.setSize(800, 200);
         jCrearEmp.setVisible(true);
@@ -113,6 +113,7 @@ public class Empaquetado {
                 String id_caja = caja1[0];
                 nuevoEmpaq(id_cont,id_merc,id_caja,estados.getSelectedItem().toString());
                 jCrearEmp.setVisible(false);
+                m.paintEmpaqs();
             }
         });
         cancelar.addActionListener(new ActionListener(){

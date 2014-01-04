@@ -36,7 +36,7 @@ public class Orden{
         this.cliente = cli;
     }
     
-    static public void crearOrden(final ArrayList<Cliente> clientes1, final ArrayList<Orden> ordenes){ 
+    static public void crearOrden(final MainMenu m){ 
         final JFrame jCrearOrden = new JFrame("Creacion de Orden");
         jCrearOrden.setSize(500, 300);
         jCrearOrden.setVisible(true);
@@ -118,6 +118,7 @@ public class Orden{
                 String id_cliente = cliente1[0];
                 nuevaOrden(id_cliente,txtPais.getText(),txtCiudad.getText(),txtAño.getSelectedItem().toString(),txtMes.getSelectedItem().toString(),txtDia.getSelectedItem().toString(),txtTiempo.getText(),txtEstado.getText(),txtNumero.getText());
                 jCrearOrden.setVisible(false);
+                m.paintOrdenes();
             }
         });
         cancelar.addActionListener(new ActionListener(){

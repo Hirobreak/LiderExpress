@@ -33,7 +33,7 @@ public class Proveedor {
         telf=telefo;
     }
     
-    static public void crearProv(final ArrayList<Proveedor> proveedores){
+    static public void crearProv(final MainMenu m){
         final JFrame jCrearProv = new JFrame("Creacion de Importador");
         jCrearProv.setSize(500, 300);
         jCrearProv.setVisible(true);
@@ -81,6 +81,7 @@ public class Proveedor {
             public void actionPerformed(ActionEvent e){
                 nuevoProv(txtCom.getText(),txtRUP.getText(),txtPais.getText(),txtCiudad.getText(),txtDueño.getText(),txtTelf.getText());
                 jCrearProv.setVisible(false);
+                m.paintProvs();
             }
         });
         cancelar.addActionListener(new ActionListener(){

@@ -39,7 +39,7 @@ public class Mercaderia {
         idorden=idor;
     }
     
-   static public void crearMerc(final ArrayList<Orden> ordenes,final ArrayList<Mercaderia> mercaderias){ 
+   static public void crearMerc(final MainMenu m){ 
         final JFrame jCrearMerc = new JFrame("Creacion de Mercaderia");
         jCrearMerc.setSize(500, 300);
         jCrearMerc.setVisible(true);
@@ -124,6 +124,7 @@ public class Mercaderia {
                 System.out.println(id_orden);
                 nuevaMerca(txtEst.getText(),txtMarc.getText(),txtDesc.getText(),txtComp.getText(),txtcant.getText(),txtOrg.getText(), txtpp.getText(), txtpc.getText(),id_orden);
                 jCrearMerc.setVisible(false);
+                m.paintMercas();
             }
         });
         cancelar.addActionListener(new ActionListener(){

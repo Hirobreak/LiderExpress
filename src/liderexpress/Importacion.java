@@ -32,7 +32,7 @@ public class Importacion{
         año=a;
     }
     
-    static public void crearImpo(final ArrayList<Importacion>imps,final ArrayList<Trabajador>trabs,final ArrayList<Proveedor>provs){
+    static public void crearImpo(final MainMenu m){
         final JFrame jCrearImpo = new JFrame("Creacion de Importación");
         jCrearImpo.setSize(500, 300);
         jCrearImpo.setVisible(true);
@@ -106,6 +106,7 @@ public class Importacion{
                 String id_proveedor = prov1[0];
                 nuevaImp(id_trab,id_proveedor,caño.getSelectedItem().toString(),cmes.getSelectedItem().toString(),cdia.getSelectedItem().toString());
                 jCrearImpo.setVisible(false);
+                m.paintImports();
             }
         });
         cancelar.addActionListener(new ActionListener(){

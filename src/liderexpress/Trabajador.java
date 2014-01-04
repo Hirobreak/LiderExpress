@@ -32,7 +32,7 @@ public class Trabajador {
         mail=correo;
     }
     
-    static public void crearTrab(final ArrayList<Trabajador>trabs){
+    static public void crearTrab(final MainMenu m){
         final JFrame jCrearT = new JFrame("Creacion de Trabajador");
         jCrearT.setSize(500, 300);
         jCrearT.setVisible(true);
@@ -84,6 +84,7 @@ public class Trabajador {
             public void actionPerformed(ActionEvent e){
                 nuevoTrab(txtNombre.getText(),txtCedula.getText(),txtCargo.getText(),txtTelf.getText(),txtSalario.getText(),txtCorreo.getText());
                 jCrearT.setVisible(false);
+                m.paintTrabs();
             }
         });
         cancelar.addActionListener(new ActionListener(){

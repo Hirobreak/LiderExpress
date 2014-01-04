@@ -122,168 +122,69 @@ public class MainMenu extends JFrame implements ActionListener{
     public void actionPerformed(ActionEvent ae){
         if(ae.getSource()==cliente){
             entidad=1;
-            this.panel.setBorder (BorderFactory.createTitledBorder (BorderFactory.createEtchedBorder (), "Clientes", TitledBorder.CENTER, TitledBorder.TOP));
-            Object[] columns={"id", "Nombre", "Cedula", "Compañia", "RUC", "Telefono"};
-            DefaultTableModel modelo1=new DefaultTableModel(null, columns);
-            ResultSet rs = Cliente.todosClientes();
-            try {
-                while(rs.next()){
-                    Object[] fila={rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6)};
-                    modelo1.addRow(fila);
-                }
-            } catch (SQLException ex) {
-            }
-            this.tabla.setModel(modelo1);
+            paintClientes();
             accion.setLabel("Mostrar Ordenes");
         }
         if(ae.getSource()==orden){
             entidad=2;
-            this.panel.setBorder (BorderFactory.createTitledBorder (BorderFactory.createEtchedBorder (), "Orden", TitledBorder.CENTER, TitledBorder.TOP));
-            Object[] columns={"id", "Cliente", "Pais", "Ciudad", "Fecha", "Tiempo", "Estado", "Numero"};
-            DefaultTableModel modelo2=new DefaultTableModel(null, columns);
-           ResultSet rs = Orden.todasOrdenes();
-            try {
-                while(rs.next()){
-                    Object[] fila={rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6), rs.getString(7), rs.getString(8)};
-                    modelo2.addRow(fila);
-                }
-            } catch (SQLException ex) {
-            }
-            this.tabla.setModel(modelo2);
+            paintOrdenes();
             accion.setLabel("Detalle");
         }
         if(ae.getSource()==merca){
             entidad=3;
-            this.panel.setBorder (BorderFactory.createTitledBorder (BorderFactory.createEtchedBorder (), "Mercaderia", TitledBorder.CENTER, TitledBorder.TOP));
-            Object[] columns={"id", "Estilo", "Marca", "Descripcion", "Composicion", "Cantidad", "Origen", "PVP", "Precio Compra",  "idOrden"};
-            DefaultTableModel modelo3=new DefaultTableModel(null, columns);
-            ResultSet rs = Mercaderia.todasMercas();
-            try {
-                while(rs.next()){
-                    Object[] fila={rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6), rs.getString(7), rs.getString(8), rs.getString(9), rs.getString(10)};
-                    modelo3.addRow(fila);
-                }
-            } catch (SQLException ex) {
-            }
-            this.tabla.setModel(modelo3);
+            paintMercas();
         }
         if(ae.getSource()==empaq){
             entidad=4;
-            this.panel.setBorder (BorderFactory.createTitledBorder (BorderFactory.createEtchedBorder (), "Empaquetado", TitledBorder.CENTER, TitledBorder.TOP));
-            Object[] columns={"id", "Contenedor", "Mercaderia", "Caja", "Estado"};
-            DefaultTableModel modelo4=new DefaultTableModel(null, columns);
-            ResultSet rs = Empaquetado.todosEmpaqs();
-            try {
-                while(rs.next()){
-                    Object[] fila={rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5)};
-                    modelo4.addRow(fila);
-                }
-            } catch (SQLException ex) {
-            }
-            this.tabla.setModel(modelo4);
+            paintEmpaqs();
         }
         if(ae.getSource()==impo){
             entidad=5;
-            this.panel.setBorder (BorderFactory.createTitledBorder (BorderFactory.createEtchedBorder (), "Importaciones", TitledBorder.CENTER, TitledBorder.TOP));
-            Object[] columns={"id", "Trabajador", "Proveedor", "Fecha"};
-            DefaultTableModel modelo5=new DefaultTableModel(null, columns);
-            ResultSet rs = Importacion.todasImport();
-            try {
-                while(rs.next()){
-                    Object[] fila={rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4)};
-                    modelo5.addRow(fila);
-                }
-            } catch (SQLException ex) {
-            }
-            this.tabla.setModel(modelo5);
+            paintImports();
         }
         if(ae.getSource()==provee){
             entidad=6;
-            this.panel.setBorder (BorderFactory.createTitledBorder (BorderFactory.createEtchedBorder (), "Proveedores", TitledBorder.CENTER, TitledBorder.TOP));
-            Object[] columns={"id", "Compañia", "RUP", "Pais", "Ciudad", "Dueño", "Telefono"};
-            DefaultTableModel modelo6=new DefaultTableModel(null, columns);
-            ResultSet rs = Proveedor.todosProv();
-            try {
-                while(rs.next()){
-                    Object[] fila={rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6), rs.getString(7)};
-                    modelo6.addRow(fila);
-                }
-            } catch (SQLException ex) {
-            }
-            this.tabla.setModel(modelo6);
+            paintProvs();
         }
         if(ae.getSource()==trab){
             entidad=7;
-            this.panel.setBorder (BorderFactory.createTitledBorder (BorderFactory.createEtchedBorder (), "Trabajadores", TitledBorder.CENTER, TitledBorder.TOP));
-            Object[] columns={"id", "Nombre", "Cedula", "Puesto", "Telefono", "Sueldo", "E-Mail"};
-            DefaultTableModel modelo7=new DefaultTableModel(null, columns);
-            ResultSet rs = Trabajador.todosTrab();
-            try {
-                while(rs.next()){
-                    Object[] fila={rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6), rs.getString(7)};
-                    modelo7.addRow(fila);
-                }
-            } catch (SQLException ex) {
-            }
-            this.tabla.setModel(modelo7);
+            paintTrabs();
         }
         if(ae.getSource()==caja){
             entidad=8;
-            this.panel.setBorder (BorderFactory.createTitledBorder (BorderFactory.createEtchedBorder (), "Cajas", TitledBorder.CENTER, TitledBorder.TOP));
-            Object[] columns={"id", "Numero", "Peso", "Estado", "Dimensiones"};
-            DefaultTableModel modelo8=new DefaultTableModel(null, columns);
-            ResultSet rs = Caja.todasCajas();
-            try {
-                while(rs.next()){
-                    Object[] fila={rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5)};
-                    modelo8.addRow(fila);
-                }
-            } catch (SQLException ex) {
-            }
-            this.tabla.setModel(modelo8);
+            paintCajas();
         }
         if(ae.getSource()==contenedor){
             entidad=9;
-            this.panel.setBorder (BorderFactory.createTitledBorder (BorderFactory.createEtchedBorder (), "Contenedores", TitledBorder.CENTER, TitledBorder.TOP));
-            Object[] columns={"id", "Dimensiones", "Peso", "Estado", "Importacion"};
-            DefaultTableModel modelo9=new DefaultTableModel(null, columns);
-            ResultSet rs = Contenedor.todosConts();
-            try {
-                while(rs.next()){
-                    Object[] fila={rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5)};
-                    modelo9.addRow(fila);
-                }
-            } catch (SQLException ex) {
-            }
-            this.tabla.setModel(modelo9);
+            paintConts();
         }
         
         if(ae.getSource()==nuevo && entidad==1){
-            Cliente.crearCliente(clientes);
+            Cliente.crearCliente(this);
         }
         if(ae.getSource()==nuevo && entidad==2){
-            Orden.crearOrden(clientes,ordenes);
+            Orden.crearOrden(this);
         }
         if(ae.getSource()==nuevo && entidad==3){
-            Mercaderia.crearMerc(ordenes,mercaderias);
+            Mercaderia.crearMerc(this);
         }
         if(ae.getSource()==nuevo && entidad==4){
-            Empaquetado.crearEmpaq(empaquetados,contenedores,mercaderias,cajas);
+            Empaquetado.crearEmpaq(this);
         }
         if(ae.getSource()==nuevo && entidad==5){
-            Importacion.crearImpo(importaciones, trabajadores, proveedores);
+            Importacion.crearImpo(this);
         }
         if(ae.getSource()==nuevo && entidad==6){
-            Proveedor.crearProv(proveedores);
+            Proveedor.crearProv(this);
         }
         if(ae.getSource()==nuevo && entidad==7){
-            Trabajador.crearTrab(trabajadores);
+            Trabajador.crearTrab(this);
         }
         if(ae.getSource()==nuevo && entidad==8){
-            Caja.crearCaja(cajas);
+            Caja.crearCaja(this);
         }
         if(ae.getSource()==nuevo && entidad==9){
-            Contenedor.crearCont(contenedores, importaciones);
+            Contenedor.crearCont(this);
         }
         if(ae.getSource()==editar && entidad==1){
             int fila = tabla.getSelectedRow();
@@ -316,6 +217,7 @@ public class MainMenu extends JFrame implements ActionListener{
         if(ae.getSource()==eliminar && entidad==1){
             int id = (int)tabla.getValueAt(tabla.getSelectedRow(),0);
             Cliente.eliminarCliente(id);
+            paintClientes();
         }
         if(ae.getSource()==eliminar && entidad==2){
             int fila = tabla.getSelectedRow();
@@ -341,6 +243,11 @@ public class MainMenu extends JFrame implements ActionListener{
             int fila = tabla.getSelectedRow();
             //Trabajador.eliminarTrab(adminTrabajador);
         }
+        if(ae.getSource()==eliminar && entidad==8){
+            int id = (int)tabla.getValueAt(tabla.getSelectedRow(),0);
+            Caja.eliminarCaja(id);
+            paintCajas();
+        }
         if(ae.getSource()==impor){
             intervalo();
         }
@@ -363,8 +270,6 @@ public class MainMenu extends JFrame implements ActionListener{
         if(ae.getSource()==client){
             consultaClient();
         }
-        
-        
     }
     
     public void intervalo(){
@@ -486,5 +391,140 @@ public class MainMenu extends JFrame implements ActionListener{
                 consClien.dispose();
             }
         });
+    }
+    
+    public void paintClientes(){
+        this.panel.setBorder (BorderFactory.createTitledBorder (BorderFactory.createEtchedBorder (), "Clientes", TitledBorder.CENTER, TitledBorder.TOP));
+        Object[] columns={"id", "Nombre", "Cedula", "Compañia", "RUC", "Telefono"};
+        DefaultTableModel modelo1=new DefaultTableModel(null, columns);
+        ResultSet rs = Cliente.todosClientes();
+        try {
+            while(rs.next()){
+                Object[] fila={rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6)};
+                modelo1.addRow(fila);
+            }
+        } catch (SQLException ex) {
+        }
+        this.tabla.setModel(modelo1);
+    }
+    
+    public void paintOrdenes(){
+        this.panel.setBorder (BorderFactory.createTitledBorder (BorderFactory.createEtchedBorder (), "Orden", TitledBorder.CENTER, TitledBorder.TOP));
+        Object[] columns={"id", "Cliente", "Pais", "Ciudad", "Fecha", "Tiempo", "Estado", "Numero"};
+        DefaultTableModel modelo2=new DefaultTableModel(null, columns);
+        ResultSet rs = Orden.todasOrdenes();
+        try {
+            while(rs.next()){
+                Object[] fila={rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6), rs.getString(7), rs.getString(8)};
+                modelo2.addRow(fila);
+            }
+        } catch (SQLException ex) {
+        }
+        this.tabla.setModel(modelo2);
+    }
+    
+    public void paintMercas(){
+        this.panel.setBorder (BorderFactory.createTitledBorder (BorderFactory.createEtchedBorder (), "Mercaderia", TitledBorder.CENTER, TitledBorder.TOP));
+        Object[] columns={"id", "Estilo", "Marca", "Descripcion", "Composicion", "Cantidad", "Origen", "PVP", "Precio Compra",  "idOrden"};
+        DefaultTableModel modelo3=new DefaultTableModel(null, columns);
+        ResultSet rs = Mercaderia.todasMercas();
+        try {
+            while(rs.next()){
+                Object[] fila={rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6), rs.getString(7), rs.getString(8), rs.getString(9), rs.getString(10)};
+                modelo3.addRow(fila);
+            }
+        } catch (SQLException ex) {
+        }
+        this.tabla.setModel(modelo3);
+    }
+    
+    public void paintEmpaqs(){
+        this.panel.setBorder (BorderFactory.createTitledBorder (BorderFactory.createEtchedBorder (), "Empaquetado", TitledBorder.CENTER, TitledBorder.TOP));
+        Object[] columns={"id", "Contenedor", "Mercaderia", "Caja", "Estado"};
+        DefaultTableModel modelo4=new DefaultTableModel(null, columns);
+        ResultSet rs = Empaquetado.todosEmpaqs();
+        try {
+            while(rs.next()){
+                Object[] fila={rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5)};
+                modelo4.addRow(fila);
+            }
+        } catch (SQLException ex) {
+        }
+        this.tabla.setModel(modelo4);
+    }
+    
+    public void paintImports(){
+        this.panel.setBorder (BorderFactory.createTitledBorder (BorderFactory.createEtchedBorder (), "Importaciones", TitledBorder.CENTER, TitledBorder.TOP));
+        Object[] columns={"id", "Trabajador", "Proveedor", "Fecha"};
+        DefaultTableModel modelo5=new DefaultTableModel(null, columns);
+        ResultSet rs = Importacion.todasImport();
+        try {
+            while(rs.next()){
+                Object[] fila={rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4)};
+                modelo5.addRow(fila);
+            }
+        } catch (SQLException ex) {
+        }
+        this.tabla.setModel(modelo5);
+    }
+
+    public void paintProvs(){
+        this.panel.setBorder (BorderFactory.createTitledBorder (BorderFactory.createEtchedBorder (), "Proveedores", TitledBorder.CENTER, TitledBorder.TOP));
+        Object[] columns={"id", "Compañia", "RUP", "Pais", "Ciudad", "Dueño", "Telefono"};
+        DefaultTableModel modelo6=new DefaultTableModel(null, columns);
+        ResultSet rs = Proveedor.todosProv();
+        try {
+            while(rs.next()){
+                Object[] fila={rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6), rs.getString(7)};
+                modelo6.addRow(fila);
+            }
+        } catch (SQLException ex) {
+        }
+        this.tabla.setModel(modelo6);
+    }
+
+    public void paintTrabs(){
+        this.panel.setBorder (BorderFactory.createTitledBorder (BorderFactory.createEtchedBorder (), "Trabajadores", TitledBorder.CENTER, TitledBorder.TOP));
+        Object[] columns={"id", "Nombre", "Cedula", "Puesto", "Telefono", "Sueldo", "E-Mail"};
+        DefaultTableModel modelo7=new DefaultTableModel(null, columns);
+        ResultSet rs = Trabajador.todosTrab();
+        try {
+            while(rs.next()){
+                Object[] fila={rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6), rs.getString(7)};
+                modelo7.addRow(fila);
+            }
+        } catch (SQLException ex) {
+        }
+        this.tabla.setModel(modelo7);
+    }
+    
+    public void paintConts(){
+        this.panel.setBorder (BorderFactory.createTitledBorder (BorderFactory.createEtchedBorder (), "Contenedores", TitledBorder.CENTER, TitledBorder.TOP));
+        Object[] columns={"id", "Dimensiones", "Peso", "Estado", "Importacion"};
+        DefaultTableModel modelo9=new DefaultTableModel(null, columns);
+        ResultSet rs = Contenedor.todosConts();
+        try {
+            while(rs.next()){
+                Object[] fila={rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5)};
+                modelo9.addRow(fila);
+            }
+        } catch (SQLException ex) {
+        }
+        this.tabla.setModel(modelo9);        
+    }
+    
+    public void paintCajas(){
+        this.panel.setBorder (BorderFactory.createTitledBorder (BorderFactory.createEtchedBorder (), "Cajas", TitledBorder.CENTER, TitledBorder.TOP));
+        Object[] columns={"id", "Numero", "Peso", "Estado", "Dimensiones"};
+        DefaultTableModel modelo8=new DefaultTableModel(null, columns);
+        ResultSet rs = Caja.todasCajas();
+        try {
+            while(rs.next()){
+                Object[] fila={rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5)};
+                modelo8.addRow(fila);
+            }
+        } catch (SQLException ex) {
+        }
+        this.tabla.setModel(modelo8);
     }
 }
