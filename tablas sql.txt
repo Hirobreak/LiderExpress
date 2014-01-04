@@ -94,7 +94,7 @@ CREATE TABLE liderexpress.caja(
 
 CREATE TABLE liderexpress.contenedor(
 	id_contenedor DECIMAL(5) PRIMARY KEY,
-	dim VARCHAR(10),
+	dim VARCHAR(20),
 	peso VARCHAR(10),
 	estado VARCHAR(20),
 	id_import DECIMAL(5),
@@ -136,9 +136,11 @@ CREATE TABLE liderexpress.importacion(
 
 CREATE TABLE liderexpress.empaquetado(
 	id_empaquetado DECIMAL(5) PRIMARY KEY,
+	id_contenedor DECIMAL(5),
 	id_merca DECIMAL(5),
 	id_caja DECIMAL(5),
 	estado VARCHAR(20),
+	FOREIGN KEY(id_contenedor) REFERENCES contenedor(id_contenedor),
 	FOREIGN KEY(id_merca) REFERENCES mercaderia(id_merca),
 	FOREIGN KEY(id_caja) REFERENCES caja(id_caja),
 	CONSTRAINT cons9 CHECK (estado<>'')
