@@ -265,6 +265,36 @@ public class Mercaderia {
             }
         });
     }
+    
+        public static void eliminarMerca(int id_merca){
+        ResultSet rs = null;
+        boolean tieneEmpaq = false;
+        int confirm = JOptionPane.showConfirmDialog(null, "Esta seguro que desea eliminar Mercaderia ID: "+id_merca+"?","ALERTA",JOptionPane.INFORMATION_MESSAGE);
+        if(confirm==JOptionPane.OK_OPTION){
+            try{
+                Connection con=connect.Conexion_SQL();
+                Statement sentencia=con.createStatement();
+                ResultSet empaqs = Empaquetado.todosEmpaqs();
+                try{
+                    while(empaqs.next()){
+                        if(empaqs.getInt(3)==id_merca){
+                            tieneEmpaq=true;
+                            JOptionPane.showMessageDialog(null,"Error al intentar eliminar Mercaderia ID: "+id_merca+"\nMercaderia ID: "+id_merca+" tiene asignada un Empaquetado ID: "+empaqs.getInt(1));
+                        }
+                    }
+                }catch(SQLException e){}   
+            }catch(SQLException e){}
+            if(tieneEmpaq==false){
+                try {
+                    Connection con=connect.Conexion_SQL();
+                    Statement sentencia=con.createStatement();
+                    String query="DELETE FROM mercaderia WHERE mercaderia.id_merca="+id_merca+";";
+                    sentencia.executeUpdate(query);
+                }catch(SQLException e){}
+            }
+        }
+    }
+    
     static public void eliminarMerc(final ArrayList<Mercaderia> mercaderias, final int pos){
         Mercaderia m = mercaderias.get(pos);
         final JFrame jElimMerc = new JFrame("Eliminacion de Mercaderia");

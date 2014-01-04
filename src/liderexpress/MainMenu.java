@@ -314,20 +314,16 @@ public class MainMenu extends JFrame implements ActionListener{
             Trabajador.modTrab(adminTrabajador);
         }
         if(ae.getSource()==eliminar && entidad==1){
-            System.out.println("1");
             int id = (int)tabla.getValueAt(tabla.getSelectedRow(),0);
-            System.out.println(id);
             Cliente.eliminarCliente(id);
-            //int fila = tabla.getSelectedRow();
-            //Cliente.eliminarCliente(clientes, fila);
         }
         if(ae.getSource()==eliminar && entidad==2){
             int fila = tabla.getSelectedRow();
             Orden.eliminarOrden(ordenes, fila);
         }
         if(ae.getSource()==eliminar && entidad==3){
-            int fila = tabla.getSelectedRow();
-            Mercaderia.eliminarMerc(mercaderias, fila);
+            int id = (int)tabla.getValueAt(tabla.getSelectedRow(),0);
+            Mercaderia.eliminarMerca(id);
         }
         if(ae.getSource()==eliminar && entidad==4){
             int fila = tabla.getSelectedRow();

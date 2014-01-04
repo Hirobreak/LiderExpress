@@ -83,9 +83,7 @@ public class Orden{
               String nombre = rs.getString(2);
               clientes.addItem(id+" - "+nombre);
           }  
-        }catch(Exception ex){
-                    
-        }
+        }catch(Exception ex){}
         panelpais.add(labelpais);
         panelpais.add(txtPais);
         panelciud.add(labelciud);
@@ -140,8 +138,7 @@ public class Orden{
             try{
                 while(rs.next())
                     id = rs.getInt("maxID");
-            }catch(SQLException e){  
-            }
+            }catch(SQLException e){}
             if(id==0)
                 id++;
             return id;
@@ -247,6 +244,7 @@ public class Orden{
         });
     }
     
+
 
     static public void eliminarOrden(final ArrayList<Orden> ordenes, final int pos){  
         Orden o = ordenes.get(pos);
