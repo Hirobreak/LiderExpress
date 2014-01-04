@@ -140,7 +140,7 @@ public class Cliente{
         return rs;
     }
     
-        public static int newID(){
+    public static int newID(){
         int id = 1;
         ResultSet rs = null;
         try {
@@ -226,28 +226,28 @@ public class Cliente{
     public static void eliminarCliente(int id_cliente){
         ResultSet rs = null;
         boolean tieneOrden = false;
-        try{
-            Connection con=connect.Conexion_SQL();
-            Statement sentencia=con.createStatement();
-            ResultSet ordenes = Orden.todasOrdenes();
+        int confirm = JOptionPane.showConfirmDialog(null, "Esta seguro que desea eliminar Cliente ID: "+id_cliente+"?","ALERTA",JOptionPane.INFORMATION_MESSAGE);
+        if(confirm==JOptionPane.OK_OPTION){
             try{
-                while(ordenes.next()){
-                    if(ordenes.getInt(2)==id_cliente){
-                        tieneOrden=true;
-                        JOptionPane.showMessageDialog(null,"Error al intentar eliminar Cliente ID: "+id_cliente+"\nCliente ID: "+id_cliente+" tiene asignada una Orden ID: "+ordenes.getInt(1));
-                    }
-                }
-            }catch(SQLException e){  
-            }   
-        }catch(SQLException e){ 
-        }
-        if(tieneOrden==false){
-            try {
                 Connection con=connect.Conexion_SQL();
                 Statement sentencia=con.createStatement();
-                String query="DELETE FROM cliente WHERE cliente.id_cliente="+id_cliente+";";
-                sentencia.executeUpdate(query);
-            }catch(SQLException e){ 
+                ResultSet ordenes = Orden.todasOrdenes();
+                try{
+                    while(ordenes.next()){
+                        if(ordenes.getInt(2)==id_cliente){
+                            tieneOrden=true;
+                            JOptionPane.showMessageDialog(null,"Error al intentar eliminar Cliente ID: "+id_cliente+"\nCliente ID: "+id_cliente+" tiene asignada una Orden ID: "+ordenes.getInt(1));
+                        }
+                    }
+                }catch(SQLException e){}   
+            }catch(SQLException e){}
+            if(tieneOrden==false){
+                try {
+                    Connection con=connect.Conexion_SQL();
+                    Statement sentencia=con.createStatement();
+                    String query="DELETE FROM cliente WHERE cliente.id_cliente="+id_cliente+";";
+                    sentencia.executeUpdate(query);
+                }catch(SQLException e){}
             }
         }
     }
