@@ -96,7 +96,6 @@ public class Caja {
     } 
     
     public static void eliminarCaja(int id_caja){
-        ResultSet rs = null;
         boolean tieneEmpaq = false;
         int confirm = JOptionPane.showConfirmDialog(null, "Esta seguro que desea eliminar Caja ID: "+id_caja+"?","ALERTA",JOptionPane.INFORMATION_MESSAGE);
         if(confirm==JOptionPane.OK_OPTION){

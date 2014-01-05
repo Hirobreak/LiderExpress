@@ -117,7 +117,6 @@ public class Factura {
     }
     
     public static void eliminarFact(int id_fact){
-        ResultSet rs = null;
         boolean tienePago = false;
         int confirm = JOptionPane.showConfirmDialog(null, "Esta seguro que desea eliminar Factura ID: "+id_fact+"?","ALERTA",JOptionPane.INFORMATION_MESSAGE);
         if(confirm==JOptionPane.OK_OPTION){

@@ -225,7 +225,6 @@ public class Cliente{
     }
     
     public static void eliminarCliente(int id_cliente){
-        ResultSet rs = null;
         boolean tieneOrden = false;
         int confirm = JOptionPane.showConfirmDialog(null, "Esta seguro que desea eliminar Cliente ID: "+id_cliente+"?","ALERTA",JOptionPane.INFORMATION_MESSAGE);
         if(confirm==JOptionPane.OK_OPTION){
