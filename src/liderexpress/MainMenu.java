@@ -454,7 +454,7 @@ public class MainMenu extends JFrame implements ActionListener,QueryLog{
     
     public void paintClientes(){
         this.panel.setBorder (BorderFactory.createTitledBorder (BorderFactory.createEtchedBorder (), "Clientes", TitledBorder.CENTER, TitledBorder.TOP));
-        Object[] columns={"id", "Nombre", "Cedula", "Compañia", "RUC", "Telefono"};
+        Object[] columns={"id", "Nombre", "Cedula", "RUC", "Compañia", "Telefono"};
         DefaultTableModel modelo1=new DefaultTableModel(null, columns);
         ResultSet rs = Cliente.todosClientes();
         try {

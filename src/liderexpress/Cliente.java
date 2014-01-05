@@ -169,8 +169,7 @@ public class Cliente extends Validaciones implements QueryLog {
             try{
                 while(rs.next())
                     id = rs.getInt("maxID");
-            }catch(SQLException e){  
-            }
+            }catch(SQLException e){}
             if(id==0)
                 id++;
             return id;
@@ -190,48 +189,40 @@ public class Cliente extends Validaciones implements QueryLog {
         String queryCom = "";
         String queryTelf = "";
         ResultSet rs = null;
-
-                try {
-                    Connection con=connect.Conexion_SQL();
-                    Statement sentencia=con.createStatement();
-                    String query="SELECT (cliente.nombre) as nombre FROM cliente WHERE cliente.id_cliente="+id_cliente+";";
-                    String query1="SELECT (cliente.ruc) as ruc FROM cliente WHERE cliente.id_cliente="+id_cliente+";";
-                    String query2="SELECT (cliente.compania) as compania FROM cliente WHERE cliente.id_cliente="+id_cliente+";";
-                    String query3="SELECT (cliente.telf) as telf FROM cliente WHERE cliente.id_cliente="+id_cliente+";";
-                    String query4="SELECT (cliente.cedula) as cedula FROM cliente WHERE cliente.id_cliente="+id_cliente+";";
-                    rs = sentencia.executeQuery(query);
-                    log.add(query);
-                    try{
-                        while(rs.next())
-                            queryNom = rs.getString("nombre");
-                    }catch (SQLException ex){}
-                    rs = sentencia.executeQuery(query1);
-                    log.add(query);
-                    try{
-                        while(rs.next())
-                            queryRuc = rs.getString("ruc");
-                    }catch (SQLException ex){}
-                    rs = sentencia.executeQuery(query2);
-                    log.add(query);
-                    try{
-                        while(rs.next())
-                            queryCom = rs.getString("compania");
-                    }catch (SQLException ex){}
-                    rs = sentencia.executeQuery(query3);
-                    log.add(query);
-                    try{
-                        while(rs.next())
-                            queryTelf = rs.getString("telf");
-                    }catch (SQLException ex){}
-                    rs = sentencia.executeQuery(query4);
-                    log.add(query);
-                    try{
-                        while(rs.next())
-                            queryCed = rs.getString("cedula");
-                    }catch (SQLException ex){}
-                }catch(SQLException ex){}
-         
-                
+            try {
+                Connection con=connect.Conexion_SQL();
+                Statement sentencia=con.createStatement();
+                String query="SELECT (cliente.nombre) as nombre FROM cliente WHERE cliente.id_cliente="+id_cliente+";";
+                String query1="SELECT (cliente.ruc) as ruc FROM cliente WHERE cliente.id_cliente="+id_cliente+";";
+                String query2="SELECT (cliente.compania) as compania FROM cliente WHERE cliente.id_cliente="+id_cliente+";";
+                String query3="SELECT (cliente.telf) as telf FROM cliente WHERE cliente.id_cliente="+id_cliente+";";
+                String query4="SELECT (cliente.cedula) as cedula FROM cliente WHERE cliente.id_cliente="+id_cliente+";";
+                rs = sentencia.executeQuery(query);
+                try{
+                    while(rs.next())
+                    queryNom = rs.getString("nombre");
+                }catch (SQLException ex){}
+                rs = sentencia.executeQuery(query1);
+                try{
+                     while(rs.next())
+                     queryRuc = rs.getString("ruc");
+                }catch (SQLException ex){}
+                rs = sentencia.executeQuery(query2);
+                try{
+                     while(rs.next())
+                     queryCom = rs.getString("compania");
+                }catch (SQLException ex){}
+                rs = sentencia.executeQuery(query3);
+                try{
+                     while(rs.next())
+                     queryTelf = rs.getString("telf");
+                }catch (SQLException ex){}
+                rs = sentencia.executeQuery(query4);
+                try{
+                     while(rs.next())
+                     queryCed = rs.getString("cedula");
+                }catch (SQLException ex){}
+            }catch(SQLException ex){}
         final JFrame jModCliente = new JFrame("Creacion de Cliente");
         jModCliente.setSize(500, 300);
         jModCliente.setVisible(true);
@@ -275,13 +266,26 @@ public class Cliente extends Validaciones implements QueryLog {
         jModCliente.add(panelPrin);
         guardar.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e){
+                                
+                if(esCEDULA(txtCedula.getText())==false)
+                        JOptionPane.showMessageDialog(null,"Error, la cedula es un numero de 10 digitos.Intente de nuevo");
+                if(esRUC(txtRuc.getText())==false)
+                        JOptionPane.showMessageDialog(null,"Error, el RUC es un numero de 13 digitos.Intente de nuevo");
+                if(esTELF(txtTelf1.getText())==false)
+                        JOptionPane.showMessageDialog(null,"Error,el telefono maximo puede tener 20 digitos.Intente de nuevo");
+                if(largoString(txtNombre.getText(),40)==false)
+                        JOptionPane.showMessageDialog(null,"Error,el nombre puede tener maximo hasta 40 caracterres.Intente de nuevo");
+                if(largoString(txtCompa.getText(),30)==false)
+                        JOptionPane.showMessageDialog(null,"Error,la compañia puede tener maximo hasta 30 caracterres.Intente de nuevo");
+                
+                if(esCEDULA(txtCedula.getText())&& esRUC(txtRuc.getText())&&esTELF(txtTelf1.getText())&&largoString(txtNombre.getText(),40)&&largoString(txtCompa.getText(),30)  ) { 
                 try {
                     Connection con=connect.Conexion_SQL();
                     Statement sentencia=con.createStatement();
                     String query="UPDATE cliente SET cliente.nombre='"+txtNombre.getText()+"', cliente.cedula='"+txtCedula.getText()+"', cliente.ruc='"+txtRuc.getText()+"', cliente.compania='"+txtCompa.getText()+"', cliente.telf='"+txtTelf1.getText()+"' WHERE cliente.id_cliente="+id_cliente+";";
                     sentencia.executeUpdate(query);
                     log.add(query);
-                }catch(SQLException ex){}
+                }catch(SQLException ex){}}
                 jModCliente.setVisible(false);
                 m.paintClientes();
             }
@@ -291,8 +295,6 @@ public class Cliente extends Validaciones implements QueryLog {
                 jModCliente.setVisible(false);
             }
         });
-
-            //}
         }
     }
     

@@ -61,3 +61,13 @@ SELECT (cliente.nombre) as nombre FROM cliente WHERE cliente.id_cliente=64;
 SELECT (cliente.nombre) as nombre FROM cliente WHERE cliente.id_cliente=64;
 SELECT (cliente.nombre) as nombre FROM cliente WHERE cliente.id_cliente=64;
 >>>>>>> 77ea1b91ff0c4bd1f65b20baa0b21e680cd640b5
+UPDATE cliente SET cliente.nombre='cliente3', cliente.cedula='0934895720', cliente.ruc='0934895720123', cliente.compania='3', cliente.telf='3' WHERE cliente.id_cliente=3;
+UPDATE cliente SET cliente.nombre='cliente3', cliente.cedula='0934895720', cliente.ruc='0934895720123', cliente.compania='3', cliente.telf='04235012' WHERE cliente.id_cliente=3;
+UPDATE cliente SET cliente.nombre='cliente3', cliente.cedula='0934895720', cliente.ruc='0934895720123', cliente.compania='hola', cliente.telf='04235012' WHERE cliente.id_cliente=3;
+INSERT INTO cliente VALUES(4,'4', '0934895720', '0934895720231', 'Compañia', '00000000');
+UPDATE cliente SET cliente.nombre='4', cliente.cedula='0934895720', cliente.ruc='0934895720231', cliente.compania='Compañia', cliente.telf='00000000' WHERE cliente.id_cliente=4;
+UPDATE cliente SET cliente.nombre='cliente4', cliente.cedula='0934895720', cliente.ruc='0934895720231', cliente.compania='chao', cliente.telf='00000000' WHERE cliente.id_cliente=4;
+INSERT INTO cliente VALUES(5,'cliente5', '0934895740', '0934895740123', 'pase', '00000000');
+UPDATE cliente SET cliente.nombre='cliente4', cliente.cedula='0934895730', cliente.ruc='0934895720231', cliente.compania='chao', cliente.telf='00000000' WHERE cliente.id_cliente=4;
+DELETE FROM cliente WHERE cliente.id_cliente=4;
+INSERT INTO cliente VALUES(6,'cliente6', '0934895750', '0934895750234', 'chao', '042393462');
