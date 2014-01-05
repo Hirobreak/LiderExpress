@@ -1,0 +1,12 @@
+INSERT INTO cliente VALUES(91,'Nombre', 'Cedula', 'RUC', 'Compañia', '00000000');
+INSERT INTO cliente VALUES(92,'Nombre', 'Cedula', 'RUC', 'Compañia', '00000000');
+INSERT INTO cliente VALUES(93,'Nombre', 'Cedula', 'RUC', 'Compañia', '00000000');
+DELETE FROM cliente WHERE cliente.id_cliente=92;
+DELETE FROM cliente WHERE cliente.id_cliente=93;
+DELETE FROM empaquetado WHERE empaquetado.id_empaquetado=2;
+INSERT INTO cliente VALUES(92,'Nombre', 'Cedula', 'RUC', 'Compañia', '00000000');
+INSERT INTO cliente VALUES(93,'Nombre', 'Cedula', 'RUC', 'Compañia', '00000000');
+DELETE FROM cliente WHERE cliente.id_cliente=93;
+INSERT INTO orden VALUES(17,91,'a','a','2006-3-7',1,'a','1');
+INSERT INTO importacion VALUES(5,'2', '4','2006-6-7');
+INSERT INTO mercaderia VALUES(3,'Estilo','Marca','Descripción','Composición',1000,'Origen',20.50,12.25,17);

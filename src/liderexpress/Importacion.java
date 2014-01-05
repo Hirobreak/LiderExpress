@@ -14,8 +14,9 @@ import javax.swing.*;
 import javax.swing.border.*;
 import static liderexpress.Cliente.connect;
 import static liderexpress.Proveedor.newID;
+import static liderexpress.QueryLog.log;
 
-public class Importacion{
+public class Importacion implements QueryLog{
     int id;
     int trabajador;
     int prov;
@@ -122,6 +123,7 @@ public class Importacion{
             Statement sentencia=con.createStatement();
             String query="INSERT INTO importacion VALUES("+newID()+",'"+id_trab+"', '"+id_prov+"','"+año+"-"+mes+"-"+dia+"');";
             sentencia.executeUpdate(query);
+            log.add(query);
         }catch(SQLException e){
             JOptionPane.showMessageDialog(null, "Error dato");
         }
@@ -263,6 +265,7 @@ public class Importacion{
                     Statement sentencia=con.createStatement();
                     String query="DELETE FROM importacion WHERE importacion.id_import="+id_import+";";
                     sentencia.executeUpdate(query);
+                    log.add(query);
                 }catch(SQLException e){}
             }
         }

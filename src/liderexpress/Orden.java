@@ -15,8 +15,9 @@ import java.util.logging.Logger;
 import javax.swing.*;
 import javax.swing.border.*;
 import static liderexpress.Cliente.connect;
+import static liderexpress.QueryLog.log;
 
-public class Orden{
+public class Orden implements QueryLog{
     int id;
     String pais;
     String ciudad;
@@ -157,6 +158,7 @@ public class Orden{
             //String query="INSERT INTO cliente VALUES(1, '"+ nombre+"','"+cedula+"','"+ruc+"','"+emp+"','"+telf+"')";
             String query="INSERT INTO orden VALUES("+newID()+","+id_cliente+",'"+pais+"','"+ciudad+"','"+año+"-"+mes+"-"+dia+"',"+tiempo+",'"+estado+"','"+numero+"');";
             sentencia.executeUpdate(query);
+            log.add(query);
         }catch(SQLException e){
             JOptionPane.showMessageDialog(null, "Error dato Orden");
         }
@@ -278,6 +280,7 @@ public class Orden{
                     Statement sentencia=con.createStatement();
                     String query="DELETE FROM orden WHERE orden.id_orden="+id_orden+";";
                     sentencia.executeUpdate(query);
+                    log.add(query);
                 }catch(SQLException e){}
             }
         }

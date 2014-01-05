@@ -12,9 +12,10 @@ import java.util.ArrayList;
 import javax.swing.*;
 import javax.swing.border.*;
 import static liderexpress.Cliente.connect;
+import static liderexpress.QueryLog.log;
 import static liderexpress.Trabajador.newID;
 
-public class Proveedor {
+public class Proveedor implements QueryLog {
     int id;
     String compañia;
     int rup;
@@ -98,6 +99,7 @@ public class Proveedor {
             Statement sentencia=con.createStatement();
             String query="INSERT INTO proveedor VALUES("+newID()+",'"+comp+"', '"+rup+"', '"+pais+"', '"+ciudad+"', '"+dueño+"', '"+telf+"');";
             sentencia.executeUpdate(query);
+            log.add(query);
         }catch(SQLException e){
             JOptionPane.showMessageDialog(null, "Error dato");
         }
@@ -227,6 +229,7 @@ public class Proveedor {
                     Statement sentencia=con.createStatement();
                     String query="DELETE FROM proveedor WHERE proveedor.id_proveedor="+id_prov+";";
                     sentencia.executeUpdate(query);
+                    log.add(query);
                 }catch(SQLException e){}
             }
         }

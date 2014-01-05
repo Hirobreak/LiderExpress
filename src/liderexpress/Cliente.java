@@ -13,8 +13,9 @@ import java.sql.PreparedStatement;
 import java.sql.*;
 import java.sql.ResultSet;
 import com.mysql.jdbc.CallableStatement;
+import static liderexpress.QueryLog.log;
 
-public class Cliente{
+public class Cliente implements QueryLog{
     int id;
     String nombre;
     String ruc;
@@ -99,6 +100,7 @@ public class Cliente{
             Statement sentencia=con.createStatement();
             String query="INSERT INTO cliente VALUES("+newID()+",'"+nombre+"', '"+cedula+"', '"+ruc+"', '"+emp+"', '"+telf+"');";
             sentencia.executeUpdate(query);
+            log.add(query);
         }catch(SQLException e){
             JOptionPane.showMessageDialog(null, "Error dato");
         }
@@ -247,6 +249,7 @@ public class Cliente{
                     Statement sentencia=con.createStatement();
                     String query="DELETE FROM cliente WHERE cliente.id_cliente="+id_cliente+";";
                     sentencia.executeUpdate(query);
+                    log.add(query);
                 }catch(SQLException e){}
             }
         }

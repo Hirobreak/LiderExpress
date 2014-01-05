@@ -6,7 +6,6 @@ import java.awt.event.ActionListener;
 import javax.swing.*;
 import javax.swing.border.*;
 
-
 public class loginScreen extends JFrame implements ActionListener{
     TextField usuario=new TextField("pepejefe", 10);
     TextField password=new TextField("1234567", 10);

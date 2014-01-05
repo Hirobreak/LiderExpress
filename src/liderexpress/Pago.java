@@ -14,8 +14,9 @@ import javax.swing.border.*;
 import java.util.Date;
 import javax.swing.table.DefaultTableModel;
 import static liderexpress.Cliente.connect;
+import static liderexpress.QueryLog.log;
 
-public class Pago {
+public class Pago implements QueryLog {
     int id;
     float valor;
     String tipo;
@@ -133,6 +134,7 @@ public class Pago {
                 Statement sentencia=con.createStatement();
                 String query="DELETE FROM pago1 WHERE pago1.id_pago="+id_pago+";";
                 sentencia.executeUpdate(query);
+                log.add(query);
             }catch(SQLException e){}
         }
     } 

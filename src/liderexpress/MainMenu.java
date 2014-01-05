@@ -4,6 +4,9 @@ package liderexpress;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowEvent;
+import java.io.BufferedWriter;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Date;
 import javax.swing.*;
@@ -13,8 +16,13 @@ import java.sql.*;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
+import java.io.Writer;
 
-public class MainMenu extends JFrame implements ActionListener{
+public class MainMenu extends JFrame implements ActionListener,QueryLog{
         ArrayList<Cliente> clientes = new ArrayList<Cliente>();
         ArrayList<Orden> ordenes = new ArrayList<Orden>();
         ArrayList<Mercaderia> mercaderias = new ArrayList<Mercaderia>();
@@ -73,7 +81,32 @@ public class MainMenu extends JFrame implements ActionListener{
         this.setTitle("Bienvenido Usuario XYZ");
         this.setSize(700, 300);
         this.setVisible(true);
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        //setDefaultCloseOperation(EXIT_ON_CLOSE);
+        this.addWindowListener(new java.awt.event.WindowAdapter() {
+        @Override
+        public void windowClosing(WindowEvent e) {
+            BufferedWriter writer = null; 
+            try {
+                writer = new BufferedWriter(new FileWriter("output.txt",true));
+            } catch (IOException ex) {
+                Logger.getLogger(MainMenu.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            for(String str: log) {
+                try {
+                    writer.append(str);
+                    writer.newLine();
+                } catch (IOException ex) {
+                    Logger.getLogger(MainMenu.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+            try {
+                writer.close();
+            } catch (IOException ex) {
+                Logger.getLogger(MainMenu.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            System.exit(0);
+        }
+        });
         mostrar.add(cliente=new MenuItem("Cliente"));
         mostrar.add(orden=new MenuItem("Orden"));
         mostrar.add(merca=new MenuItem("Mercaderia"));

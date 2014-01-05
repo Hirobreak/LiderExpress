@@ -13,8 +13,9 @@ import javax.swing.*;
 import javax.swing.border.*;
 import static liderexpress.Cliente.connect;
 import static liderexpress.Importacion.newID;
+import static liderexpress.QueryLog.log;
 
-public class Empaquetado {
+public class Empaquetado implements QueryLog {
     int id;
     int idcont;
     int idmerca;
@@ -129,6 +130,7 @@ public class Empaquetado {
             Statement sentencia=con.createStatement();
             String query="INSERT INTO empaquetado VALUES("+newID()+","+id_cont+", "+id_merc+", "+id_caja+",'"+estado+"');";
             sentencia.executeUpdate(query);
+            log.add(query);
         }catch(SQLException e){
             JOptionPane.showMessageDialog(null, "Error dato");
         }
@@ -236,6 +238,7 @@ public class Empaquetado {
                 Statement sentencia=con.createStatement();
                 String query="DELETE FROM empaquetado WHERE empaquetado.id_empaquetado="+id_empaq+";";
                 sentencia.executeUpdate(query);
+                log.add(query);
             }catch(SQLException e){}
         }
     }

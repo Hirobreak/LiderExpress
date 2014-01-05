@@ -12,8 +12,9 @@ import java.util.ArrayList;
 import javax.swing.*;
 import javax.swing.border.*;
 import static liderexpress.Cliente.connect;
+import static liderexpress.QueryLog.log;
 
-public class Trabajador {
+public class Trabajador implements QueryLog {
     int id;
     String nombre;
     String cargo;
@@ -100,6 +101,7 @@ public class Trabajador {
             Statement sentencia=con.createStatement();
             String query="INSERT INTO trabajador VALUES("+newID()+",'"+nombre+"', '"+cedula+"', '"+puesto+"', '"+telf+"', "+sueldo+", '"+mail+"');";
             sentencia.executeUpdate(query);
+            log.add(query);
         }catch(SQLException e){
             JOptionPane.showMessageDialog(null, "Error dato");
         }
@@ -228,6 +230,7 @@ public class Trabajador {
                     Statement sentencia=con.createStatement();
                     String query="DELETE FROM trabajador WHERE trabajador.id_trabajador="+id_trab+";";
                     sentencia.executeUpdate(query);
+                    log.add(query);
                 }catch(SQLException e){}
             }
         }

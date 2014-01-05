@@ -10,12 +10,13 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import javax.swing.JOptionPane;
 import static liderexpress.Cliente.connect;
+import static liderexpress.QueryLog.log;
 
 /**
  *
  * @author Kevin
  */
-public class Factura2 {
+public class Factura2 implements QueryLog {
     
     public static ResultSet todasFacts(){
         ResultSet rs = null;
@@ -55,6 +56,7 @@ public class Factura2 {
                     Statement sentencia=con.createStatement();
                     String query="DELETE FROM factura2 WHERE factura2.id_factura="+id_fact+";";
                     sentencia.executeUpdate(query);
+                    log.add(query);
                 }catch(SQLException e){}
             }
         }

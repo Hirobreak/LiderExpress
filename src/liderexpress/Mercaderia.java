@@ -12,9 +12,10 @@ import java.util.ArrayList;
 import javax.swing.*;
 import javax.swing.border.*;
 import static liderexpress.Cliente.connect;
+import static liderexpress.QueryLog.log;
 
 
-public class Mercaderia {
+public class Mercaderia implements QueryLog {
     int id;
     String style;
     String mark;
@@ -140,6 +141,7 @@ public class Mercaderia {
             Statement sentencia=con.createStatement();
             String query="INSERT INTO mercaderia VALUES("+newID()+",'"+estilo+"','"+marca+"','"+dsc+"','"+compos+"',"+cantidad+",'"+origen+"',"+p_venta+","+p_compra+","+id_orden+");";
             sentencia.executeUpdate(query);
+            log.add(query);
         }catch(SQLException e){
             JOptionPane.showMessageDialog(null, "Error dato Mercaderia");
         }
@@ -290,6 +292,7 @@ public class Mercaderia {
                     Statement sentencia=con.createStatement();
                     String query="DELETE FROM mercaderia WHERE mercaderia.id_merca="+id_merca+";";
                     sentencia.executeUpdate(query);
+                    log.add(query);
                 }catch(SQLException e){}
             }
         }

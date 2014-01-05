@@ -13,8 +13,9 @@ import javax.swing.*;
 import javax.swing.border.*;
 import java.util.Date;
 import static liderexpress.Cliente.connect;
+import static liderexpress.QueryLog.log;
 
-public class Factura {
+public class Factura implements QueryLog {
     int id;
     float valorp;
     float iva;
@@ -139,6 +140,7 @@ public class Factura {
                     Statement sentencia=con.createStatement();
                     String query="DELETE FROM factura1 WHERE factura1.id_factura="+id_fact+";";
                     sentencia.executeUpdate(query);
+                    log.add(query);
                 }catch(SQLException e){}
             }
         }

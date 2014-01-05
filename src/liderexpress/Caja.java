@@ -13,8 +13,9 @@ import javax.swing.*;
 import javax.swing.border.*;
 import static liderexpress.Cliente.connect;
 import static liderexpress.Importacion.newID;
+import static liderexpress.QueryLog.log;
 
-public class Caja {
+public class Caja  implements QueryLog{
     int id;
     String dimension;
     int peso;
@@ -90,6 +91,7 @@ public class Caja {
             Statement sentencia=con.createStatement();
             String query="INSERT INTO caja VALUES("+newID()+",'"+num+"', '"+peso+"', '"+estado+"', '"+dim+"');";
             sentencia.executeUpdate(query);
+            log.add(query);
         }catch(SQLException e){
             JOptionPane.showMessageDialog(null, "Error dato");
         }
@@ -118,6 +120,7 @@ public class Caja {
                     Statement sentencia=con.createStatement();
                     String query="DELETE FROM caja WHERE caja.id_caja="+id_caja+";";
                     sentencia.executeUpdate(query);
+                    log.add(query);
                 }catch(SQLException e){}
             }
         }
