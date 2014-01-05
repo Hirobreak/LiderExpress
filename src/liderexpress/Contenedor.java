@@ -144,6 +144,34 @@ public class Contenedor {
         return id;
     }
     
+    public static void eliminarCont(int id_cont){
+        boolean tieneEmpaq = false;
+        int confirm = JOptionPane.showConfirmDialog(null, "Esta seguro que desea eliminar Contenedor ID: "+id_cont+"?","ALERTA",JOptionPane.INFORMATION_MESSAGE);
+        if(confirm==JOptionPane.OK_OPTION){
+            try{
+                Connection con=connect.Conexion_SQL();
+                Statement sentencia=con.createStatement();
+                ResultSet empaqs = Empaquetado.todosEmpaqs();
+                try{
+                    while(empaqs.next()){
+                        if(empaqs.getInt(2)==id_cont){
+                            tieneEmpaq=true;
+                            JOptionPane.showMessageDialog(null,"Error al intentar eliminar Contenedor ID: "+id_cont+"\nContenedor ID: "+id_cont+" tiene asignada un Empaquetado ID: "+empaqs.getInt(1));
+                        }
+                    }
+                }catch(SQLException e){}   
+            }catch(SQLException e){}
+            if(tieneEmpaq==false){
+                try {
+                    Connection con=connect.Conexion_SQL();
+                    Statement sentencia=con.createStatement();
+                    String query="DELETE FROM contenedor WHERE contenedor.id_contenedor="+id_cont+";";
+                    sentencia.executeUpdate(query);
+                }catch(SQLException e){}
+            }
+        }
+    }
+    
     public Object[] arreglo(){
         Object[] arreglo={id, dimension, peso, estado, idImpo};
         return arreglo;

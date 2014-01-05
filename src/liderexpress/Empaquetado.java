@@ -226,9 +226,20 @@ public class Empaquetado {
                 jModEmp.setVisible(false);
             }
         });
-        
     }  
 
+    public static void eliminarEmpaq(int id_empaq){
+        int confirm = JOptionPane.showConfirmDialog(null, "Esta seguro que desea eliminar Empaquetado ID: "+id_empaq+"?","ALERTA",JOptionPane.INFORMATION_MESSAGE);
+        if(confirm==JOptionPane.OK_OPTION){
+            try {
+                Connection con=connect.Conexion_SQL();
+                Statement sentencia=con.createStatement();
+                String query="DELETE FROM empaquetado WHERE empaquetado.id_empaquetado="+id_empaq+";";
+                sentencia.executeUpdate(query);
+            }catch(SQLException e){}
+        }
+    }
+    
     public Object[] arreglo(){
         Object[] arreglo={id, idcont, idmerca, idcaja, estado};
         return arreglo;

@@ -220,33 +220,40 @@ public class MainMenu extends JFrame implements ActionListener{
             paintClientes();
         }
         if(ae.getSource()==eliminar && entidad==2){
-            int fila = tabla.getSelectedRow();
-            Orden.eliminarOrden(ordenes, fila);
+            //int fila = tabla.getSelectedRow();
+            //Orden.eliminarOrden(ordenes, fila);
         }
         if(ae.getSource()==eliminar && entidad==3){
             int id = (int)tabla.getValueAt(tabla.getSelectedRow(),0);
             Mercaderia.eliminarMerca(id);
         }
         if(ae.getSource()==eliminar && entidad==4){
-            int fila = tabla.getSelectedRow();
-            //Empaquetado.eliminarEmpaq(adminEmpaquetado);
+            int id = (int)tabla.getValueAt(tabla.getSelectedRow(),0);
+            Empaquetado.eliminarEmpaq(id);
+            paintEmpaqs();
         }
         if(ae.getSource()==eliminar && entidad==5){
-            int fila = tabla.getSelectedRow();
+            //int fila = tabla.getSelectedRow();
             //Importacion.eliminarImpo(adminImportacion);
         }
         if(ae.getSource()==eliminar && entidad==6){
-            int fila = tabla.getSelectedRow();
-            Proveedor.eliminarProv(proveedores, fila);
+            //int fila = tabla.getSelectedRow();
+            //Proveedor.eliminarProv(proveedores, fila);
         }
         if(ae.getSource()==eliminar && entidad==7){
-            int fila = tabla.getSelectedRow();
-            //Trabajador.eliminarTrab(adminTrabajador);
+            int id = (int)tabla.getValueAt(tabla.getSelectedRow(),0);
+            Trabajador.eliminarTrab(id);
+            paintTrabs();
         }
         if(ae.getSource()==eliminar && entidad==8){
             int id = (int)tabla.getValueAt(tabla.getSelectedRow(),0);
             Caja.eliminarCaja(id);
             paintCajas();
+        }
+        if(ae.getSource()==eliminar && entidad==9){
+            int id = (int)tabla.getValueAt(tabla.getSelectedRow(),0);
+            Contenedor.eliminarCont(id);
+            paintConts();
         }
         if(ae.getSource()==impor){
             intervalo();

@@ -202,10 +202,37 @@ public class Trabajador {
             public void actionPerformed(ActionEvent e){
                 jModT.setVisible(false);
             }
-        });
-        
-        
+        }); 
     }
+    
+    public static void eliminarTrab(int id_trab){
+        boolean tieneImport = false;
+        int confirm = JOptionPane.showConfirmDialog(null, "Esta seguro que desea eliminar Trabajador ID: "+id_trab+"?","ALERTA",JOptionPane.INFORMATION_MESSAGE);
+        if(confirm==JOptionPane.OK_OPTION){
+            try{
+                Connection con=connect.Conexion_SQL();
+                Statement sentencia=con.createStatement();
+                ResultSet imports = Importacion.todasImport();
+                try{
+                    while(imports.next()){
+                        if(imports.getInt(2)==id_trab){
+                            tieneImport=true;
+                            JOptionPane.showMessageDialog(null,"Error al intentar eliminar Trabajador ID: "+id_trab+"\nTrabajador ID: "+id_trab+" tiene asignada una Importacion ID: "+imports.getInt(1));
+                        }
+                    }
+                }catch(SQLException e){}   
+            }catch(SQLException e){}
+            if(tieneImport==false){
+                try {
+                    Connection con=connect.Conexion_SQL();
+                    Statement sentencia=con.createStatement();
+                    String query="DELETE FROM trabajador WHERE trabajador.id_trabajador="+id_trab+";";
+                    sentencia.executeUpdate(query);
+                }catch(SQLException e){}
+            }
+        }
+    }
+    
     public Object[] arreglo(){
         Object[] arreglo={id, nombre, cargo, cedula, telefono, salario, mail};
         return arreglo;
