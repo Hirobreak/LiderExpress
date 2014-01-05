@@ -15,7 +15,7 @@ import java.sql.ResultSet;
 import com.mysql.jdbc.CallableStatement;
 import static liderexpress.QueryLog.log;
 
-public class Cliente implements QueryLog{
+public class Cliente extends Validaciones implements QueryLog {
     int id;
     String nombre;
     String ruc;
@@ -82,7 +82,21 @@ public class Cliente implements QueryLog{
         jCrearCliente.add(panelPrin);
         guardar.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e){
+                
+                if(esCEDULA(txtCedula.getText())==false)
+                        JOptionPane.showMessageDialog(null,"Error, la cedula es un numero de 10 digitos.Intente de nuevo");
+                if(esRUC(txtRuc.getText())==false)
+                        JOptionPane.showMessageDialog(null,"Error, el RUC es un numero de 13 digitos.Intente de nuevo");
+                if(esTELF(txtTelf1.getText())==false)
+                        JOptionPane.showMessageDialog(null,"Error,el telefono maximo puede tener 20 digitos.Intente de nuevo");
+                if(largoString(txtNombre.getText(),40)==false)
+                        JOptionPane.showMessageDialog(null,"Error,el nombre puede tener maximo hasta 40 caracterres.Intente de nuevo");
+                if(largoString(txtCompa.getText(),30)==false)
+                        JOptionPane.showMessageDialog(null,"Error,la compañia puede tener maximo hasta 30 caracterres.Intente de nuevo");
+                
+                if(esCEDULA(txtCedula.getText())&& esRUC(txtRuc.getText())&&esTELF(txtTelf1.getText())&&largoString(txtNombre.getText(),40)&&largoString(txtCompa.getText(),30)  ) {                 
                 NuevoCliente(txtNombre.getText(), txtCedula.getText(), txtRuc.getText(), txtCompa.getText(), txtTelf1.getText());
+                }
                 jCrearCliente.setVisible(false);
                 m.paintClientes();
             }
@@ -98,6 +112,7 @@ public class Cliente implements QueryLog{
         try {
             Connection con=connect.Conexion_SQL();
             Statement sentencia=con.createStatement();
+            
             String query="INSERT INTO cliente VALUES("+newID()+",'"+nombre+"', '"+cedula+"', '"+ruc+"', '"+emp+"', '"+telf+"');";
             sentencia.executeUpdate(query);
             log.add(query);

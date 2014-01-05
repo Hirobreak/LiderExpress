@@ -10,3 +10,6 @@ DELETE FROM cliente WHERE cliente.id_cliente=93;
 INSERT INTO orden VALUES(17,91,'a','a','2006-3-7',1,'a','1');
 INSERT INTO importacion VALUES(5,'2', '4','2006-6-7');
 INSERT INTO mercaderia VALUES(3,'Estilo','Marca','Descripción','Composición',1000,'Origen',20.50,12.25,17);
+INSERT INTO cliente VALUES(4,'Nombre', '4325645', 'RUC', 'Compañia', '00000000');
+INSERT INTO cliente VALUES(5,'Nombre', '0921645677', 'RUC', 'Compañia', '00000000');
+INSERT INTO cliente VALUES(6,'zdfs', '1236587499', '1236549879851', 'adfsfgggg', '32135284654687');
