@@ -229,6 +229,45 @@ public class Importacion{
             }
         });
     }
+    
+    public static void eliminarImport(int id_import){
+        boolean tieneEmpaq = false;
+        boolean tieneFact = false;
+        int confirm = JOptionPane.showConfirmDialog(null, "Esta seguro que desea eliminar Importacion ID: "+id_import+"?","ALERTA",JOptionPane.INFORMATION_MESSAGE);
+        if(confirm==JOptionPane.OK_OPTION){
+            try{
+                Connection con=connect.Conexion_SQL();
+                Statement sentencia=con.createStatement();
+                ResultSet conts = Contenedor.todosConts();
+                ResultSet facts = Factura.todasFacts();
+                try{
+                    while(conts.next()){
+                        if(conts.getInt(5)==id_import){
+                            tieneEmpaq=true;
+                            JOptionPane.showMessageDialog(null,"Error al intentar eliminar Importacion ID: "+id_import+"\nImportacion ID: "+id_import+" tiene asignado un Contenedor ID: "+conts.getInt(1));
+                        }
+                    }
+                }catch(SQLException e){}
+                try{
+                    while(facts.next()){
+                        if(facts.getInt(7)==id_import){
+                            tieneFact=true;
+                            JOptionPane.showMessageDialog(null,"Error al intentar eliminar Importacion ID: "+id_import+"\nImportacion ID: "+id_import+" tiene asignada una Factura ID: "+facts.getInt(1));
+                        }
+                    }
+                }catch(SQLException e){}  
+            }catch(SQLException e){}
+            if(tieneEmpaq==false && tieneFact==false){
+                try {
+                    Connection con=connect.Conexion_SQL();
+                    Statement sentencia=con.createStatement();
+                    String query="DELETE FROM importacion WHERE importacion.id_import="+id_import+";";
+                    sentencia.executeUpdate(query);
+                }catch(SQLException e){}
+            }
+        }
+    }    
+    
     public Object[] arreglo(){
         Object[] arreglo={id, trabajador, prov, dia, mes, año};
         return arreglo;

@@ -202,7 +202,35 @@ public class Proveedor {
             }
         });
         
-    }    
+    }
+    
+    public static void eliminarProv(int id_prov){
+        boolean tieneImport = false;
+        int confirm = JOptionPane.showConfirmDialog(null, "Esta seguro que desea eliminar Proveedor ID: "+id_prov+"?","ALERTA",JOptionPane.INFORMATION_MESSAGE);
+        if(confirm==JOptionPane.OK_OPTION){
+            try{
+                Connection con=connect.Conexion_SQL();
+                Statement sentencia=con.createStatement();
+                ResultSet imports = Importacion.todasImport();
+                try{
+                    while(imports.next()){
+                        if(imports.getInt(3)==id_prov){
+                            tieneImport=true;
+                            JOptionPane.showMessageDialog(null,"Error al intentar eliminar Proveedor ID: "+id_prov+"\nProveedor ID: "+id_prov+" tiene asignada una Importacion ID: "+imports.getInt(1));
+                        }
+                    }
+                }catch(SQLException e){}   
+            }catch(SQLException e){}
+            if(tieneImport==false){
+                try {
+                    Connection con=connect.Conexion_SQL();
+                    Statement sentencia=con.createStatement();
+                    String query="DELETE FROM proveedor WHERE proveedor.id_proveedor="+id_prov+";";
+                    sentencia.executeUpdate(query);
+                }catch(SQLException e){}
+            }
+        }
+    }
     
     static public void eliminarProv(final ArrayList<Proveedor> proveedores, final int pos){
         Proveedor  prov = proveedores.get(pos);

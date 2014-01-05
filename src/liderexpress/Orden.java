@@ -245,7 +245,43 @@ public class Orden{
         });
     }
     
-
+    public static void eliminarOrden(int id_orden){
+        boolean tieneMerca = false;
+        boolean tieneFact = false;
+        int confirm = JOptionPane.showConfirmDialog(null, "Esta seguro que desea eliminar Orden ID: "+id_orden+"?","ALERTA",JOptionPane.INFORMATION_MESSAGE);
+        if(confirm==JOptionPane.OK_OPTION){
+            try{
+                Connection con=connect.Conexion_SQL();
+                Statement sentencia=con.createStatement();
+                ResultSet mercas = Mercaderia.todasMercas();
+                ResultSet facts = Factura2.todasFacts();
+                try{
+                    while(mercas.next()){
+                        if(mercas.getInt(10)==id_orden){
+                            tieneMerca=true;
+                            JOptionPane.showMessageDialog(null,"Error al intentar eliminar Orden ID: "+id_orden+"\nOrden ID: "+id_orden+" tiene asignada una Mercaderia ID: "+mercas.getInt(1));
+                        }
+                    }
+                }catch(SQLException e){}
+                try{
+                    while(facts.next()){
+                        if(facts.getInt(7)==id_orden){
+                            tieneFact=true;
+                            JOptionPane.showMessageDialog(null,"Error al intentar eliminar Orden ID: "+id_orden+"\nOrden ID: "+id_orden+" tiene asignada una Factura ID: "+facts.getInt(1));
+                        }
+                    }
+                }catch(SQLException e){}  
+            }catch(SQLException e){}
+            if(tieneMerca==false && tieneFact==false){
+                try {
+                    Connection con=connect.Conexion_SQL();
+                    Statement sentencia=con.createStatement();
+                    String query="DELETE FROM orden WHERE orden.id_orden="+id_orden+";";
+                    sentencia.executeUpdate(query);
+                }catch(SQLException e){}
+            }
+        }
+    }    
 
     static public void eliminarOrden(final ArrayList<Orden> ordenes, final int pos){  
         Orden o = ordenes.get(pos);

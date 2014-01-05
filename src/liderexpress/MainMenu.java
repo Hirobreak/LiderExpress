@@ -220,8 +220,9 @@ public class MainMenu extends JFrame implements ActionListener{
             paintClientes();
         }
         if(ae.getSource()==eliminar && entidad==2){
-            //int fila = tabla.getSelectedRow();
-            //Orden.eliminarOrden(ordenes, fila);
+            int id = (int)tabla.getValueAt(tabla.getSelectedRow(),0);
+            Orden.eliminarOrden(id);
+            paintOrdenes();
         }
         if(ae.getSource()==eliminar && entidad==3){
             int id = (int)tabla.getValueAt(tabla.getSelectedRow(),0);
@@ -233,12 +234,14 @@ public class MainMenu extends JFrame implements ActionListener{
             paintEmpaqs();
         }
         if(ae.getSource()==eliminar && entidad==5){
-            //int fila = tabla.getSelectedRow();
-            //Importacion.eliminarImpo(adminImportacion);
+            int id = (int)tabla.getValueAt(tabla.getSelectedRow(),0);
+            Importacion.eliminarImport(id);
+            paintImports();
         }
         if(ae.getSource()==eliminar && entidad==6){
-            //int fila = tabla.getSelectedRow();
-            //Proveedor.eliminarProv(proveedores, fila);
+            int id = (int)tabla.getValueAt(tabla.getSelectedRow(),0);
+            Proveedor.eliminarProv(id);
+            paintProvs();
         }
         if(ae.getSource()==eliminar && entidad==7){
             int id = (int)tabla.getValueAt(tabla.getSelectedRow(),0);

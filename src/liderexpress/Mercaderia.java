@@ -268,7 +268,6 @@ public class Mercaderia {
     }
     
     public static void eliminarMerca(int id_merca){
-        ResultSet rs = null;
         boolean tieneEmpaq = false;
         int confirm = JOptionPane.showConfirmDialog(null, "Esta seguro que desea eliminar Mercaderia ID: "+id_merca+"?","ALERTA",JOptionPane.INFORMATION_MESSAGE);
         if(confirm==JOptionPane.OK_OPTION){

@@ -4,11 +4,16 @@ package liderexpress;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import javax.swing.*;
 import javax.swing.border.*;
 import java.util.Date;
 import javax.swing.table.DefaultTableModel;
+import static liderexpress.Cliente.connect;
 
 public class Pago {
     int id;
@@ -105,5 +110,31 @@ public class Pago {
         
     }
     
+    public static ResultSet todosPagos(){
+        ResultSet rs = null;
+        try {
+            String query;
+            Connection con=connect.Conexion_SQL();
+            Statement sentencia=con.createStatement();
+            query="SELECT pago1.* FROM pago1;";
+            rs=sentencia.executeQuery(query);
+            
+        }catch(SQLException e){
+            JOptionPane.showMessageDialog(null, "Error dato");
+        }
+        return rs;
+    }
+    
+    public static void eliminarPago(int id_pago){
+        int confirm = JOptionPane.showConfirmDialog(null, "Esta seguro que desea eliminar Pago ID: "+id_pago+"?","ALERTA",JOptionPane.INFORMATION_MESSAGE);
+        if(confirm==JOptionPane.OK_OPTION){
+            try {
+                Connection con=connect.Conexion_SQL();
+                Statement sentencia=con.createStatement();
+                String query="DELETE FROM pago1 WHERE pago1.id_pago="+id_pago+";";
+                sentencia.executeUpdate(query);
+            }catch(SQLException e){}
+        }
+    } 
 }
 

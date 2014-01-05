@@ -4,10 +4,15 @@ package liderexpress;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import javax.swing.*;
 import javax.swing.border.*;
 import java.util.Date;
+import static liderexpress.Cliente.connect;
 
 public class Factura {
     int id;
@@ -96,4 +101,47 @@ public class Factura {
         });
     }
     
+    public static ResultSet todasFacts(){
+        ResultSet rs = null;
+        try {
+            String query;
+            Connection con=connect.Conexion_SQL();
+            Statement sentencia=con.createStatement();
+            query="SELECT factura1.* FROM factura1;";
+            rs=sentencia.executeQuery(query);
+            
+        }catch(SQLException e){
+            JOptionPane.showMessageDialog(null, "Error dato");
+        }
+        return rs;
+    }
+    
+    public static void eliminarFact(int id_fact){
+        ResultSet rs = null;
+        boolean tienePago = false;
+        int confirm = JOptionPane.showConfirmDialog(null, "Esta seguro que desea eliminar Factura ID: "+id_fact+"?","ALERTA",JOptionPane.INFORMATION_MESSAGE);
+        if(confirm==JOptionPane.OK_OPTION){
+            try{
+                Connection con=connect.Conexion_SQL();
+                Statement sentencia=con.createStatement();
+                ResultSet pagos = Pago.todosPagos();
+                try{
+                    while(pagos.next()){
+                        if(pagos.getInt(4)==id_fact){
+                            tienePago=true;
+                            JOptionPane.showMessageDialog(null,"Error al intentar eliminar Factura ID: "+id_fact+"\nFactura ID: "+id_fact+" tiene asignado un Pago ID: "+pagos.getInt(1));
+                        }
+                    }
+                }catch(SQLException e){}   
+            }catch(SQLException e){}
+            if(tienePago==false){
+                try {
+                    Connection con=connect.Conexion_SQL();
+                    Statement sentencia=con.createStatement();
+                    String query="DELETE FROM factura1 WHERE factura1.id_factura="+id_fact+";";
+                    sentencia.executeUpdate(query);
+                }catch(SQLException e){}
+            }
+        }
+    }
 }
