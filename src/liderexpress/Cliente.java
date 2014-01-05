@@ -166,9 +166,58 @@ public class Cliente implements QueryLog{
         return id;
     }
     
-    static void modificarCliente(final ArrayList<Cliente> clientes, final int pos){ 
-        Cliente c = clientes.get(pos);
-        final JFrame jModCliente = new JFrame("Modificando Cliente: "+c.id);
+    static void modificarCliente(final int id_cliente, final MainMenu m){ 
+        int confirm = JOptionPane.showConfirmDialog(null, "Esta seguro que desea modificar al Cliente ID: "+id_cliente+"?","ALERTA",JOptionPane.INFORMATION_MESSAGE);
+        if(confirm==JOptionPane.OK_OPTION){
+        String queryNom = "";
+        String queryCed = "";
+        String queryRuc = "";
+        String queryCom = "";
+        String queryTelf = "";
+        ResultSet rs = null;
+
+                try {
+                    Connection con=connect.Conexion_SQL();
+                    Statement sentencia=con.createStatement();
+                    String query="SELECT (cliente.nombre) as nombre FROM cliente WHERE cliente.id_cliente="+id_cliente+";";
+                    String query1="SELECT (cliente.ruc) as ruc FROM cliente WHERE cliente.id_cliente="+id_cliente+";";
+                    String query2="SELECT (cliente.compania) as compania FROM cliente WHERE cliente.id_cliente="+id_cliente+";";
+                    String query3="SELECT (cliente.telf) as telf FROM cliente WHERE cliente.id_cliente="+id_cliente+";";
+                    String query4="SELECT (cliente.cedula) as cedula FROM cliente WHERE cliente.id_cliente="+id_cliente+";";
+                    rs = sentencia.executeQuery(query);
+                    log.add(query);
+                    try{
+                        while(rs.next())
+                            queryNom = rs.getString("nombre");
+                    }catch (SQLException ex){}
+                    rs = sentencia.executeQuery(query1);
+                    log.add(query);
+                    try{
+                        while(rs.next())
+                            queryRuc = rs.getString("ruc");
+                    }catch (SQLException ex){}
+                    rs = sentencia.executeQuery(query2);
+                    log.add(query);
+                    try{
+                        while(rs.next())
+                            queryCom = rs.getString("compania");
+                    }catch (SQLException ex){}
+                    rs = sentencia.executeQuery(query3);
+                    log.add(query);
+                    try{
+                        while(rs.next())
+                            queryTelf = rs.getString("telf");
+                    }catch (SQLException ex){}
+                    rs = sentencia.executeQuery(query4);
+                    log.add(query);
+                    try{
+                        while(rs.next())
+                            queryCed = rs.getString("cedula");
+                    }catch (SQLException ex){}
+                }catch(SQLException ex){}
+         
+                
+        final JFrame jModCliente = new JFrame("Creacion de Cliente");
         jModCliente.setSize(500, 300);
         jModCliente.setVisible(true);
         Panel panelPrin=new Panel(new GridLayout(6, 1));
@@ -182,15 +231,14 @@ public class Cliente implements QueryLog{
         Label labelruc=new Label("RUC:", Label.CENTER);
         Label labelced=new Label("Cedula:", Label.CENTER);
         Label labelcom=new Label("Compañia:", Label.CENTER);
-        Label labeltelf=new Label("Telefonos:", Label.CENTER);
+        Label labeltelf=new Label("Telefono:", Label.CENTER);
         Button guardar=new Button("Guardar");
         Button cancelar=new Button("Cancelar");
-        final TextField txtNombre=new TextField(c.nombre, 20);
-        final TextField txtRuc=new TextField(String.valueOf(c.ruc), 20);
-        final TextField txtCedula=new TextField(String.valueOf(c.cedula), 20);
-        final TextField txtCompa=new TextField(c.compa, 20);
-        final TextField txtTelf1=new TextField(String.valueOf(c.telf1), 20);
-        final TextField txtTelf2=new TextField(String.valueOf(c.telf2), 20);
+        final TextField txtNombre=new TextField(queryNom, 20);
+        final TextField txtRuc=new TextField(queryRuc, 20);
+        final TextField txtCedula=new TextField(queryCed, 20);
+        final TextField txtCompa=new TextField(queryCom, 20);
+        final TextField txtTelf1=new TextField(queryTelf, 20);
         panelnombre.add(labelnom);
         panelnombre.add(txtNombre);
         panelcedula.add(labelced);
@@ -201,7 +249,6 @@ public class Cliente implements QueryLog{
         panelruc.add(txtRuc);
         paneltelf.add(labeltelf);
         paneltelf.add(txtTelf1);
-        paneltelf.add(txtTelf2);
         panelboton.add(guardar);
         panelboton.add(cancelar);
         panelPrin.add(panelnombre);
@@ -213,10 +260,15 @@ public class Cliente implements QueryLog{
         jModCliente.add(panelPrin);
         guardar.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e){
-                Cliente mod = new Cliente(pos+1,txtNombre.getText(),txtRuc.getText(),txtCedula.getText(),txtCompa.getText(),Integer.parseInt(txtTelf1.getText()),Integer.parseInt(txtTelf2.getText()));
-                clientes.remove(pos);
-                clientes.add(pos, mod);
+                try {
+                    Connection con=connect.Conexion_SQL();
+                    Statement sentencia=con.createStatement();
+                    String query="UPDATE cliente SET cliente.nombre='"+txtNombre.getText()+"', cliente.cedula='"+txtCedula.getText()+"', cliente.ruc='"+txtRuc.getText()+"', cliente.compania='"+txtCompa.getText()+"', cliente.telf='"+txtTelf1.getText()+"' WHERE cliente.id_cliente="+id_cliente+";";
+                    sentencia.executeUpdate(query);
+                    log.add(query);
+                }catch(SQLException ex){}
                 jModCliente.setVisible(false);
+                m.paintClientes();
             }
         });
         cancelar.addActionListener(new ActionListener(){
@@ -224,6 +276,9 @@ public class Cliente implements QueryLog{
                 jModCliente.setVisible(false);
             }
         });
+
+            //}
+        }
     }
     
     public static void eliminarCliente(int id_cliente){
@@ -253,64 +308,6 @@ public class Cliente implements QueryLog{
                 }catch(SQLException e){}
             }
         }
-    }
-    
-    static void eliminarCliente(final ArrayList<Cliente> clientes, final int pos){
-        Cliente c = clientes.get(pos);
-        final JFrame jElimCliente = new JFrame("Eliminacion de Cliente");
-        jElimCliente.setSize(500, 300);
-        jElimCliente.setVisible(true);
-        Panel panelPrin=new Panel(new GridLayout(6, 1));
-        Panel panelnombre=new Panel(new GridLayout(1, 2));
-        Panel panelruc=new Panel(new GridLayout(1, 2));
-        Panel panelcedula=new Panel(new GridLayout(1, 2));
-        Panel panelcom=new Panel(new GridLayout(1, 2));
-        Panel paneltelf=new Panel(new GridLayout(1, 3));
-        Panel panelboton=new Panel(new GridLayout(1, 2));
-        Label labelnom=new Label("Nombre:", Label.CENTER);
-        Label labelruc=new Label("RUC:", Label.CENTER);
-        Label labelced=new Label("Cedula:", Label.CENTER);
-        Label labelcom=new Label("Compañia:", Label.CENTER);
-        Label labeltelf=new Label("Telefonos:", Label.CENTER);
-        Button guardar=new Button("Eliminar");
-        Button cancelar=new Button("Cancelar");
-        Label txtNombre=new Label(c.nombre, Label.CENTER);
-        Label txtRuc=new Label(String.valueOf(c.ruc), Label.CENTER);
-        Label txtCedula=new Label(String.valueOf(c.cedula), Label.CENTER);
-        Label txtCompa=new Label(c.compa, Label.CENTER);
-        Label txtTelf1=new Label(String.valueOf(c.telf1), Label.CENTER);
-        Label txtTelf2=new Label(String.valueOf(c.telf2), Label.CENTER);
-        panelnombre.add(labelnom);
-        panelnombre.add(txtNombre);
-        panelcedula.add(labelced);
-        panelcedula.add(txtCedula);
-        panelcom.add(labelcom);
-        panelcom.add(txtCompa);
-        panelruc.add(labelruc);
-        panelruc.add(txtRuc);
-        paneltelf.add(labeltelf);
-        paneltelf.add(txtTelf1);
-        paneltelf.add(txtTelf2);
-        panelboton.add(guardar);
-        panelboton.add(cancelar);
-        panelPrin.add(panelnombre);
-        panelPrin.add(panelcedula);
-        panelPrin.add(panelcom);
-        panelPrin.add(panelruc);
-        panelPrin.add(paneltelf);
-        panelPrin.add(panelboton);
-        jElimCliente.add(panelPrin);
-        guardar.addActionListener(new ActionListener(){
-            public void actionPerformed(ActionEvent e){
-                clientes.remove(pos);
-                jElimCliente.setVisible(false);
-            }
-        });
-        cancelar.addActionListener(new ActionListener(){
-            public void actionPerformed(ActionEvent e){
-                jElimCliente.setVisible(false);
-            }
-        });
     }
     
     public Object[] arreglo(){
