@@ -180,14 +180,57 @@ public class Orden implements QueryLog{
         return rs;
     }
     
-    static public void modificarOrden(final ArrayList<Cliente> clientes1, final ArrayList<Orden> ordenes, final int pos){
-        Orden o = ordenes.get(pos);
-        final JFrame jModOrden = new JFrame("Modificando Orden: "+o.id);
+    static public void modificarOrden(final int id_orden, final MainMenu m){
+        int confirm = JOptionPane.showConfirmDialog(null, "Esta seguro que desea modificar la Orden ID: "+id_orden+"?","ALERTA",JOptionPane.INFORMATION_MESSAGE);
+        if(confirm==JOptionPane.OK_OPTION){
+            String queryPais = "";
+            String queryCiu = "";
+            String queryEntr = "";
+            String queryEst = "";
+            String queryRas = "";
+            ResultSet rs1 = null;
+            try {
+                Connection con=connect.Conexion_SQL();
+                Statement sentencia=con.createStatement();
+                String query="SELECT (orden.pais) as pais FROM orden WHERE orden.id_orden="+id_orden+";";
+                String query1="SELECT (orden.ciudad) as ciudad FROM orden WHERE orden.id_orden="+id_orden+";";
+                String query3="SELECT (orden.t_entrega) as tentrega FROM orden WHERE orden.id_orden="+id_orden+";";
+                String query4="SELECT (orden.estado) as estado FROM orden WHERE orden.id_orden="+id_orden+";";
+                String query5="SELECT (orden.num_rastreo) as rastreo FROM orden WHERE orden.id_orden="+id_orden+";";
+                rs1 = sentencia.executeQuery(query);
+                try{
+                    while(rs1.next())
+                    queryPais = rs1.getString("pais");
+                }catch (SQLException ex){}
+                rs1 = sentencia.executeQuery(query1);
+                try{
+                     while(rs1.next())
+                     queryCiu = rs1.getString("ciudad");
+                }catch (SQLException ex){}
+                rs1 = sentencia.executeQuery(query3);
+                try{
+                     while(rs1.next())
+                     queryEntr = rs1.getString("tentrega");
+                }catch (SQLException ex){}
+                rs1 = sentencia.executeQuery(query4);
+                try{
+                     while(rs1.next())
+                     queryEst = rs1.getString("estado");
+                }catch (SQLException ex){}
+                rs1 = sentencia.executeQuery(query5);
+                try{
+                     while(rs1.next())
+                     queryRas = rs1.getString("rastreo");
+                }catch (SQLException ex){}
+            }catch(SQLException ex){}
+            
+        final JFrame jModOrden = new JFrame("Modificacion de Orden");
         jModOrden.setSize(500, 300);
         jModOrden.setVisible(true);
         Panel panelPrin=new Panel(new GridLayout(7, 1));
         Panel panelpais=new Panel(new GridLayout(1, 2));
         Panel panelciud=new Panel(new GridLayout(1, 2));
+        Panel panelfecha = new Panel(new GridLayout(1,2));
         Panel paneltiem=new Panel(new GridLayout(1, 2));
         Panel panelnum=new Panel(new GridLayout(1, 2));
         Panel panelestado=new Panel(new GridLayout(1, 2));
@@ -195,25 +238,47 @@ public class Orden implements QueryLog{
         Panel panelboton=new Panel(new GridLayout(1, 2));
         Label labelpais=new Label("Pais:", Label.CENTER);
         Label labelciud=new Label("Ciudad:", Label.CENTER);
+        Label labelfecha=new Label("Fecha:", Label.CENTER);
         Label labeltiem=new Label("Tiempo Entrega:", Label.CENTER);
         Label labelnum=new Label("# Rastreo:", Label.CENTER);
         Label labelclien=new Label("Cliente:", Label.CENTER);
         Label labelestado=new Label("Estado:", Label.CENTER);
         Button guardar=new Button("Guardar");
         Button cancelar=new Button("Cancelar");
-        final TextField txtPais=new TextField(o.pais, 20);
-        final TextField txtCiudad=new TextField(o.ciudad, 20);
-        final TextField txtTiempo=new TextField(o.tiempo, 20);
-        final TextField txtNumero=new TextField(o.numero, 20);
-        final TextField txtEstado=new TextField(o.estado, 20);
+        final TextField txtPais=new TextField(queryPais, 20);
+        final TextField txtCiudad=new TextField(queryCiu, 20);
+        final JComboBox txtAño=new JComboBox();
+        final JComboBox txtMes=new JComboBox();
+        final JComboBox txtDia=new JComboBox();
+        for (int i=2000; i<2015; i++){
+            txtAño.addItem(i);
+        }
+        for (int j=1; j<13; j++){
+            txtMes.addItem(j);
+        }
+        for (int i=1; i<32; i++){
+            txtDia.addItem(i);
+        }
+        final TextField txtTiempo=new TextField(queryEntr, 20);
+        final TextField txtNumero=new TextField(queryRas, 20);
+        final TextField txtEstado=new TextField(queryEst, 20);
         final JComboBox clientes=new JComboBox();
-        for(Cliente c : clientes1)
-            clientes.addItem(c.nombre);
-        //final Cliente asignado = clientes1.get(clientes.getSelectedIndex());
+        try{
+          ResultSet rs = Cliente.todosClientes();
+          while(rs.next()){
+              int id = rs.getInt(1);
+              String nombre = rs.getString(2);
+              clientes.addItem(id+" - "+nombre);
+          }  
+        }catch(Exception ex){}
         panelpais.add(labelpais);
         panelpais.add(txtPais);
         panelciud.add(labelciud);
         panelciud.add(txtCiudad);
+        panelfecha.add(labelfecha);
+        panelfecha.add(txtAño);
+        panelfecha.add(txtMes);
+        panelfecha.add(txtDia);
         paneltiem.add(labeltiem);
         paneltiem.add(txtTiempo);
         panelnum.add(labelnum);
@@ -226,6 +291,7 @@ public class Orden implements QueryLog{
         panelboton.add(cancelar);
         panelPrin.add(panelpais);
         panelPrin.add(panelciud);
+        panelPrin.add(panelfecha);
         panelPrin.add(paneltiem);
         panelPrin.add(panelnum);
         panelPrin.add(panelestado);
@@ -234,10 +300,18 @@ public class Orden implements QueryLog{
         jModOrden.add(panelPrin);
         guardar.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e){
-                Orden mod = new Orden(pos+1,txtPais.getText(),txtCiudad.getText(),txtTiempo.getText(),txtNumero.getText(),txtEstado.getText(),clientes1.get(clientes.getSelectedIndex()).id);
-                ordenes.remove(pos);
-                ordenes.add(pos, mod);
+                String cliente = clientes.getSelectedItem().toString();
+                String cliente1[] = cliente.split("\\ ");
+                String id_cliente = cliente1[0];
+                try {
+                    Connection con=connect.Conexion_SQL();
+                    Statement sentencia=con.createStatement();
+                    String query="UPDATE orden SET orden.id_cliente="+id_cliente+", orden.pais='"+txtPais.getText()+"', orden.ciudad='"+txtCiudad.getText()+"', orden.fecha='"+txtAño.getSelectedItem().toString()+"-"+txtMes.getSelectedItem().toString()+"-"+txtDia.getSelectedItem().toString()+"', orden.t_entrega="+txtTiempo.getText()+", orden.estado='"+txtEstado.getText()+"', orden.num_rastreo='"+txtNumero.getText()+"' WHERE orden.id_orden="+id_orden+";";
+                    sentencia.executeUpdate(query);
+                    log.add(query);
+                }catch(SQLException ex){}
                 jModOrden.setVisible(false);
+                m.paintOrdenes();
             }
         });
         cancelar.addActionListener(new ActionListener(){
@@ -245,6 +319,7 @@ public class Orden implements QueryLog{
                 jModOrden.setVisible(false);
             }
         });
+    }
     }
     
     public static void eliminarOrden(int id_orden){
@@ -286,63 +361,6 @@ public class Orden implements QueryLog{
         }
     }    
 
-    static public void eliminarOrden(final ArrayList<Orden> ordenes, final int pos){  
-        Orden o = ordenes.get(pos);
-        final JFrame jElimOrden = new JFrame("Eliminacion de Ordenes");
-        jElimOrden.setSize(500, 300);
-        jElimOrden.setVisible(true);
-        Panel panelPrin=new Panel(new GridLayout(7, 1));
-        Panel panelpais=new Panel(new GridLayout(1, 2));
-        Panel panelciud=new Panel(new GridLayout(1, 2));
-        Panel paneltiem=new Panel(new GridLayout(1, 2));
-        Panel panelnum=new Panel(new GridLayout(1, 2));
-        Panel panelestado=new Panel(new GridLayout(1, 2));
-        Panel panelclien=new Panel(new GridLayout(1, 2));
-        Panel panelboton=new Panel(new GridLayout(1, 2));
-        Label labelpais=new Label("Pais:", Label.CENTER);
-        Label labelciud=new Label("Ciudad:", Label.CENTER);
-        Label labeltiem=new Label("Tiempo Entrega:", Label.CENTER);
-        Label labelnum=new Label("# Rastreo:", Label.CENTER);
-        Label labelestado=new Label("Estado:", Label.CENTER);
-        Button guardar=new Button("Eliminar");
-        Button cancelar=new Button("Cancelar");
-        Label txtPais=new Label(o.pais, Label.CENTER);
-        Label txtCiudad=new Label(o.ciudad, Label.CENTER);
-        Label txtTiempo=new Label(o.tiempo, Label.CENTER);
-        Label txtNumero=new Label(o.numero, Label.CENTER);
-        Label txtEstado=new Label(o.estado, Label.CENTER);
-        panelpais.add(labelpais);
-        panelpais.add(txtPais);
-        panelciud.add(labelciud);
-        panelciud.add(txtCiudad);
-        paneltiem.add(labeltiem);
-        paneltiem.add(txtTiempo);
-        panelnum.add(labelnum);
-        panelnum.add(txtNumero);
-        panelestado.add(labelestado);
-        panelestado.add(txtEstado);
-        panelboton.add(guardar);
-        panelboton.add(cancelar);
-        panelPrin.add(panelpais);
-        panelPrin.add(panelciud);
-        panelPrin.add(paneltiem);
-        panelPrin.add(panelnum);
-        panelPrin.add(panelestado);
-        panelPrin.add(panelclien);
-        panelPrin.add(panelboton);
-        jElimOrden.add(panelPrin);
-        guardar.addActionListener(new ActionListener(){
-            public void actionPerformed(ActionEvent e){
-                ordenes.remove(pos);
-                jElimOrden.setVisible(false);
-            }
-        });
-        cancelar.addActionListener(new ActionListener(){
-            public void actionPerformed(ActionEvent e){
-                jElimOrden.setVisible(false);
-            }
-        });
-    }
     
     public Object[] arreglo(){
         Object[] arreglo={id, pais, ciudad, tiempo, numero, estado, cliente};

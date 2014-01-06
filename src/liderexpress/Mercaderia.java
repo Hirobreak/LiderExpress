@@ -185,21 +185,85 @@ public class Mercaderia implements QueryLog {
         return rs;
     }
    
-    static public void modMerc(final ArrayList<Orden> ordenes,final ArrayList<Mercaderia> mercaderias, final int pos){
-        Mercaderia m = mercaderias.get(pos);
-        final JFrame jModMerc = new JFrame("Creacion de Mercaderia");
-        jModMerc.setSize(500, 300);
-        jModMerc.setVisible(true);
+    static public void modMerc(final int id_merca, final MainMenu m){
+        int confirm = JOptionPane.showConfirmDialog(null, "Esta seguro que desea modificar la Mercaderia ID: "+id_merca+"?","ALERTA",JOptionPane.INFORMATION_MESSAGE);
+        if(confirm==JOptionPane.OK_OPTION){
+            String queryEst = "";
+            String queryMar = "";
+            String queryDsc = "";
+            String queryCompos = "";
+            String queryCan = "";
+            String queryOri = "";
+            String queryVen = "";
+            String queryCompra = "";
+            ResultSet rs1 = null;
+            try {
+                Connection con=connect.Conexion_SQL();
+                Statement sentencia=con.createStatement();
+                String query="SELECT (mercaderia.estilo) as estilo FROM mercaderia WHERE mercaderia.id_merca="+id_merca+";";
+                String query1="SELECT (mercaderia.marca) as marca FROM mercaderia WHERE mercaderia.id_merca="+id_merca+";";
+                String query2="SELECT (mercaderia.dsc) as dsc FROM mercaderia WHERE mercaderia.id_merca="+id_merca+";";
+                String query3="SELECT (mercaderia.compos) as compos FROM mercaderia WHERE mercaderia.id_merca="+id_merca+";";
+                String query4="SELECT (mercaderia.cantidad) as cantidad FROM mercaderia WHERE mercaderia.id_merca="+id_merca+";";
+                String query5="SELECT (mercaderia.origen) as origen FROM mercaderia WHERE mercaderia.id_merca="+id_merca+";";
+                String query6="SELECT (mercaderia.precio_venta) as venta FROM mercaderia WHERE mercaderia.id_merca="+id_merca+";";
+                String query7="SELECT (mercaderia.precio_compra) as compra FROM mercaderia WHERE mercaderia.id_merca="+id_merca+";";
+                rs1 = sentencia.executeQuery(query);
+                try{
+                    while(rs1.next())
+                    queryEst = rs1.getString("estilo");
+                }catch (SQLException ex){}
+                rs1 = sentencia.executeQuery(query1);
+                try{
+                     while(rs1.next())
+                     queryMar = rs1.getString("marca");
+                }catch (SQLException ex){}
+                rs1 = sentencia.executeQuery(query2);
+                try{
+                     while(rs1.next())
+                     queryDsc = rs1.getString("dsc");
+                }catch (SQLException ex){}
+                rs1 = sentencia.executeQuery(query3);
+                try{
+                     while(rs1.next())
+                     queryCompos = rs1.getString("compos");
+                }catch (SQLException ex){}
+                rs1 = sentencia.executeQuery(query4);
+                try{
+                     while(rs1.next())
+                     queryCan = rs1.getString("cantidad");
+                }catch (SQLException ex){}
+                 rs1 = sentencia.executeQuery(query5);
+                try{
+                     while(rs1.next())
+                     queryOri = rs1.getString("origen");
+                }catch (SQLException ex){}
+                rs1 = sentencia.executeQuery(query6);
+                try{
+                     while(rs1.next())
+                     queryVen = rs1.getString("venta");
+                }catch (SQLException ex){}
+                rs1 = sentencia.executeQuery(query7);
+                try{
+                     while(rs1.next())
+                     queryCompra = rs1.getString("compra");
+                }catch (SQLException ex){}
+            }catch(SQLException ex){}
+           
+        
+        final JFrame jCrearMerc = new JFrame("Modificacion de Mercaderia");
+        jCrearMerc.setSize(500, 300);
+        jCrearMerc.setVisible(true);
         Panel panelPrin=new Panel(new GridLayout(10, 1));
         Panel panelEst=new Panel(new GridLayout(1, 2));
         Panel panelMarc=new Panel(new GridLayout(1, 2));
         Panel panelDesc=new Panel(new GridLayout(1, 2));
         Panel panelComp=new Panel(new GridLayout(1, 2));
         Panel panelorig=new Panel(new GridLayout(1, 2));
+        Panel panelOrd=new Panel(new GridLayout(1, 2));
         Panel panelpp=new Panel(new GridLayout(1, 2));
         Panel panelpc=new Panel(new GridLayout(1, 2));
         Panel panelcant=new Panel(new GridLayout(1, 2));
-        Panel panelOrd=new Panel(new GridLayout(1, 2));
         Panel panelboton=new Panel(new GridLayout(1, 2));
         Label labelEst=new Label("Estilo:", Label.CENTER);
         Label labelMarc=new Label("Marca", Label.CENTER);
@@ -212,17 +276,26 @@ public class Mercaderia implements QueryLog {
         Label labelcant=new Label("Cantidad: ", Label.CENTER);
         Button guardar=new Button("Guardar");
         Button cancelar=new Button("Cancelar");
-        final TextField txtEst=new TextField(m.style, 20);
-        final TextField txtMarc=new TextField(m.mark, 20);
-        final TextField txtDesc=new TextField(m.desc, 20);
-        final TextField txtComp=new TextField(m.comp, 20);
-        final TextField txtOrg=new TextField(m.origen, 20);
-        final TextField txtpp=new TextField(String.valueOf(m.preProv), 20);
-        final TextField txtpc=new TextField(String.valueOf(m.preClien), 20);
-        final TextField txtcant=new TextField(String.valueOf(m.cantidad), 20);
+        final TextField txtEst=new TextField(queryEst, 20);
+        final TextField txtMarc=new TextField(queryMar, 20);
+        final TextField txtDesc=new TextField(queryDsc, 20);
+        final TextField txtComp=new TextField(queryCompos, 20);
+        final TextField txtOrg=new TextField(queryOri, 20);
+        final TextField txtpp=new TextField(queryVen, 20);
+        final TextField txtpc=new TextField(queryCompra, 20);
+        final TextField txtcant=new TextField(queryCan, 20);
         final JComboBox listaOrd=new JComboBox();
-        for(Orden o : ordenes)
-            listaOrd.addItem(o.numero);
+        try{
+          ResultSet rs = Orden.todasOrdenes();
+          while(rs.next()){
+              int id = rs.getInt(1);
+              String idOrden = rs.getString(1);
+              String idCliente = rs.getString(2);
+              listaOrd.addItem("Orden: "+idOrden+" - Cliente: "+idCliente);
+          }  
+        }catch(Exception ex){
+                    
+        }
         panelEst.add(labelEst);
         panelEst.add(txtEst);
         panelMarc.add(labelMarc);
@@ -253,20 +326,30 @@ public class Mercaderia implements QueryLog {
         panelPrin.add(panelcant);
         panelPrin.add(panelOrd);
         panelPrin.add(panelboton);
-        jModMerc.add(panelPrin);
+        jCrearMerc.add(panelPrin);
         guardar.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e){
-                Mercaderia mod = new Mercaderia(pos+1,txtEst.getText(),txtMarc.getText(),txtDesc.getText(),txtComp.getText(),txtOrg.getText(),ordenes.get(listaOrd.getSelectedIndex()).id, Float.parseFloat(txtpp.getText()), Float.parseFloat(txtpc.getText()), Integer.parseInt(txtcant.getText()));
-                mercaderias.remove(pos);
-                mercaderias.add(pos, mod);
-                jModMerc.setVisible(false);
+                String orden = listaOrd.getSelectedItem().toString();
+                String orden1[] = orden.split("\\ ");
+                String id_orden = orden1[1];
+                System.out.println(id_orden);
+                try {
+                    Connection con=connect.Conexion_SQL();
+                    Statement sentencia=con.createStatement();
+                    String query="UPDATE mercaderia SET mercaderia.estilo="+txtEst.getText()+", mercaderia.marca='"+txtMarc.getText()+"', mercaderia.dsc='"+txtDesc.getText()+"', mercaderia.compos='"+txtComp.getText()+"', mercaderia.cantidad="+txtcant.getText()+", mercaderia.origen='"+txtOrg.getText()+"', mercaderia.precio_venta="+txtpp.getText()+", mercaderia.precio_compra="+txtpc.getText()+", mercaderia.id_orden="+id_orden+" WHERE mercaderia.id_merca="+id_merca+";";
+                    sentencia.executeUpdate(query);
+                    log.add(query);
+                }catch(SQLException ex){}
+                jCrearMerc.setVisible(false);
+                m.paintMercas();
             }
         });
         cancelar.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e){
-                jModMerc.setVisible(false);
+                jCrearMerc.setVisible(false);
             }
         });
+        }
     }
     
     public static void eliminarMerca(int id_merca){
@@ -298,81 +381,6 @@ public class Mercaderia implements QueryLog {
         }
     }
     
-    static public void eliminarMerc(final ArrayList<Mercaderia> mercaderias, final int pos){
-        Mercaderia m = mercaderias.get(pos);
-        final JFrame jElimMerc = new JFrame("Eliminacion de Mercaderia");
-        jElimMerc.setSize(500, 300);
-        jElimMerc.setVisible(true);
-        Panel panelPrin=new Panel(new GridLayout(10, 1));
-        Panel panelEst=new Panel(new GridLayout(1, 2));
-        Panel panelMarc=new Panel(new GridLayout(1, 2));
-        Panel panelDesc=new Panel(new GridLayout(1, 2));
-        Panel panelComp=new Panel(new GridLayout(1, 2));
-        Panel panelorig=new Panel(new GridLayout(1, 2));
-        Panel panelpp=new Panel(new GridLayout(1, 2));
-        Panel panelpc=new Panel(new GridLayout(1, 2));
-        Panel panelcant=new Panel(new GridLayout(1, 2));
-        Panel panelOrd=new Panel(new GridLayout(1, 2));
-        Panel panelboton=new Panel(new GridLayout(1, 2));
-        Label labelEst=new Label("Estilo:", Label.CENTER);
-        Label labelMarc=new Label("Marca", Label.CENTER);
-        Label labelDesc=new Label("Descripción:", Label.CENTER);
-        Label labelComp=new Label("Composición:", Label.CENTER);
-        Label labelOrg=new Label("Origen:", Label.CENTER);
-        Label labelpp=new Label("Precio Proveedor $:", Label.CENTER);
-        Label labelpc=new Label("Precio Venta $: ", Label.CENTER);
-        Label labelcant=new Label("Cantidad: ", Label.CENTER);
-        Button guardar=new Button("Eliminar");
-        Button cancelar=new Button("Cancelar");
-        Label txtEst=new Label(m.style, Label.CENTER);
-        Label txtMarc=new Label(m.mark, Label.CENTER);
-        Label txtDesc=new Label(m.desc, Label.CENTER);
-        Label txtComp=new Label(m.comp, Label.CENTER);
-        Label txtOrg=new Label(m.origen, Label.CENTER);
-        Label txtpp=new Label(String.valueOf(m.preProv), Label.CENTER);
-        Label txtpc=new Label(String.valueOf(m.preClien), Label.CENTER);
-        Label txtcant=new Label(String.valueOf(m.cantidad), Label.CENTER);
-        panelEst.add(labelEst);
-        panelEst.add(txtEst);
-        panelMarc.add(labelMarc);
-        panelMarc.add(txtMarc);
-        panelDesc.add(labelDesc);
-        panelDesc.add(txtDesc);
-        panelComp.add(labelComp);
-        panelComp.add(txtComp);
-        panelorig.add(labelOrg);
-        panelorig.add(txtOrg);
-        panelboton.add(guardar);
-        panelboton.add(cancelar);
-        panelpp.add(labelpp);
-        panelpp.add(txtpp);
-        panelpc.add(labelpc);
-        panelpc.add(txtpc);
-        panelcant.add(labelcant);
-        panelcant.add(txtcant);
-        panelPrin.add(panelEst);
-        panelPrin.add(panelMarc);
-        panelPrin.add(panelDesc);
-        panelPrin.add(panelComp);
-        panelPrin.add(panelorig);
-        panelPrin.add(panelpp);
-        panelPrin.add(panelpc);
-        panelPrin.add(panelcant);
-        panelPrin.add(panelOrd);
-        panelPrin.add(panelboton);
-        jElimMerc.add(panelPrin);
-        guardar.addActionListener(new ActionListener(){
-            public void actionPerformed(ActionEvent e){
-                mercaderias.remove(pos);
-                jElimMerc.setVisible(false);
-            }
-        });
-        cancelar.addActionListener(new ActionListener(){
-            public void actionPerformed(ActionEvent e){
-                jElimMerc.setVisible(false);
-            }
-        });
-    }
         public Object[] arreglo(){
         Object[] arreglo={id, style, mark, desc, comp, origen, preProv, preClien, cantidad, idorden};
         return arreglo;

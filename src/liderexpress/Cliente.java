@@ -183,12 +183,12 @@ public class Cliente extends Validaciones implements QueryLog {
     static void modificarCliente(final int id_cliente, final MainMenu m){ 
         int confirm = JOptionPane.showConfirmDialog(null, "Esta seguro que desea modificar al Cliente ID: "+id_cliente+"?","ALERTA",JOptionPane.INFORMATION_MESSAGE);
         if(confirm==JOptionPane.OK_OPTION){
-        String queryNom = "";
-        String queryCed = "";
-        String queryRuc = "";
-        String queryCom = "";
-        String queryTelf = "";
-        ResultSet rs = null;
+            String queryNom = "";
+            String queryCed = "";
+            String queryRuc = "";
+            String queryCom = "";
+            String queryTelf = "";
+            ResultSet rs = null;
             try {
                 Connection con=connect.Conexion_SQL();
                 Statement sentencia=con.createStatement();
@@ -223,7 +223,7 @@ public class Cliente extends Validaciones implements QueryLog {
                      queryCed = rs.getString("cedula");
                 }catch (SQLException ex){}
             }catch(SQLException ex){}
-        final JFrame jModCliente = new JFrame("Creacion de Cliente");
+        final JFrame jModCliente = new JFrame("Modificacion de Cliente");
         jModCliente.setSize(500, 300);
         jModCliente.setVisible(true);
         Panel panelPrin=new Panel(new GridLayout(6, 1));

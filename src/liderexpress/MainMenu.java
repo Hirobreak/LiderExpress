@@ -194,39 +194,30 @@ public class MainMenu extends JFrame implements ActionListener,QueryLog{
         
         if(ae.getSource()==nuevo && entidad==1){
             Cliente.crearCliente(this);
-            paintClientes();
         }
         if(ae.getSource()==nuevo && entidad==2){
             Orden.crearOrden(this);
-            paintOrdenes();
         }
         if(ae.getSource()==nuevo && entidad==3){
             Mercaderia.crearMerc(this);
-            paintMercas();
         }
         if(ae.getSource()==nuevo && entidad==4){
             Empaquetado.crearEmpaq(this);
-            paintEmpaqs();
         }
         if(ae.getSource()==nuevo && entidad==5){
             Importacion.crearImpo(this);
-            paintImports();
         }
         if(ae.getSource()==nuevo && entidad==6){
             Proveedor.crearProv(this);
-            paintProvs();
         }
         if(ae.getSource()==nuevo && entidad==7){
             Trabajador.crearTrab(this);
-            paintTrabs();
         }
         if(ae.getSource()==nuevo && entidad==8){
             Caja.crearCaja(this);
-            paintCajas();
         }
         if(ae.getSource()==nuevo && entidad==9){
             Contenedor.crearCont(this);
-            paintConts();
         }
         if(ae.getSource()==editar && entidad==1){
             int id = (int)tabla.getValueAt(tabla.getSelectedRow(),0);
@@ -234,34 +225,28 @@ public class MainMenu extends JFrame implements ActionListener,QueryLog{
             paintClientes();
         }
         if(ae.getSource()==editar && entidad==2){
-            int fila = tabla.getSelectedRow();
-            Orden.modificarOrden(clientes, ordenes, fila);
-            paintOrdenes();
+            int id = (int)tabla.getValueAt(tabla.getSelectedRow(),0);
+            Orden.modificarOrden(id, this);
         }
         if(ae.getSource()==editar && entidad==3){
-            int fila = tabla.getSelectedRow();
-            Mercaderia.modMerc(ordenes,mercaderias, fila);
-            paintMercas();
+            int id = (int)tabla.getValueAt(tabla.getSelectedRow(),0);
+            Mercaderia.modMerc(id, this);
         }
         if(ae.getSource()==editar && entidad==4){
             int fila = tabla.getSelectedRow();
             Empaquetado.modEmpaq(adminEmpaquetado);
-            paintEmpaqs();
         }
         if(ae.getSource()==editar && entidad==5){
             int fila = tabla.getSelectedRow();
             Importacion.modImpo(adminImportacion);
-            paintImports();
         }
         if(ae.getSource()==editar && entidad==6){
             int fila = tabla.getSelectedRow();
             Proveedor.modProv(proveedores, fila);
-            paintProvs();
         }
         if(ae.getSource()==editar && entidad==7){
             int fila = tabla.getSelectedRow();
             Trabajador.modTrab(adminTrabajador);
-            paintTrabs();
         }
         if(ae.getSource()==eliminar && entidad==1){
             int id = (int)tabla.getValueAt(tabla.getSelectedRow(),0);
@@ -276,6 +261,7 @@ public class MainMenu extends JFrame implements ActionListener,QueryLog{
         if(ae.getSource()==eliminar && entidad==3){
             int id = (int)tabla.getValueAt(tabla.getSelectedRow(),0);
             Mercaderia.eliminarMerca(id);
+            paintMercas();
         }
         if(ae.getSource()==eliminar && entidad==4){
             int id = (int)tabla.getValueAt(tabla.getSelectedRow(),0);
@@ -484,7 +470,7 @@ public class MainMenu extends JFrame implements ActionListener,QueryLog{
     
     public void paintMercas(){
         this.panel.setBorder (BorderFactory.createTitledBorder (BorderFactory.createEtchedBorder (), "Mercaderia", TitledBorder.CENTER, TitledBorder.TOP));
-        Object[] columns={"id", "Estilo", "Marca", "Descripcion", "Composicion", "Cantidad", "Origen", "PVP", "Precio Compra",  "idOrden"};
+        Object[] columns={"id", "Estilo", "Marca", "Descripcion", "Composicion", "Cantidad", "Origen", "PVP", "Precio Compra", "idOrden"};
         DefaultTableModel modelo3=new DefaultTableModel(null, columns);
         ResultSet rs = Mercaderia.todasMercas();
         try {
