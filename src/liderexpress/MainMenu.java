@@ -233,20 +233,20 @@ public class MainMenu extends JFrame implements ActionListener,QueryLog{
             Mercaderia.modMerc(id, this);
         }
         if(ae.getSource()==editar && entidad==4){
-            int fila = tabla.getSelectedRow();
-            Empaquetado.modEmpaq(adminEmpaquetado);
+            int id = (int)tabla.getValueAt(tabla.getSelectedRow(),0);
+            Empaquetado.modEmpaq(id, this);
         }
         if(ae.getSource()==editar && entidad==5){
-            int fila = tabla.getSelectedRow();
-            Importacion.modImpo(adminImportacion);
+            int id = (int)tabla.getValueAt(tabla.getSelectedRow(),0);
+            Importacion.modImpo(id, this);
         }
         if(ae.getSource()==editar && entidad==6){
-            int fila = tabla.getSelectedRow();
-            Proveedor.modProv(proveedores, fila);
+            int id = (int)tabla.getValueAt(tabla.getSelectedRow(),0);
+            Proveedor.modProv(id, this);
         }
         if(ae.getSource()==editar && entidad==7){
-            int fila = tabla.getSelectedRow();
-            Trabajador.modTrab(adminTrabajador);
+            int id = (int)tabla.getValueAt(tabla.getSelectedRow(),0);
+            Trabajador.modTrab(id, this);
         }
         if(ae.getSource()==eliminar && entidad==1){
             int id = (int)tabla.getValueAt(tabla.getSelectedRow(),0);

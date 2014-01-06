@@ -181,8 +181,7 @@ public class Cliente extends Validaciones implements QueryLog {
     }
     
     static void modificarCliente(final int id_cliente, final MainMenu m){ 
-        int confirm = JOptionPane.showConfirmDialog(null, "Esta seguro que desea modificar al Cliente ID: "+id_cliente+"?","ALERTA",JOptionPane.INFORMATION_MESSAGE);
-        if(confirm==JOptionPane.OK_OPTION){
+
             String queryNom = "";
             String queryCed = "";
             String queryRuc = "";
@@ -266,7 +265,6 @@ public class Cliente extends Validaciones implements QueryLog {
         jModCliente.add(panelPrin);
         guardar.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e){
-                                
                 if(esCEDULA(txtCedula.getText())==false)
                         JOptionPane.showMessageDialog(null,"Error, la cedula es un numero de 10 digitos.Intente de nuevo");
                 if(esRUC(txtRuc.getText())==false)
@@ -279,6 +277,8 @@ public class Cliente extends Validaciones implements QueryLog {
                         JOptionPane.showMessageDialog(null,"Error,la compañia puede tener maximo hasta 30 caracterres.Intente de nuevo");
                 
                 if(esCEDULA(txtCedula.getText())&& esRUC(txtRuc.getText())&&esTELF(txtTelf1.getText())&&largoString(txtNombre.getText(),40)&&largoString(txtCompa.getText(),30)  ) { 
+                int confirm = JOptionPane.showConfirmDialog(null, "Esta seguro que desea modificar al Cliente ID: "+id_cliente+"?","ALERTA",JOptionPane.INFORMATION_MESSAGE);
+                if(confirm==JOptionPane.OK_OPTION){
                 try {
                     Connection con=connect.Conexion_SQL();
                     Statement sentencia=con.createStatement();
@@ -289,13 +289,13 @@ public class Cliente extends Validaciones implements QueryLog {
                 jModCliente.setVisible(false);
                 m.paintClientes();
             }
+        }
         });
         cancelar.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e){
                 jModCliente.setVisible(false);
             }
         });
-        }
     }
     
     public static void eliminarCliente(int id_cliente){

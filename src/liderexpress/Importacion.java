@@ -168,7 +168,7 @@ public class Importacion implements QueryLog{
         return id;
     }
     
-    static public void modImpo(Importacion im){
+    static public void modImpo(final int id_import, final MainMenu m){
         final JFrame jModImpo = new JFrame("Modificacion de Importación");
         jModImpo.setSize(500, 300);
         jModImpo.setVisible(true);
@@ -183,17 +183,31 @@ public class Importacion implements QueryLog{
         Label labelFecha=new Label("Fecha:", Label.CENTER);
         Button guardar=new Button("Guardar");
         Button cancelar=new Button("Cancelar");
-        Button bCont=new Button("Contenedores");
-        JComboBox superv=new JComboBox();
-        superv.addItem(im.trabajador);
-        JComboBox provee=new JComboBox();
-        provee.addItem(im.prov);
-        JComboBox cdia=new JComboBox();
-        cdia.addItem(im.dia);
-        JComboBox cmes=new JComboBox();
-        cmes.addItem(im.mes);
-        JComboBox caño=new JComboBox();
-        caño.addItem(im.año);
+        final JComboBox superv=new JComboBox();
+                try{
+          ResultSet rs = Trabajador.todosTrab();
+          while(rs.next()){
+              int id = rs.getInt(1);
+              String nombre = rs.getString(2);
+              superv.addItem(id+" - "+nombre);
+          }  
+        }catch(Exception ex){
+                    
+        }
+        final JComboBox provee=new JComboBox();
+                try{
+          ResultSet rs = Proveedor.todosProv();
+          while(rs.next()){
+              int id = rs.getInt(1);
+              String comp = rs.getString(2);
+              provee.addItem(id+" - "+comp);
+          }  
+        }catch(Exception ex){
+                    
+        }
+        final JComboBox cdia=new JComboBox();
+        final JComboBox cmes=new JComboBox();
+        final JComboBox caño=new JComboBox();
         for (int i=2000; i<2015; i++){
             caño.addItem(i);
         }
@@ -211,19 +225,33 @@ public class Importacion implements QueryLog{
         panelFecha.add(cdia);
         panelFecha.add(cmes);
         panelFecha.add(caño);
-        panelCont.add(bCont);
         panelboton.add(guardar);
         panelboton.add(cancelar);
         panelPrin.add(panelTrab);
         panelPrin.add(panelProv);
         panelPrin.add(panelFecha);
-        panelPrin.add(panelCont);
         panelPrin.add(panelboton);
         jModImpo.add(panelPrin);
         guardar.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e){
+                int confirm = JOptionPane.showConfirmDialog(null, "Esta seguro que desea modificar la Importacion ID: "+id_import+"?","ALERTA",JOptionPane.INFORMATION_MESSAGE);
+                if(confirm==JOptionPane.OK_OPTION){
+                String sup = superv.getSelectedItem().toString();
+                String sup1[] = sup.split("\\ ");
+                String id_trab = sup1[0];
+                String prov = provee.getSelectedItem().toString();
+                String prov1[] = prov.split("\\ ");
+                String id_proveedor = prov1[0];
+                try {
+                    Connection con=connect.Conexion_SQL();
+                    Statement sentencia=con.createStatement();
+                    String query="UPDATE importacion SET importacion.id_trabajador="+id_trab+", importacion.id_proveedor="+id_proveedor+", importacion.fecha='"+caño.getSelectedItem().toString()+"-"+cmes.getSelectedItem().toString()+"-"+cdia.getSelectedItem().toString()+"' WHERE importacion.id_import="+id_import+";";
+                    sentencia.executeUpdate(query);
+                    log.add(query);
+                }catch(SQLException ex){}
                 jModImpo.setVisible(false);
-            }
+                m.paintImports();
+            }}
         });
         cancelar.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e){

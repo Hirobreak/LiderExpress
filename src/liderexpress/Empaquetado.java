@@ -176,10 +176,11 @@ public class Empaquetado implements QueryLog {
     }
     
     
-    static public void modEmpaq(Empaquetado emp){
-        final JFrame jModEmp = new JFrame("Modificar Empaquetado");
-        jModEmp.setSize(500, 300);
+    static public void modEmpaq(final int id_empaq, final MainMenu m){
+        final JFrame jModEmp = new JFrame("Asignar Empaquetado");
+        jModEmp.setSize(800, 200);
         jModEmp.setVisible(true);
+        Panel panelRefresh = new Panel(new GridLayout(2,2));
         Panel panelPrin=new Panel(new GridLayout(5, 1));
         Panel panelMerc=new Panel(new GridLayout(1, 2));
         Panel panelCaja=new Panel(new GridLayout(1, 3));
@@ -192,21 +193,48 @@ public class Empaquetado implements QueryLog {
         Label labelest=new Label("Estado", Label.CENTER);
         Button guardar=new Button("Guardar");
         Button cancelar=new Button("Cancelar");
-        Button crearCaja=new Button("Crear");
-        Button crearCont=new Button("Crear");
-        JComboBox estados=new JComboBox();
-        JComboBox mercas=new JComboBox();
-        JComboBox cajas=new JComboBox();
-        JComboBox contens=new JComboBox();
+        final JComboBox estados=new JComboBox();
         estados.addItem("Embarcado");
         estados.addItem("Desmontado");
+        final JComboBox mercas=new JComboBox();
+        try{
+          ResultSet rs = Mercaderia.todasMercas();
+          while(rs.next()){
+              int id = rs.getInt(1);
+              String estilo = rs.getString(2);
+              mercas.addItem(id+" - "+estilo);
+          }  
+        }catch(Exception ex){
+                    
+        }
+        final JComboBox cajas1=new JComboBox();
+        try{
+          ResultSet rs = Caja.todasCajas();
+          while(rs.next()){
+              int id = rs.getInt(1);
+              String numero = rs.getString(2);
+              cajas1.addItem(id+" - "+numero);
+          }  
+        }catch(Exception ex){
+                    
+        }
+        final JComboBox contens=new JComboBox();
+        try{
+          ResultSet rs = Contenedor.todosConts();
+          while(rs.next()){
+              int id = rs.getInt(1);
+              String dimensiones = rs.getString(2);
+              String estado = rs.getString(4);
+              contens.addItem(id+" - "+dimensiones+" - "+estado);
+          }  
+        }catch(Exception ex){
+                    
+        }
         panelMerc.add(labelMerc);
         panelMerc.add(mercas);
         panelCaja.add(labelCaja);
-        panelCaja.add(crearCaja);
-        panelCaja.add(cajas);
+        panelCaja.add(cajas1);
         panelCont.add(labelCont);
-        panelCont.add(crearCont);
         panelCont.add(contens);
         panelEst.add(labelest);
         panelEst.add(estados);
@@ -217,10 +245,31 @@ public class Empaquetado implements QueryLog {
         panelPrin.add(panelCont);
         panelPrin.add(panelEst);
         panelPrin.add(panelboton);
+        panelPrin.add(panelRefresh);
         jModEmp.add(panelPrin);
         guardar.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e){
+                int confirm = JOptionPane.showConfirmDialog(null, "Esta seguro que desea modificar el empaquetado ID: "+id_empaq+"?","ALERTA",JOptionPane.INFORMATION_MESSAGE);
+                if(confirm==JOptionPane.OK_OPTION){
+                String cont = contens.getSelectedItem().toString();
+                String cont1[] = cont.split("\\ ");
+                String id_cont = cont1[0];
+                String merc = mercas.getSelectedItem().toString();
+                String merc1[] = merc.split("\\ ");
+                String id_merc = merc1[0];
+                String caja = cajas1.getSelectedItem().toString();
+                String caja1[] = caja.split("\\ ");
+                String id_caja = caja1[0];
+                try {
+                    Connection con=connect.Conexion_SQL();
+                    Statement sentencia=con.createStatement();
+                    String query="UPDATE empaquetado SET empaquetado.id_contenedor="+id_cont+", empaquetado.id_merca="+id_merc+", empaquetado.id_caja="+id_caja+", empaquetado.estado='"+estados.getSelectedItem().toString()+"' WHERE empaquetado.id_empaquetado="+id_empaq+";";
+                    sentencia.executeUpdate(query);
+                    log.add(query);
+                }catch(SQLException ex){}
                 jModEmp.setVisible(false);
+                m.paintEmpaqs();
+                }
             }
         });
         cancelar.addActionListener(new ActionListener(){

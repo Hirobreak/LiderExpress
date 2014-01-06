@@ -181,8 +181,7 @@ public class Orden implements QueryLog{
     }
     
     static public void modificarOrden(final int id_orden, final MainMenu m){
-        int confirm = JOptionPane.showConfirmDialog(null, "Esta seguro que desea modificar la Orden ID: "+id_orden+"?","ALERTA",JOptionPane.INFORMATION_MESSAGE);
-        if(confirm==JOptionPane.OK_OPTION){
+
             String queryPais = "";
             String queryCiu = "";
             String queryEntr = "";
@@ -300,6 +299,8 @@ public class Orden implements QueryLog{
         jModOrden.add(panelPrin);
         guardar.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e){
+                int confirm = JOptionPane.showConfirmDialog(null, "Esta seguro que desea modificar la Orden ID: "+id_orden+"?","ALERTA",JOptionPane.INFORMATION_MESSAGE);
+                if(confirm==JOptionPane.OK_OPTION){
                 String cliente = clientes.getSelectedItem().toString();
                 String cliente1[] = cliente.split("\\ ");
                 String id_cliente = cliente1[0];
@@ -312,6 +313,7 @@ public class Orden implements QueryLog{
                 }catch(SQLException ex){}
                 jModOrden.setVisible(false);
                 m.paintOrdenes();
+                }
             }
         });
         cancelar.addActionListener(new ActionListener(){
@@ -319,7 +321,6 @@ public class Orden implements QueryLog{
                 jModOrden.setVisible(false);
             }
         });
-    }
     }
     
     public static void eliminarOrden(int id_orden){

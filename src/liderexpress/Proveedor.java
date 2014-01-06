@@ -145,8 +145,54 @@ public class Proveedor implements QueryLog {
     }
     
     
-    static public void modProv(final ArrayList<Proveedor> proveedores, final int pos){
-        Proveedor  prov = proveedores.get(pos);
+    static public void modProv(final int id_prov, final MainMenu m){
+            String queryCom = "";
+            String queryRup = "";
+            String queryPais = "";
+            String queryCiu = "";
+            String queryDue = "";
+            String queryTelf = "";
+            ResultSet rs1 = null;
+            try {
+                Connection con=connect.Conexion_SQL();
+                Statement sentencia=con.createStatement();
+                String query="SELECT (proveedor.compania) as comp FROM proveedor WHERE proveedor.id_proveedor="+id_prov+";";
+                String query1="SELECT (proveedor.rup) as rup FROM proveedor WHERE proveedor.id_proveedor="+id_prov+";";
+                String query2="SELECT (proveedor.pais) as pais FROM proveedor WHERE proveedor.id_proveedor="+id_prov+";";
+                String query3="SELECT (proveedor.ciudad) as ciudad FROM proveedor WHERE proveedor.id_proveedor="+id_prov+";";
+                String query4="SELECT (proveedor.dueño) as dueño FROM proveedor WHERE proveedor.id_proveedor="+id_prov+";";
+                String query5="SELECT (proveedor.telf) as telf FROM proveedor WHERE proveedor.id_proveedor="+id_prov+";";
+                rs1 = sentencia.executeQuery(query);
+                try{
+                    while(rs1.next())
+                    queryCom = rs1.getString("comp");
+                }catch (SQLException ex){}
+                rs1 = sentencia.executeQuery(query1);
+                try{
+                     while(rs1.next())
+                     queryRup = rs1.getString("rup");
+                }catch (SQLException ex){}
+                rs1 = sentencia.executeQuery(query2);
+                try{
+                     while(rs1.next())
+                     queryPais = rs1.getString("pais");
+                }catch (SQLException ex){}
+                rs1 = sentencia.executeQuery(query3);
+                try{
+                     while(rs1.next())
+                     queryCiu = rs1.getString("ciudad");
+                }catch (SQLException ex){}
+                rs1 = sentencia.executeQuery(query4);
+                try{
+                     while(rs1.next())
+                     queryDue = rs1.getString("dueño");
+                }catch (SQLException ex){}
+                 rs1 = sentencia.executeQuery(query5);
+                try{
+                     while(rs1.next())
+                     queryTelf = rs1.getString("telf");
+                }catch (SQLException ex){}
+            }catch(SQLException ex){}
         final JFrame jModProv = new JFrame("Modificacion de Importador");
         jModProv.setSize(500, 300);
         jModProv.setVisible(true);
@@ -164,12 +210,12 @@ public class Proveedor implements QueryLog {
         Label labeltelf=new Label("Telefonos:", Label.CENTER);
         Button guardar=new Button("Guardar");
         Button cancelar=new Button("Cancelar");
-        final TextField txtCom=new TextField(prov.compañia, 20);
-        final TextField txtRUP=new TextField(String.valueOf(prov.rup), 20);
-        final TextField txtDueño=new TextField(prov.dueño, 20);
-        final TextField txtPais=new TextField(prov.pais, 20);
-        final TextField txtTelf=new TextField(String.valueOf(prov.telf), 20);
-        final TextField txtCiudad=new TextField(prov.ciudad, 20);
+        final TextField txtCom=new TextField(queryCom, 20);
+        final TextField txtRUP=new TextField(queryRup, 20);
+        final TextField txtDueño=new TextField(queryDue, 20);
+        final TextField txtPais=new TextField(queryPais, 20);
+        final TextField txtTelf=new TextField(queryTelf, 20);
+        final TextField txtCiudad=new TextField(queryCiu, 20);
         panelCom.add(labelCom);
         panelCom.add(txtCom);
         panelRup.add(labelRup);
@@ -192,11 +238,18 @@ public class Proveedor implements QueryLog {
         jModProv.add(panelPrin);
         guardar.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e){
-                Proveedor mod = new Proveedor(pos+1,txtCom.getText(),Integer.parseInt(txtRUP.getText()),txtPais.getText(),txtCiudad.getText(),txtDueño.getText(),Integer.parseInt(txtTelf.getText()));
-                proveedores.remove(pos);
-                proveedores.add(pos, mod);
+                int confirm = JOptionPane.showConfirmDialog(null, "Esta seguro que desea modificar Proveedor ID: "+id_prov+"?","ALERTA",JOptionPane.INFORMATION_MESSAGE);
+                if(confirm==JOptionPane.OK_OPTION){
+                try {
+                    Connection con=connect.Conexion_SQL();
+                    Statement sentencia=con.createStatement();
+                    String query="UPDATE proveedor SET proveedor.compania='"+txtCom.getText()+"', proveedor.rup='"+txtRUP.getText()+"', proveedor.pais='"+txtPais.getText()+"', proveedor.ciudad='"+txtCiudad.getText()+"', proveedor.dueño='"+txtDueño.getText()+"', proveedor.telf='"+txtTelf.getText()+"' WHERE proveedor.id_proveedor="+id_prov+";";
+                    sentencia.executeUpdate(query);
+                    log.add(query);
+                }catch(SQLException ex){}
                 jModProv.setVisible(false);
-            }
+                m.paintProvs();
+            }}
         });
         cancelar.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e){

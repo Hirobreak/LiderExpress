@@ -186,8 +186,7 @@ public class Mercaderia implements QueryLog {
     }
    
     static public void modMerc(final int id_merca, final MainMenu m){
-        int confirm = JOptionPane.showConfirmDialog(null, "Esta seguro que desea modificar la Mercaderia ID: "+id_merca+"?","ALERTA",JOptionPane.INFORMATION_MESSAGE);
-        if(confirm==JOptionPane.OK_OPTION){
+
             String queryEst = "";
             String queryMar = "";
             String queryDsc = "";
@@ -329,6 +328,8 @@ public class Mercaderia implements QueryLog {
         jCrearMerc.add(panelPrin);
         guardar.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e){
+                int confirm = JOptionPane.showConfirmDialog(null, "Esta seguro que desea modificar la Mercaderia ID: "+id_merca+"?","ALERTA",JOptionPane.INFORMATION_MESSAGE);
+                if(confirm==JOptionPane.OK_OPTION){
                 String orden = listaOrd.getSelectedItem().toString();
                 String orden1[] = orden.split("\\ ");
                 String id_orden = orden1[1];
@@ -342,6 +343,7 @@ public class Mercaderia implements QueryLog {
                 }catch(SQLException ex){}
                 jCrearMerc.setVisible(false);
                 m.paintMercas();
+                }
             }
         });
         cancelar.addActionListener(new ActionListener(){
@@ -349,7 +351,7 @@ public class Mercaderia implements QueryLog {
                 jCrearMerc.setVisible(false);
             }
         });
-        }
+        
     }
     
     public static void eliminarMerca(int id_merca){

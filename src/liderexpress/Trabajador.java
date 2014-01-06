@@ -147,7 +147,54 @@ public class Trabajador implements QueryLog {
     }
         
         
-    static public void modTrab(Trabajador tr){
+    static public void modTrab(final int id_trab, final MainMenu m){
+            String queryNom = "";
+            String queryCed = "";
+            String queryPue = "";
+            String queryTelf = "";
+            String querySue = "";
+            String queryMail = "";
+            ResultSet rs1 = null;
+            try {
+                Connection con=connect.Conexion_SQL();
+                Statement sentencia=con.createStatement();
+                String query="SELECT (trabajador.nombre) as nombre FROM trabajador WHERE trabajador.id_trabajador="+id_trab+";";
+                String query1="SELECT (trabajador.cedula) as cedula FROM trabajador WHERE trabajador.id_trabajador="+id_trab+";";
+                String query2="SELECT (trabajador.puesto) as puesto FROM trabajador WHERE trabajador.id_trabajador="+id_trab+";";
+                String query3="SELECT (trabajador.telf) as telf FROM trabajador WHERE trabajador.id_trabajador="+id_trab+";";
+                String query4="SELECT (trabajador.sueldo) as sueldo FROM trabajador WHERE trabajador.id_trabajador="+id_trab+";";
+                String query5="SELECT (trabajador.mail) as mail FROM trabajador WHERE trabajador.id_trabajador="+id_trab+";";
+                rs1 = sentencia.executeQuery(query);
+                try{
+                    while(rs1.next())
+                    queryNom = rs1.getString("nombre");
+                }catch (SQLException ex){}
+                rs1 = sentencia.executeQuery(query1);
+                try{
+                     while(rs1.next())
+                     queryCed = rs1.getString("cedula");
+                }catch (SQLException ex){}
+                rs1 = sentencia.executeQuery(query2);
+                try{
+                     while(rs1.next())
+                     queryPue = rs1.getString("puesto");
+                }catch (SQLException ex){}
+                rs1 = sentencia.executeQuery(query3);
+                try{
+                     while(rs1.next())
+                     queryTelf = rs1.getString("telf");
+                }catch (SQLException ex){}
+                rs1 = sentencia.executeQuery(query4);
+                try{
+                     while(rs1.next())
+                     querySue = rs1.getString("sueldo");
+                }catch (SQLException ex){}
+                 rs1 = sentencia.executeQuery(query5);
+                try{
+                     while(rs1.next())
+                     queryMail = rs1.getString("mail");
+                }catch (SQLException ex){}
+            }catch(SQLException ex){}
         final JFrame jModT = new JFrame("Modificacion de Trabajador");
         jModT.setSize(500, 300);
         jModT.setVisible(true);
@@ -167,12 +214,12 @@ public class Trabajador implements QueryLog {
         Label labeltelf=new Label("Telefonos:", Label.CENTER);
         Button guardar=new Button("Guardar");
         Button cancelar=new Button("Cancelar");
-        TextField txtNombre=new TextField(tr.nombre, 20);
-        TextField txtCargo=new TextField(tr.cargo, 20);
-        TextField txtCedula=new TextField(String.valueOf(tr.cedula), 20);
-        TextField txtSalario=new TextField(String.valueOf(tr.salario), 20);
-        TextField txtTelf=new TextField(String.valueOf(tr.telefono), 20);
-        TextField txtCorreo=new TextField(tr.mail, 20);
+        final TextField txtNombre=new TextField(queryNom, 20);
+        final TextField txtCargo=new TextField(queryPue, 20);
+        final TextField txtCedula=new TextField(queryCed, 20);
+        final TextField txtSalario=new TextField(querySue, 20);
+        final TextField txtTelf=new TextField(queryTelf, 20);
+        final TextField txtCorreo=new TextField(queryMail, 20);
         panelnombre.add(labelnom);
         panelnombre.add(txtNombre);
         panelced.add(labelced);
@@ -197,14 +244,24 @@ public class Trabajador implements QueryLog {
         jModT.add(panelPrin);
         guardar.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e){
+                int confirm = JOptionPane.showConfirmDialog(null, "Esta seguro que desea modificar Trabajador ID: "+id_trab+"?","ALERTA",JOptionPane.INFORMATION_MESSAGE);
+                if(confirm==JOptionPane.OK_OPTION){
+                try {
+                    Connection con=connect.Conexion_SQL();
+                    Statement sentencia=con.createStatement();
+                    String query="UPDATE trabajador SET trabajador.nombre='"+txtNombre.getText()+"', trabajador.cedula='"+txtCedula.getText()+"', trabajador.puesto='"+txtCargo.getText()+"', trabajador.telf='"+txtTelf.getText()+"', trabajador.sueldo="+txtSalario.getText()+", trabajador.mail='"+txtCorreo.getText()+"' WHERE trabajador.id_trabajador="+id_trab+";";
+                    sentencia.executeUpdate(query);
+                    log.add(query);
+                }catch(SQLException ex){}
                 jModT.setVisible(false);
-            }
+                m.paintTrabs();
+            }}
         });
         cancelar.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e){
                 jModT.setVisible(false);
             }
-        }); 
+        });
     }
     
     public static void eliminarTrab(int id_trab){
