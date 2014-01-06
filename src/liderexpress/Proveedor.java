@@ -14,6 +14,7 @@ import javax.swing.border.*;
 import static liderexpress.Cliente.connect;
 import static liderexpress.QueryLog.log;
 import static liderexpress.Trabajador.newID;
+import static liderexpress.Validaciones.*;
 
 public class Proveedor implements QueryLog {
     int id;
@@ -80,6 +81,19 @@ public class Proveedor implements QueryLog {
         jCrearProv.add(panelPrin);
         guardar.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e){
+                if(largoString(txtCom.getText(),40)==false)
+                        JOptionPane.showMessageDialog(null,"Error,la compañia es de hasta 40 caracteres.Intente de nuevo");
+                if(largoInt(txtRUP.getText(),20)==false)
+                        JOptionPane.showMessageDialog(null,"Error,el RUP es un numero de hasta 20 digitos.Intente de nuevo");
+                if(largoString(txtPais.getText(),20)==false)
+                        JOptionPane.showMessageDialog(null,"Error,el pais debe tener hasta 20 caracteres.Intente de nuevo");
+                if(largoString(txtCiudad.getText(),20)==false)
+                        JOptionPane.showMessageDialog(null,"Error,la ciudad debe tener hasta 30 caracteres.Intente de nuevo");
+                if(largoString(txtDueño.getText(),20)==false)
+                        JOptionPane.showMessageDialog(null,"Error,el dueño debe tener hasta 20 caracteres.Intente de nuevo");
+                if(largoInt(txtTelf.getText(),20)==false)
+                        JOptionPane.showMessageDialog(null,"Error,el telefono debe tener hasta 20 caraceres.Intente de nuevo");                
+                if(largoString(txtCom.getText(),40)&&largoInt(txtRUP.getText(),20)&&largoString(txtPais.getText(),20)&&largoString(txtCiudad.getText(),20)&&largoString(txtDueño.getText(),20)&&largoInt(txtTelf.getText(),20))
                 nuevoProv(txtCom.getText(),txtRUP.getText(),txtPais.getText(),txtCiudad.getText(),txtDueño.getText(),txtTelf.getText());
                 jCrearProv.setVisible(false);
                 m.paintProvs();

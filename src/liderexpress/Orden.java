@@ -16,7 +16,7 @@ import javax.swing.*;
 import javax.swing.border.*;
 import static liderexpress.Cliente.connect;
 import static liderexpress.QueryLog.log;
-
+import static liderexpress.Validaciones.*;
 public class Orden implements QueryLog{
     int id;
     String pais;
@@ -117,11 +117,21 @@ public class Orden implements QueryLog{
                 String cliente = clientes.getSelectedItem().toString();
                 String cliente1[] = cliente.split("\\ ");
                 String id_cliente = cliente1[0];
-                
-                
-                
-                
+                if(largoString(txtPais.getText(),20)==false)
+                        JOptionPane.showMessageDialog(null,"Error,el pais puede tener hasta 20 caracteres.Intente de nuevo");
+                if(largoString(txtCiudad.getText(),20)==false)
+                        JOptionPane.showMessageDialog(null,"Error,la cuidad debe tener hasta 20 caracteres.Intente de nuevo");
+                if(largoInt(txtTiempo.getText(),5)==false)
+                        JOptionPane.showMessageDialog(null,"Error,el tienpo es de hasta 5 digitos.Intente de nuevo");
+                if(largoString(txtEstado.getText(),20)==false)
+                        JOptionPane.showMessageDialog(null,"Error,el estado debe tener hasta 20 caracteres.Intente de nuevo");
+                if(largoInt(txtNumero.getText(),20)==false)
+                        JOptionPane.showMessageDialog(null,"Error,el numero de rastreo debe tener hasta 20 caracteres.Intente de nuevo");
+               
+                if(largoString(txtPais.getText(),20)&&largoString(txtCiudad.getText(),20)&&largoInt(txtTiempo.getText(),5)&&largoString(txtEstado.getText(),20)&&largoInt(txtNumero.getText(),20))                        
                 nuevaOrden(id_cliente,txtPais.getText(),txtCiudad.getText(),txtAño.getSelectedItem().toString(),txtMes.getSelectedItem().toString(),txtDia.getSelectedItem().toString(),txtTiempo.getText(),txtEstado.getText(),txtNumero.getText());
+                
+                
                 jCrearOrden.setVisible(false);
                 m.paintOrdenes();
             }

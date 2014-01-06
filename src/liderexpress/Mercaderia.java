@@ -139,7 +139,7 @@ public class Mercaderia extends Validaciones implements QueryLog {
                         JOptionPane.showMessageDialog(null,"Error, el precio de venta es un numero de hasta 20 digitos.Intente de nuevo");
                 if(largoInt(txtpc.getText(),20)==false)
                         JOptionPane.showMessageDialog(null,"Error,el precio de compra es un numero de hasta 20 digitos.Intente de nuevo");
-                
+                if(largoString(txtEst.getText(),20)&&largoString(txtMarc.getText(),20)&&largoString(txtDesc.getText(),20)&&largoString(txtComp.getText(),20)&&largoInt(txtcant.getText(),10)&&largoString(txtOrg.getText(),10)&&largoInt(txtpp.getText(),20)&&largoInt(txtpc.getText(),20))
                 nuevaMerca(txtEst.getText(),txtMarc.getText(),txtDesc.getText(),txtComp.getText(),txtcant.getText(),txtOrg.getText(), txtpp.getText(), txtpc.getText(),id_orden);
                 jCrearMerc.setVisible(false);
                 m.paintMercas();

@@ -13,6 +13,7 @@ import javax.swing.*;
 import javax.swing.border.*;
 import static liderexpress.Cliente.connect;
 import static liderexpress.QueryLog.log;
+import static liderexpress.Validaciones.*;
 
 public class Trabajador implements QueryLog {
     int id;
@@ -83,6 +84,20 @@ public class Trabajador implements QueryLog {
         jCrearT.add(panelPrin);
         guardar.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e){
+                
+                 if(largoString(txtNombre.getText(),40)==false)
+                        JOptionPane.showMessageDialog(null,"Error,el nombre debe tener hasta 40 caracteres.Intente de nuevo");
+                 if(largoInt(txtCedula.getText(),20)==false)
+                        JOptionPane.showMessageDialog(null,"Error,la cedula debe tener hasta 10 digitos.Intente de nuevo");
+                 if(largoString(txtCargo.getText(),20)==false)
+                        JOptionPane.showMessageDialog(null,"Error,el cargo debe tener hasta 20 caracteres.Intente de nuevo");
+                 if(largoInt(txtTelf.getText(),30)==false)
+                        JOptionPane.showMessageDialog(null,"Error,el telefono debe tener hasta 30 digitos.Intente de nuevo");
+                 if(largoInt(txtSalario.getText(),10)==false)
+                        JOptionPane.showMessageDialog(null,"Error,el salario debe tener hasta 10 caracteres.Intente de nuevo");
+                 if(largoString(txtCorreo.getText(),40)==false)
+                        JOptionPane.showMessageDialog(null,"Error,el correo debe tener hasta 40 caracteres.Intente de nuevo");
+                if(largoString(txtNombre.getText(),40)&&largoInt(txtCedula.getText(),20)&&largoString(txtCargo.getText(),20)&&largoInt(txtTelf.getText(),30)&&largoInt(txtSalario.getText(),10)&&largoString(txtCorreo.getText(),40))
                 nuevoTrab(txtNombre.getText(),txtCedula.getText(),txtCargo.getText(),txtTelf.getText(),txtSalario.getText(),txtCorreo.getText());
                 jCrearT.setVisible(false);
                 m.paintTrabs();
