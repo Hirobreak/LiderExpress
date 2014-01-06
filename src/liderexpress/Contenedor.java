@@ -14,7 +14,7 @@ import static liderexpress.Caja.newID;
 import static liderexpress.Cliente.connect;
 import static liderexpress.QueryLog.log;
 
-public class Contenedor  implements QueryLog{
+public class Contenedor extends Validaciones implements QueryLog{
     int id;
     String dimension;
     int peso;
@@ -83,7 +83,16 @@ public class Contenedor  implements QueryLog{
                 String imp = impos.getSelectedItem().toString();
                 String imp1[] = imp.split("\\ ");
                 String id_imp = imp1[0];
+                 if(largoInt(txtDim.getText(),10)==false)
+                        JOptionPane.showMessageDialog(null,"Error, las dimensiones son de hasta 10 digitos.Intente de nuevo");
+                  if(largoInt(txtPeso.getText(),10)==false)
+                        JOptionPane.showMessageDialog(null,"Error, el peso es hasta 10 digitos.Intente de nuevo");
+                   if(largoString(bEstado.getSelectedItem().toString(),20)==false)
+                        JOptionPane.showMessageDialog(null,"Error, las dimensiones son de hasta 10 digitos.Intente de nuevo");
+                   
+                   if(largoInt(txtDim.getText(),10)&&largoInt(txtPeso.getText(),10)&&largoString(bEstado.getSelectedItem().toString(),20))
                 nuevoCont(txtDim.getText(),txtPeso.getText(),bEstado.getSelectedItem().toString(),id_imp);
+                   
                 jCrearCont.setVisible(false);
                 m.paintConts();
             }

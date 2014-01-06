@@ -23,7 +23,7 @@ public class Validaciones {
                  try  
                 {  
                  double d = Double.parseDouble(str);  
-                 if(str.length()<=largo)
+                 if(str.length()>largo)
                      return false;
                  }  
                   catch(NumberFormatException nfe)  
@@ -39,7 +39,7 @@ public class Validaciones {
                  try  
                 {  
                  double d = Double.parseDouble(str);  
-                 if(str.length()>=20)
+                 if(str.length()>20)
                      return false;
                  }  
                   catch(NumberFormatException nfe)  

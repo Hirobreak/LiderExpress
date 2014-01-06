@@ -117,6 +117,10 @@ public class Orden implements QueryLog{
                 String cliente = clientes.getSelectedItem().toString();
                 String cliente1[] = cliente.split("\\ ");
                 String id_cliente = cliente1[0];
+                
+                
+                
+                
                 nuevaOrden(id_cliente,txtPais.getText(),txtCiudad.getText(),txtAño.getSelectedItem().toString(),txtMes.getSelectedItem().toString(),txtDia.getSelectedItem().toString(),txtTiempo.getText(),txtEstado.getText(),txtNumero.getText());
                 jCrearOrden.setVisible(false);
                 m.paintOrdenes();

@@ -14,8 +14,9 @@ import javax.swing.border.*;
 import static liderexpress.Cliente.connect;
 import static liderexpress.Importacion.newID;
 import static liderexpress.QueryLog.log;
+import static liderexpress.Validaciones.largoInt;
 
-public class Caja  implements QueryLog{
+public class Caja extends Validaciones implements QueryLog{
     int id;
     String dimension;
     int peso;
@@ -72,7 +73,20 @@ public class Caja  implements QueryLog{
         jCrearCaja.add(panelPrin);
         guardar.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e){
+                
+                
+                if(largoInt(txtNum.getText(),10)==false)
+                        JOptionPane.showMessageDialog(null,"Error, la caja tiene numero de hasta 10 digitos.Intente de nuevo");
+                 if(largoInt(txtPeso.getText(),10)==false)
+                        JOptionPane.showMessageDialog(null,"Error, el peso es un numero de hasta 10 digitos.Intente de nuevo");
+                  if(largoString(bEstado.getSelectedItem().toString(),20)==false)
+                        JOptionPane.showMessageDialog(null,"Error, el estado puede tener hasta 20 caracteres.Intente de nuevo");
+                   if(largoInt(txtDim.getText(),10)==false)
+                        JOptionPane.showMessageDialog(null,"Error, las dimensiones son de hasta 10 digitos.Intente de nuevo");
+                   
+                if(largoInt(txtNum.getText(),10)&&largoInt(txtPeso.getText(),10)&&largoString(bEstado.getSelectedItem().toString(),20)&&largoInt(txtDim.getText(),10))                
                 nuevaCaja(txtNum.getText(),txtPeso.getText(),bEstado.getSelectedItem().toString(),txtDim.getText());
+                
                 jCrearCaja.setVisible(false);
                 m.paintCajas();
             }

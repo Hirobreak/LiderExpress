@@ -15,7 +15,7 @@ import static liderexpress.Cliente.connect;
 import static liderexpress.QueryLog.log;
 
 
-public class Mercaderia implements QueryLog {
+public class Mercaderia extends Validaciones implements QueryLog {
     int id;
     String style;
     String mark;
@@ -123,6 +123,23 @@ public class Mercaderia implements QueryLog {
                 String orden1[] = orden.split("\\ ");
                 String id_orden = orden1[1];
                 System.out.println(id_orden);
+                if(largoString(txtEst.getText(),20)==false)
+                        JOptionPane.showMessageDialog(null,"Error, el estilo tiene hasta 20 caracteres.Intente de nuevo");
+                if(largoString(txtMarc.getText(),20)==false)
+                        JOptionPane.showMessageDialog(null,"Error, la marca es de hasta 20 carateres.Intente de nuevo");
+                if(largoString(txtDesc.getText(),20)==false)
+                        JOptionPane.showMessageDialog(null,"Error, el descuento es de hasta 20 caracteres.Intente de nuevo");
+                if(largoString(txtComp.getText(),20)==false)
+                        JOptionPane.showMessageDialog(null,"Error,la composicion es de hasta 20 caracteres.Intente de nuevo");
+                if(largoInt(txtcant.getText(),10)==false)
+                        JOptionPane.showMessageDialog(null,"Error, las cantidades son de hasta 5 digitos.Intente de nuevo");
+                if(largoString(txtOrg.getText(),10)==false)
+                        JOptionPane.showMessageDialog(null,"Error, el origen es hasta de 20 caracteres.Intente de nuevo");
+                if(largoInt(txtpp.getText(),20)==false)
+                        JOptionPane.showMessageDialog(null,"Error, el precio de venta es un numero de hasta 20 digitos.Intente de nuevo");
+                if(largoInt(txtpc.getText(),20)==false)
+                        JOptionPane.showMessageDialog(null,"Error,el precio de compra es un numero de hasta 20 digitos.Intente de nuevo");
+                
                 nuevaMerca(txtEst.getText(),txtMarc.getText(),txtDesc.getText(),txtComp.getText(),txtcant.getText(),txtOrg.getText(), txtpp.getText(), txtpc.getText(),id_orden);
                 jCrearMerc.setVisible(false);
                 m.paintMercas();
