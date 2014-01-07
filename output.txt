@@ -71,3 +71,13 @@ INSERT INTO cliente VALUES(5,'cliente5', '0934895740', '0934895740123', 'pase', 
 UPDATE cliente SET cliente.nombre='cliente4', cliente.cedula='0934895730', cliente.ruc='0934895720231', cliente.compania='chao', cliente.telf='00000000' WHERE cliente.id_cliente=4;
 DELETE FROM cliente WHERE cliente.id_cliente=4;
 INSERT INTO cliente VALUES(6,'cliente6', '0934895750', '0934895750234', 'chao', '042393462');
+UPDATE proveedor SET proveedor.compania='prov3', proveedor.rup='3', proveedor.pais='3', proveedor.ciudad='3', proveedor.dueño='3', proveedor.telf='3' WHERE proveedor.id_proveedor=3;
+INSERT INTO proveedor VALUES(4,'Nombre', '1234567890', 'Pais', 'Ciudad', 'Contacto', '00000000');
+INSERT INTO proveedor VALUES(5,'Nombre', '1', 'Pais', 'Ciudad', 'Contacto', '00000000');
+INSERT INTO proveedor VALUES(6,'Nombre', '123', 'Pais', 'Ciudad', 'Contacto', '00000000');
+DELETE FROM proveedor WHERE proveedor.id_proveedor=6;
+UPDATE proveedor SET proveedor.compania='Nombre', proveedor.rup='123', proveedor.pais='Pais', proveedor.ciudad='Ciudad', proveedor.dueño='Contacto', proveedor.telf='00000000' WHERE proveedor.id_proveedor=5;
+UPDATE proveedor SET proveedor.compania='Nombre', proveedor.rup='12345', proveedor.pais='Pais', proveedor.ciudad='Ciudad', proveedor.dueño='Contacto', proveedor.telf='00000000' WHERE proveedor.id_proveedor=5;
+UPDATE mercaderia SET mercaderia.estilo=3, mercaderia.marca='3', mercaderia.dsc='3', mercaderia.compos='3', mercaderia.cantidad=3, mercaderia.origen='3', mercaderia.precio_venta=3, mercaderia.precio_compra=3, mercaderia.id_orden=1 WHERE mercaderia.id_merca=4;
+INSERT INTO mercaderia VALUES(5,'Estilo','Marca','Descripción','Composición',0,'Origen',0.00,0.00,1);
+DELETE FROM mercaderia WHERE mercaderia.id_merca=5;

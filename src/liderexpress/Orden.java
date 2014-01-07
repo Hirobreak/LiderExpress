@@ -128,11 +128,11 @@ public class Orden implements QueryLog{
                 if(largoInt(txtNumero.getText(),20)==false)
                         JOptionPane.showMessageDialog(null,"Error,el numero de rastreo debe tener hasta 20 caracteres.Intente de nuevo");
                
-                if(largoString(txtPais.getText(),20)&&largoString(txtCiudad.getText(),20)&&largoInt(txtTiempo.getText(),5)&&largoString(txtEstado.getText(),20)&&largoInt(txtNumero.getText(),20))                        
+                if(largoString(txtPais.getText(),20)&&largoString(txtCiudad.getText(),20)&&largoInt(txtTiempo.getText(),5)&&largoString(txtEstado.getText(),20)&&largoInt(txtNumero.getText(),20)) {                       
                 nuevaOrden(id_cliente,txtPais.getText(),txtCiudad.getText(),txtAño.getSelectedItem().toString(),txtMes.getSelectedItem().toString(),txtDia.getSelectedItem().toString(),txtTiempo.getText(),txtEstado.getText(),txtNumero.getText());
                 
                 
-                jCrearOrden.setVisible(false);
+                jCrearOrden.setVisible(false);}
                 m.paintOrdenes();
             }
         });
@@ -319,13 +319,28 @@ public class Orden implements QueryLog{
                 String cliente1[] = cliente.split("\\ ");
                 String id_cliente = cliente1[0];
                 try {
+                                    if(largoString(txtPais.getText(),20)==false)
+                        JOptionPane.showMessageDialog(null,"Error,el pais puede tener hasta 20 caracteres.Intente de nuevo");
+                if(largoString(txtCiudad.getText(),20)==false)
+                        JOptionPane.showMessageDialog(null,"Error,la cuidad debe tener hasta 20 caracteres.Intente de nuevo");
+                if(largoInt(txtTiempo.getText(),5)==false)
+                        JOptionPane.showMessageDialog(null,"Error,el tienpo es de hasta 5 digitos.Intente de nuevo");
+                if(largoString(txtEstado.getText(),20)==false)
+                        JOptionPane.showMessageDialog(null,"Error,el estado debe tener hasta 20 caracteres.Intente de nuevo");
+                if(largoInt(txtNumero.getText(),20)==false)
+                        JOptionPane.showMessageDialog(null,"Error,el numero de rastreo debe tener hasta 20 caracteres.Intente de nuevo");
+               
+                if(largoString(txtPais.getText(),20)&&largoString(txtCiudad.getText(),20)&&largoInt(txtTiempo.getText(),5)&&largoString(txtEstado.getText(),20)&&largoInt(txtNumero.getText(),20))                        
+                {
                     Connection con=connect.Conexion_SQL();
                     Statement sentencia=con.createStatement();
                     String query="UPDATE orden SET orden.id_cliente="+id_cliente+", orden.pais='"+txtPais.getText()+"', orden.ciudad='"+txtCiudad.getText()+"', orden.fecha='"+txtAño.getSelectedItem().toString()+"-"+txtMes.getSelectedItem().toString()+"-"+txtDia.getSelectedItem().toString()+"', orden.t_entrega="+txtTiempo.getText()+", orden.estado='"+txtEstado.getText()+"', orden.num_rastreo='"+txtNumero.getText()+"' WHERE orden.id_orden="+id_orden+";";
                     sentencia.executeUpdate(query);
+                    jModOrden.setVisible(false);
                     log.add(query);
+                }
                 }catch(SQLException ex){}
-                jModOrden.setVisible(false);
+                
                 m.paintOrdenes();
                 }
             }

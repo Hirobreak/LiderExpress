@@ -4,6 +4,8 @@
  */
 package liderexpress;
 
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author Your Name <Edison Sanchez>
@@ -77,6 +79,27 @@ public class Validaciones {
                 }  
                  return true;  
                 }
+     static public boolean validarProv(String txtCom, String txtRUP, String txtPais, String txtCiudad, String txtDueño, String txtTelf){
+        if(largoString(txtCom,40)==false){
+                JOptionPane.showMessageDialog(null,"Error,la compañia es de hasta 40 caracteres.Intente de nuevo");
+                return false;}
+        if(largoInt(txtRUP,20)==false){
+                JOptionPane.showMessageDialog(null,"Error,el RUP es un numero de hasta 20 digitos.Intente de nuevo");   
+                return false;}
+        if(largoString(txtPais,20)==false){
+                JOptionPane.showMessageDialog(null,"Error,el pais debe tener hasta 20 caracteres.Intente de nuevo");
+                return false;}
+        if(largoString(txtCiudad,30)==false){
+                JOptionPane.showMessageDialog(null,"Error,la ciudad debe tener hasta 30 caracteres.Intente de nuevo");
+                return false;}
+        if(largoString(txtDueño,20)==false){
+                JOptionPane.showMessageDialog(null,"Error,el dueño debe tener hasta 20 caracteres.Intente de nuevo");
+                return false;}
+        if(largoInt(txtTelf,20)==false){
+                JOptionPane.showMessageDialog(null,"Error,el telefono debe tener hasta 20 caraceres.Intente de nuevo");
+                return false;}
+        return true;
+     }         
               
     
 }

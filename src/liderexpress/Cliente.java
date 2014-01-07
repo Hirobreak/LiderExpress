@@ -82,7 +82,6 @@ public class Cliente extends Validaciones implements QueryLog {
         jCrearCliente.add(panelPrin);
         guardar.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e){
-                
                 if(esCEDULA(txtCedula.getText())==false)
                         JOptionPane.showMessageDialog(null,"Error, la cedula es un numero de 10 digitos.Intente de nuevo");
                 if(esRUC(txtRuc.getText())==false)
@@ -93,11 +92,10 @@ public class Cliente extends Validaciones implements QueryLog {
                         JOptionPane.showMessageDialog(null,"Error,el nombre puede tener maximo hasta 40 caracterres.Intente de nuevo");
                 if(largoString(txtCompa.getText(),30)==false)
                         JOptionPane.showMessageDialog(null,"Error,la compañia puede tener maximo hasta 30 caracterres.Intente de nuevo");
-                
                 if(esCEDULA(txtCedula.getText())&& esRUC(txtRuc.getText())&&esTELF(txtTelf1.getText())&&largoString(txtNombre.getText(),40)&&largoString(txtCompa.getText(),30)  ) {                 
-                NuevoCliente(txtNombre.getText(), txtCedula.getText(), txtRuc.getText(), txtCompa.getText(), txtTelf1.getText());
+                    NuevoCliente(txtNombre.getText(), txtCedula.getText(), txtRuc.getText(), txtCompa.getText(), txtTelf1.getText());
+                    jCrearCliente.setVisible(false);
                 }
-                jCrearCliente.setVisible(false);
                 m.paintClientes();
             }
         });
