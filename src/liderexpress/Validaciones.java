@@ -11,7 +11,16 @@ import javax.swing.JOptionPane;
  * @author Your Name <Edison Sanchez>
  */
 public class Validaciones {
-    
+    public static boolean esMail(String email){
+   
+      String EMAIL_REGEX = "^[\\w-_\\.+]*[\\w-_\\.]\\      @([\\w]+\\.)+[\\w]+[\\w]$";
+      
+      Boolean b = email.matches(EMAIL_REGEX);
+      
+      return b;
+   
+    }
+            
     public static boolean largoString(String str, int largo)  
                 {               
                  

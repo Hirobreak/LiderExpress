@@ -95,9 +95,9 @@ public class Trabajador implements QueryLog {
                         JOptionPane.showMessageDialog(null,"Error,el telefono debe tener hasta 30 digitos.Intente de nuevo");
                  if(largoInt(txtSalario.getText(),10)==false)
                         JOptionPane.showMessageDialog(null,"Error,el salario debe tener hasta 10 caracteres.Intente de nuevo");
-                 if(largoString(txtCorreo.getText(),40)==false)
-                        JOptionPane.showMessageDialog(null,"Error,el correo debe tener hasta 40 caracteres.Intente de nuevo");
-                if(largoString(txtNombre.getText(),40)&&largoInt(txtCedula.getText(),20)&&largoString(txtCargo.getText(),20)&&largoInt(txtTelf.getText(),30)&&largoInt(txtSalario.getText(),10)&&largoString(txtCorreo.getText(),40)){
+                 if(esMail(txtCorreo.getText())==false)
+                        JOptionPane.showMessageDialog(null,"Error,direccion de correo electronico no valida.Intente de nuevo");
+                if(largoString(txtNombre.getText(),40)&&largoInt(txtCedula.getText(),20)&&largoString(txtCargo.getText(),20)&&largoInt(txtTelf.getText(),30)&&largoInt(txtSalario.getText(),10)&&esMail(txtCorreo.getText())){
                 nuevoTrab(txtNombre.getText(),txtCedula.getText(),txtCargo.getText(),txtTelf.getText(),txtSalario.getText(),txtCorreo.getText());
                 jCrearT.setVisible(false);}
                 m.paintTrabs();
