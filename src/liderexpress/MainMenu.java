@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.io.Writer;
+import javax.swing.table.TableCellRenderer;
 
 public class MainMenu extends JFrame implements ActionListener,QueryLog{
         ArrayList<Cliente> clientes = new ArrayList<Cliente>();
@@ -131,7 +132,7 @@ public class MainMenu extends JFrame implements ActionListener,QueryLog{
         JScrollPane listScroller = new JScrollPane(tabla);
         listScroller.setPreferredSize(new Dimension(650, 200));
         panel.add (listScroller, c);
-        add(panel);
+        add(panel,BorderLayout.NORTH);
         cliente.addActionListener(this);
         orden.addActionListener(this);
         merca.addActionListener(this);
@@ -300,17 +301,11 @@ public class MainMenu extends JFrame implements ActionListener,QueryLog{
             Factura.mostrarFact();
         }
         if(ae.getSource()==exe && entidad==1){
-            idc=clientes.get((int)tabla.getSelectedRow()).id;
-            this.panel.setBorder (BorderFactory.createTitledBorder (BorderFactory.createEtchedBorder (), "Ordenes de " + clientes.get(idc-1).nombre, TitledBorder.CENTER, TitledBorder.TOP));
-            Object[] columns={"id", "Pais", "Ciudad", "Tiempo", "Numero", "Estado", "Cliente"};
-            DefaultTableModel modelo2=new DefaultTableModel(null, columns);
-            for(Orden o : ordenes)
-                if(o.cliente==idc){
-                    modelo2.addRow(o.arreglo());
-                }
-            this.tabla.setModel(modelo2);
+            int id = (int)tabla.getValueAt(tabla.getSelectedRow(),0);
+            paintOrdenesCliente(id);
+            /*this.tabla.setModel(modelo2);
             accion.setLabel("Detalle");
-            entidad=2;
+            entidad=2;*/
         }
         if(ae.getSource()==client){
             consultaClient();
@@ -438,6 +433,21 @@ public class MainMenu extends JFrame implements ActionListener,QueryLog{
         });
     }
     
+    public void paintOrdenesCliente(int id_cliente){
+        ResultSet rs = Cliente.ordenesDeCliente(id_cliente);
+        panel.setBorder (BorderFactory.createTitledBorder (BorderFactory.createEtchedBorder (), "Ordenes del Cliente ID: "+id_cliente, TitledBorder.CENTER, TitledBorder.TOP));
+        Object[] columns={"id", "Cliente", "Pais", "Ciudad", "Fecha", "Tiempo", "Estado", "Numero"};
+        DefaultTableModel modelo2=new DefaultTableModel(null, columns);
+        try {
+            while(rs.next()){
+                Object[] fila={rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6), rs.getString(7), rs.getString(8)};
+                modelo2.addRow(fila);
+            }
+        } catch (SQLException ex) {
+        }
+        this.tabla.setModel(modelo2);
+    }
+    
     public void paintClientes(){
         this.panel.setBorder (BorderFactory.createTitledBorder (BorderFactory.createEtchedBorder (), "Clientes", TitledBorder.CENTER, TitledBorder.TOP));
         Object[] columns={"id", "Nombre", "Cedula", "RUC", "Compañia", "Telefono"};
@@ -447,7 +457,7 @@ public class MainMenu extends JFrame implements ActionListener,QueryLog{
             while(rs.next()){
                 Object[] fila={rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6)};
                 modelo1.addRow(fila);
-            }
+            }  
         } catch (SQLException ex) {
         }
         this.tabla.setModel(modelo1);

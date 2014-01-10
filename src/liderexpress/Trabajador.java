@@ -54,12 +54,12 @@ public class Trabajador implements QueryLog {
         Label labeltelf=new Label("Telefonos:", Label.CENTER);
         Button guardar=new Button("Guardar");
         Button cancelar=new Button("Cancelar");
-        final TextField txtNombre=new TextField("Nombre", 20);
-        final TextField txtCargo=new TextField("Cargo", 20);
-        final TextField txtCedula=new TextField("Cedula", 20);
-        final TextField txtSalario=new TextField("$", 20);
-        final TextField txtTelf=new TextField("00000000", 20);
-        final TextField txtCorreo=new TextField("ejemplo@yatusabe.com", 20);
+        final TextField txtNombre=new TextField("", 20);
+        final TextField txtCargo=new TextField("", 20);
+        final TextField txtCedula=new TextField("", 20);
+        final TextField txtSalario=new TextField("", 20);
+        final TextField txtTelf=new TextField("", 20);
+        final TextField txtCorreo=new TextField("", 20);
         panelnombre.add(labelnom);
         panelnombre.add(txtNombre);
         panelced.add(labelced);
@@ -86,18 +86,18 @@ public class Trabajador implements QueryLog {
             public void actionPerformed(ActionEvent e){
                 
                  if(largoString(txtNombre.getText(),40)==false)
-                        JOptionPane.showMessageDialog(null,"Error,el nombre debe tener hasta 40 caracteres.Intente de nuevo");
-                 if(largoInt(txtCedula.getText(),20)==false)
-                        JOptionPane.showMessageDialog(null,"Error,la cedula debe tener hasta 10 digitos.Intente de nuevo");
+                        JOptionPane.showMessageDialog(null,"Error, el nombre debe tener hasta 40 caracteres. Intente de nuevo");
+                 if(esCEDULA(txtCedula.getText())==false)
+                        JOptionPane.showMessageDialog(null,"Error, la cedula debe tener hasta 10 digitos. Intente de nuevo");
                  if(largoString(txtCargo.getText(),20)==false)
-                        JOptionPane.showMessageDialog(null,"Error,el cargo debe tener hasta 20 caracteres.Intente de nuevo");
+                        JOptionPane.showMessageDialog(null,"Error, el cargo debe tener hasta 20 caracteres. Intente de nuevo");
                  if(largoInt(txtTelf.getText(),30)==false)
-                        JOptionPane.showMessageDialog(null,"Error,el telefono debe tener hasta 30 digitos.Intente de nuevo");
+                        JOptionPane.showMessageDialog(null,"Error, el telefono debe tener hasta 30 digitos. Intente de nuevo");
                  if(largoInt(txtSalario.getText(),10)==false)
-                        JOptionPane.showMessageDialog(null,"Error,el salario debe tener hasta 10 caracteres.Intente de nuevo");
+                        JOptionPane.showMessageDialog(null,"Error, el salario debe ser un numero de hasta 10 digitos. Intente de nuevo");
                  if(esMail(txtCorreo.getText())==false)
                         JOptionPane.showMessageDialog(null,"Error,direccion de correo electronico no valida.Intente de nuevo");
-                if(largoString(txtNombre.getText(),40)&&largoInt(txtCedula.getText(),20)&&largoString(txtCargo.getText(),20)&&largoInt(txtTelf.getText(),30)&&largoInt(txtSalario.getText(),10)&&esMail(txtCorreo.getText())){
+                if(largoString(txtNombre.getText(),40)&&esCEDULA(txtCedula.getText())&&largoString(txtCargo.getText(),20)&&largoInt(txtTelf.getText(),30)&&largoInt(txtSalario.getText(),10)&&esMail(txtCorreo.getText())){
                 nuevoTrab(txtNombre.getText(),txtCedula.getText(),txtCargo.getText(),txtTelf.getText(),txtSalario.getText(),txtCorreo.getText());
                 jCrearT.setVisible(false);}
                 m.paintTrabs();
@@ -263,19 +263,19 @@ public class Trabajador implements QueryLog {
                 if(confirm==JOptionPane.OK_OPTION){
                 try {
                 if(largoString(txtNombre.getText(),40)==false)
-                        JOptionPane.showMessageDialog(null,"Error,el nombre debe tener hasta 40 caracteres.Intente de nuevo");
-                 if(largoInt(txtCedula.getText(),20)==false)
-                        JOptionPane.showMessageDialog(null,"Error,la cedula debe tener hasta 10 digitos.Intente de nuevo");
+                        JOptionPane.showMessageDialog(null,"Error, el nombre debe tener hasta 40 caracteres. Intente de nuevo");
+                 if(esCEDULA(txtCedula.getText())==false)
+                        JOptionPane.showMessageDialog(null,"Error, la cedula debe tener hasta 10 digitos. Intente de nuevo");
                  if(largoString(txtCargo.getText(),20)==false)
-                        JOptionPane.showMessageDialog(null,"Error,el cargo debe tener hasta 20 caracteres.Intente de nuevo");
+                        JOptionPane.showMessageDialog(null,"Error, el cargo debe tener hasta 20 caracteres. Intente de nuevo");
                  if(largoInt(txtTelf.getText(),30)==false)
-                        JOptionPane.showMessageDialog(null,"Error,el telefono debe tener hasta 30 digitos.Intente de nuevo");
+                        JOptionPane.showMessageDialog(null,"Error, el telefono debe tener hasta 30 digitos. Intente de nuevo");
                  if(largoInt(txtSalario.getText(),10)==false)
-                        JOptionPane.showMessageDialog(null,"Error,el salario debe tener hasta 10 caracteres.Intente de nuevo");
-                 if(largoString(txtCorreo.getText(),40)==false)
-                        JOptionPane.showMessageDialog(null,"Error,el correo debe tener hasta 40 caracteres.Intente de nuevo");
-                if(largoString(txtNombre.getText(),40)&&largoInt(txtCedula.getText(),20)&&largoString(txtCargo.getText(),20)&&largoInt(txtTelf.getText(),30)&&largoInt(txtSalario.getText(),10)&&largoString(txtCorreo.getText(),40))
-                {
+                        JOptionPane.showMessageDialog(null,"Error, el salario debe ser un numero de hasta 10 digitos. Intente de nuevo");
+                 if(esMail(txtCorreo.getText())==false)
+                        JOptionPane.showMessageDialog(null,"Error,direccion de correo electronico no valida.Intente de nuevo");
+                if(largoString(txtNombre.getText(),40)&&esCEDULA(txtCedula.getText())&&largoString(txtCargo.getText(),20)&&largoInt(txtTelf.getText(),30)&&largoInt(txtSalario.getText(),10)&&esMail(txtCorreo.getText())){
+               
                     Connection con=connect.Conexion_SQL();
                     Statement sentencia=con.createStatement();
                     String query="UPDATE trabajador SET trabajador.nombre='"+txtNombre.getText()+"', trabajador.cedula='"+txtCedula.getText()+"', trabajador.puesto='"+txtCargo.getText()+"', trabajador.telf='"+txtTelf.getText()+"', trabajador.sueldo="+txtSalario.getText()+", trabajador.mail='"+txtCorreo.getText()+"' WHERE trabajador.id_trabajador="+id_trab+";";

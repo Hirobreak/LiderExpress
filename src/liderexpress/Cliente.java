@@ -325,6 +325,17 @@ public class Cliente extends Validaciones implements QueryLog {
         }
     }
     
+    public static ResultSet ordenesDeCliente(int id_cliente){
+        ResultSet rs = null;
+        try{
+            Connection con=connect.Conexion_SQL();
+            Statement sentencia=con.createStatement();
+            String query = "SELECT orden.* FROM orden WHERE orden.id_cliente="+id_cliente+";"; 
+            rs = sentencia.executeQuery(query);
+        }catch(SQLException e){}
+        return rs;
+    }
+    
     public Object[] arreglo(){
         
         Object[] arreglo={id, nombre, cedula, compa, ruc, telf1, telf2};
