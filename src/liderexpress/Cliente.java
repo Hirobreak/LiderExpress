@@ -26,7 +26,7 @@ public class Cliente extends Validaciones implements QueryLog {
     static C_ConexionSQL connect=new C_ConexionSQL();
     static Conex c;
     Connection conexion;
-
+   
 
     Cliente(int id, String nom, String ruc, String ced, String comp, int t1, int t2){
         this.id = id;
@@ -40,7 +40,7 @@ public class Cliente extends Validaciones implements QueryLog {
     
     static public void crearCliente(final MainMenu m){ 
         final JFrame jCrearCliente = new JFrame("Creacion de Cliente");
-        jCrearCliente.setSize(500, 300);
+        jCrearCliente.setSize(600, 300);
         jCrearCliente.setVisible(true);
         Panel panelPrin=new Panel(new GridLayout(6, 1));
         Panel panelnombre=new Panel(new GridLayout(1, 2));
@@ -48,14 +48,18 @@ public class Cliente extends Validaciones implements QueryLog {
         Panel panelcedula=new Panel(new GridLayout(1, 2));
         Panel panelcom=new Panel(new GridLayout(1, 2));
         Panel paneltelf=new Panel(new GridLayout(1, 3));
+        Panel panelOrden= new Panel(new GridLayout(1, 3));
+        
         Panel panelboton=new Panel(new GridLayout(1, 2));
         Label labelnom=new Label("Nombre:", Label.CENTER);
         Label labelruc=new Label("RUC:", Label.CENTER);
         Label labelced=new Label("Cedula:", Label.CENTER);
         Label labelcom=new Label("Compañia:", Label.CENTER);
         Label labeltelf=new Label("Telefono:", Label.CENTER);
+        Label labelOrden =new Label(" Ordenes", Label.CENTER);
         Button guardar=new Button("Guardar");
         Button cancelar=new Button("Cancelar");
+        Button Ordenes=new Button("Ordenes");
         final TextField txtNombre=new TextField("Nombre", 20);
         final TextField txtRuc=new TextField("RUC", 20);
         final TextField txtCedula=new TextField("Cedula", 20);
@@ -65,12 +69,15 @@ public class Cliente extends Validaciones implements QueryLog {
         panelnombre.add(txtNombre);
         panelcedula.add(labelced);
         panelcedula.add(txtCedula);
+        
         panelcom.add(labelcom);
         panelcom.add(txtCompa);
         panelruc.add(labelruc);
         panelruc.add(txtRuc);
         paneltelf.add(labeltelf);
         paneltelf.add(txtTelf1);
+        panelOrden.add(labelOrden);
+        panelOrden.add(Ordenes);
         panelboton.add(guardar);
         panelboton.add(cancelar);
         panelPrin.add(panelnombre);
@@ -230,13 +237,16 @@ public class Cliente extends Validaciones implements QueryLog {
         Panel panelcom=new Panel(new GridLayout(1, 2));
         Panel paneltelf=new Panel(new GridLayout(1, 3));
         Panel panelboton=new Panel(new GridLayout(1, 2));
+        Panel panelOrden= new Panel(new GridLayout(1, 2));
         Label labelnom=new Label("Nombre:", Label.CENTER);
         Label labelruc=new Label("RUC:", Label.CENTER);
         Label labelced=new Label("Cedula:", Label.CENTER);
         Label labelcom=new Label("Compañia:", Label.CENTER);
         Label labeltelf=new Label("Telefono:", Label.CENTER);
+        Label labelOrden =new Label(" Ordenes", Label.CENTER);
         Button guardar=new Button("Guardar");
         Button cancelar=new Button("Cancelar");
+        Button Ordenes=new Button("Ordenes");
         final TextField txtNombre=new TextField(queryNom, 20);
         final TextField txtRuc=new TextField(queryRuc, 20);
         final TextField txtCedula=new TextField(queryCed, 20);
@@ -252,6 +262,8 @@ public class Cliente extends Validaciones implements QueryLog {
         panelruc.add(txtRuc);
         paneltelf.add(labeltelf);
         paneltelf.add(txtTelf1);
+        panelOrden.add(labelOrden);
+        panelOrden.add(Ordenes);
         panelboton.add(guardar);
         panelboton.add(cancelar);
         panelPrin.add(panelnombre);
