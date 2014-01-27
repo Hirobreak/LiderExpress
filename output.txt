@@ -107,3 +107,4 @@ INSERT INTO cliente VALUES(4,'lolo', '1234567890', '1234567890125', 'tulo', '123
 INSERT INTO cliente VALUES(5,'swag', '1234567892', '1234567890126', 'swagpro', '1234565432');
 UPDATE cliente SET cliente.nombre='tuma', cliente.cedula='1234567987', cliente.ruc='1234321908764', cliente.compania='lol', cliente.telf='1324356789' WHERE cliente.id_cliente=2;
 INSERT INTO orden VALUES(1,1,'regwe','csdgs','2000-4-1',56,'sdfgh','5452');
+INSERT INTO orden VALUES(5,1,'ec','gr','2000-1-1',12,'es','12');

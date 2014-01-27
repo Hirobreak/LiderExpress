@@ -1,6 +1,7 @@
 
 package liderexpress;
 
+import com.mysql.jdbc.CallableStatement;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -53,12 +54,12 @@ public class Proveedor implements QueryLog {
         Label labeltelf=new Label("Telefonos:", Label.CENTER);
         Button guardar=new Button("Guardar");
         Button cancelar=new Button("Cancelar");
-        final TextField txtCom=new TextField("Nombre", 20);
-        final TextField txtRUP=new TextField("RUP", 20);
-        final TextField txtDueño=new TextField("Contacto", 20);
-        final TextField txtPais=new TextField("Pais", 20);
-        final TextField txtTelf=new TextField("00000000", 20);
-        final TextField txtCiudad=new TextField("Ciudad", 20);
+        final TextField txtCom=new TextField("", 20);
+        final TextField txtRUP=new TextField("", 20);
+        final TextField txtDueño=new TextField("", 20);
+        final TextField txtPais=new TextField("", 20);
+        final TextField txtTelf=new TextField("", 20);
+        final TextField txtCiudad=new TextField("", 20);
         panelCom.add(labelCom);
         panelCom.add(txtCom);
         panelRup.add(labelRup);
@@ -99,10 +100,15 @@ public class Proveedor implements QueryLog {
         public static void nuevoProv(String comp, String rup, String pais, String ciudad, String dueño, String telf){
         try {
             Connection con=connect.Conexion_SQL();
-            Statement sentencia=con.createStatement();
-            String query="INSERT INTO proveedor VALUES("+newID()+",'"+comp+"', '"+rup+"', '"+pais+"', '"+ciudad+"', '"+dueño+"', '"+telf+"');";
-            sentencia.executeUpdate(query);
-            log.add(query);
+            CallableStatement pro = (CallableStatement) con.prepareCall("{call crearProv(?,?,?,?,?,?,?)}");
+            pro.setInt(1, newID());
+            pro.setString(2, comp);
+            pro.setString(3, rup);
+            pro.setString(4, pais);                        
+            pro.setString(5, ciudad);
+            pro.setString(6, dueño);
+            pro.setString(7, telf);
+            pro.executeQuery();
         }catch(SQLException e){
             JOptionPane.showMessageDialog(null, "Error dato");
         }
@@ -112,11 +118,10 @@ public class Proveedor implements QueryLog {
     public static ResultSet todosProv(){
         ResultSet rs = null;
         try {
-            String query;
             Connection con=connect.Conexion_SQL();
-            Statement sentencia=con.createStatement();
-            query="SELECT proveedor.* FROM proveedor;";
-            rs=sentencia.executeQuery(query);
+            CallableStatement pro = (CallableStatement) con.prepareCall("{call todosProv()}");
+            pro.execute();
+            rs=pro.getResultSet();
             
         }catch(SQLException e){
             JOptionPane.showMessageDialog(null, "Error dato");
@@ -126,12 +131,12 @@ public class Proveedor implements QueryLog {
     
     public static int newID(){
         int id = 1;
-        ResultSet rs = null;
+        ResultSet rs = null; 
         try {
             Connection con=connect.Conexion_SQL();
-            Statement sentencia=con.createStatement();
-            String query="SELECT max(proveedor.id_proveedor)+1 as maxID FROM proveedor;";
-            rs = sentencia.executeQuery(query);
+            CallableStatement pro = (CallableStatement) con.prepareCall("{call LastIDProv()}");
+            pro.execute();
+            rs=pro.getResultSet();
             try{
                 while(rs.next())
                     id = rs.getInt("maxID");
@@ -157,44 +162,18 @@ public class Proveedor implements QueryLog {
             String queryTelf = "";
             ResultSet rs1 = null;
             try {
-                Connection con=connect.Conexion_SQL();
-                Statement sentencia=con.createStatement();
-                String query="SELECT (proveedor.compania) as comp FROM proveedor WHERE proveedor.id_proveedor="+id_prov+";";
-                String query1="SELECT (proveedor.rup) as rup FROM proveedor WHERE proveedor.id_proveedor="+id_prov+";";
-                String query2="SELECT (proveedor.pais) as pais FROM proveedor WHERE proveedor.id_proveedor="+id_prov+";";
-                String query3="SELECT (proveedor.ciudad) as ciudad FROM proveedor WHERE proveedor.id_proveedor="+id_prov+";";
-                String query4="SELECT (proveedor.dueño) as dueño FROM proveedor WHERE proveedor.id_proveedor="+id_prov+";";
-                String query5="SELECT (proveedor.telf) as telf FROM proveedor WHERE proveedor.id_proveedor="+id_prov+";";
-                rs1 = sentencia.executeQuery(query);
-                try{
-                    while(rs1.next())
-                    queryCom = rs1.getString("comp");
-                }catch (SQLException ex){}
-                rs1 = sentencia.executeQuery(query1);
-                try{
-                     while(rs1.next())
-                     queryRup = rs1.getString("rup");
-                }catch (SQLException ex){}
-                rs1 = sentencia.executeQuery(query2);
-                try{
-                     while(rs1.next())
-                     queryPais = rs1.getString("pais");
-                }catch (SQLException ex){}
-                rs1 = sentencia.executeQuery(query3);
-                try{
-                     while(rs1.next())
-                     queryCiu = rs1.getString("ciudad");
-                }catch (SQLException ex){}
-                rs1 = sentencia.executeQuery(query4);
-                try{
-                     while(rs1.next())
-                     queryDue = rs1.getString("dueño");
-                }catch (SQLException ex){}
-                 rs1 = sentencia.executeQuery(query5);
-                try{
-                     while(rs1.next())
-                     queryTelf = rs1.getString("telf");
-                }catch (SQLException ex){}
+                Connection con=connect.Conexion_SQL(); 
+                CallableStatement pro = (CallableStatement) con.prepareCall("{call takeProvData(?)}");
+                pro.setInt(1, id_prov);
+                pro.execute();
+                rs1 = pro.getResultSet();
+                rs1.next();
+                queryCom = rs1.getString("compania");
+                queryRup = rs1.getString("rup");
+                queryPais = rs1.getString("pais");
+                queryCiu = rs1.getString("ciudad");
+                queryDue = rs1.getString("dueño");
+                queryTelf = rs1.getString("telf");
             }catch(SQLException ex){}
         final JFrame jModProv = new JFrame("Modificacion de Importador");
         jModProv.setSize(500, 300);
@@ -245,11 +224,17 @@ public class Proveedor implements QueryLog {
                 if(confirm==JOptionPane.OK_OPTION){
                 try {
                     Connection con=connect.Conexion_SQL();
-                    Statement sentencia=con.createStatement();
-                    String query="UPDATE proveedor SET proveedor.compania='"+txtCom.getText()+"', proveedor.rup='"+txtRUP.getText()+"', proveedor.pais='"+txtPais.getText()+"', proveedor.ciudad='"+txtCiudad.getText()+"', proveedor.dueño='"+txtDueño.getText()+"', proveedor.telf='"+txtTelf.getText()+"' WHERE proveedor.id_proveedor="+id_prov+";";
+                    CallableStatement pro = (CallableStatement) con.prepareCall("{call modProv(?,?,?,?,?,?,?)}");
+                    pro.setInt(1, id_prov);
+                    pro.setString(2, txtCom.getText());
+                    pro.setString(3, txtRUP.getText());
+                    pro.setString(4, txtPais.getText());                        
+                    pro.setString(5, txtCiudad.getText());
+                    pro.setString(6, txtDueño.getText());
+                    pro.setString(7, txtTelf.getText());
+                    
                     if(validarProv(txtCom.getText(), txtRUP.getText(), txtPais.getText(), txtCiudad.getText(), txtDueño.getText(), txtTelf.getText())){
-                        sentencia.executeUpdate(query);
-                        log.add(query);
+                        pro.executeQuery();
                         jModProv.setVisible(false);
                     }
                     
@@ -285,10 +270,9 @@ public class Proveedor implements QueryLog {
             if(tieneImport==false){
                 try {
                     Connection con=connect.Conexion_SQL();
-                    Statement sentencia=con.createStatement();
-                    String query="DELETE FROM proveedor WHERE proveedor.id_proveedor="+id_prov+";";
-                    sentencia.executeUpdate(query);
-                    log.add(query);
+                    CallableStatement pro = (CallableStatement) con.prepareCall("{call elimProv(?)}");
+                    pro.setInt(1, id_prov);
+                    pro.execute();
                 }catch(SQLException e){}
             }
         }

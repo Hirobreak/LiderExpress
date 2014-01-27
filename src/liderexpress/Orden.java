@@ -1,6 +1,7 @@
 
 package liderexpress;
 
+import com.mysql.jdbc.CallableStatement;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -145,12 +146,12 @@ public class Orden implements QueryLog{
     
         public static int newID(){
         int id = 1;
-        ResultSet rs = null;
+        ResultSet rs = null; 
         try {
             Connection con=connect.Conexion_SQL();
-            Statement sentencia=con.createStatement();
-            String query="SELECT max(orden.id_orden)+1 as maxID FROM orden;";
-            rs = sentencia.executeQuery(query);
+            CallableStatement pro = (CallableStatement) con.prepareCall("{call LastIDOrden()}");
+            pro.execute();
+            rs=pro.getResultSet();
             try{
                 while(rs.next())
                     id = rs.getInt("maxID");
@@ -168,25 +169,29 @@ public class Orden implements QueryLog{
     public static void nuevaOrden(String id_cliente,String pais, String ciudad, String año, String mes, String dia, String tiempo, String estado, String numero){
         try {
             Connection con=connect.Conexion_SQL();
-            Statement sentencia=con.createStatement();
-            //String query="INSERT INTO cliente VALUES(1, '"+ nombre+"','"+cedula+"','"+ruc+"','"+emp+"','"+telf+"')";
-            String query="INSERT INTO orden VALUES("+newID()+","+id_cliente+",'"+pais+"','"+ciudad+"','"+año+"-"+mes+"-"+dia+"',"+tiempo+",'"+estado+"','"+numero+"');";
-            sentencia.executeUpdate(query);
-            log.add(query);
+            String fecha=""+año+"-"+mes+"-"+dia+"";
+            CallableStatement pro = (CallableStatement) con.prepareCall("{call crearOrden(?,?,?,?,?,?,?,?)}");
+            pro.setInt(1, newID());
+            pro.setString(2, id_cliente);
+            pro.setString(3, pais);
+            pro.setString(4, ciudad);                        
+            pro.setString(5, fecha);
+            pro.setString(6, tiempo);
+            pro.setString(7, estado);
+            pro.setString(8, numero);
+            pro.executeQuery();
         }catch(SQLException e){
             JOptionPane.showMessageDialog(null, "Error dato Orden");
         }
-        //return fa;
     }
     
     public static ResultSet todasOrdenes(){
         ResultSet rs = null;
         try {
-            String query;
             Connection con=connect.Conexion_SQL();
-            Statement sentencia=con.createStatement();
-            query="SELECT orden.* FROM orden;";
-            rs=sentencia.executeQuery(query);
+            CallableStatement pro = (CallableStatement) con.prepareCall("{call todasOrdenes()}");
+            pro.execute();
+            rs=pro.getResultSet();
             
         }catch(SQLException e){
             JOptionPane.showMessageDialog(null, "Error dato");
@@ -203,38 +208,17 @@ public class Orden implements QueryLog{
             String queryRas = "";
             ResultSet rs1 = null;
             try {
-                Connection con=connect.Conexion_SQL();
-                Statement sentencia=con.createStatement();
-                String query="SELECT (orden.pais) as pais FROM orden WHERE orden.id_orden="+id_orden+";";
-                String query1="SELECT (orden.ciudad) as ciudad FROM orden WHERE orden.id_orden="+id_orden+";";
-                String query3="SELECT (orden.t_entrega) as tentrega FROM orden WHERE orden.id_orden="+id_orden+";";
-                String query4="SELECT (orden.estado) as estado FROM orden WHERE orden.id_orden="+id_orden+";";
-                String query5="SELECT (orden.num_rastreo) as rastreo FROM orden WHERE orden.id_orden="+id_orden+";";
-                rs1 = sentencia.executeQuery(query);
-                try{
-                    while(rs1.next())
-                    queryPais = rs1.getString("pais");
-                }catch (SQLException ex){}
-                rs1 = sentencia.executeQuery(query1);
-                try{
-                     while(rs1.next())
-                     queryCiu = rs1.getString("ciudad");
-                }catch (SQLException ex){}
-                rs1 = sentencia.executeQuery(query3);
-                try{
-                     while(rs1.next())
-                     queryEntr = rs1.getString("tentrega");
-                }catch (SQLException ex){}
-                rs1 = sentencia.executeQuery(query4);
-                try{
-                     while(rs1.next())
-                     queryEst = rs1.getString("estado");
-                }catch (SQLException ex){}
-                rs1 = sentencia.executeQuery(query5);
-                try{
-                     while(rs1.next())
-                     queryRas = rs1.getString("rastreo");
-                }catch (SQLException ex){}
+                Connection con=connect.Conexion_SQL(); 
+                CallableStatement pro = (CallableStatement) con.prepareCall("{call takeOrdenData(?)}");
+                pro.setInt(1, id_orden);
+                pro.execute();
+                rs1 = pro.getResultSet();
+                rs1.next();
+                queryPais = rs1.getString("pais");
+                queryCiu = rs1.getString("ciudad");
+                queryEntr = rs1.getString("t_entrega");
+                queryEst = rs1.getString("estado");
+                queryRas = rs1.getString("num_rastreo");
             }catch(SQLException ex){}
             
         final JFrame jModOrden = new JFrame("Modificacion de Orden");
@@ -333,14 +317,20 @@ public class Orden implements QueryLog{
                 if(largoString(txtPais.getText(),20)&&largoString(txtCiudad.getText(),20)&&largoInt(txtTiempo.getText(),5)&&largoString(txtEstado.getText(),20)&&largoInt(txtNumero.getText(),20))                        
                 {
                     Connection con=connect.Conexion_SQL();
-                    Statement sentencia=con.createStatement();
-                    String query="UPDATE orden SET orden.id_cliente="+id_cliente+", orden.pais='"+txtPais.getText()+"', orden.ciudad='"+txtCiudad.getText()+"', orden.fecha='"+txtAño.getSelectedItem().toString()+"-"+txtMes.getSelectedItem().toString()+"-"+txtDia.getSelectedItem().toString()+"', orden.t_entrega="+txtTiempo.getText()+", orden.estado='"+txtEstado.getText()+"', orden.num_rastreo='"+txtNumero.getText()+"' WHERE orden.id_orden="+id_orden+";";
-                    sentencia.executeUpdate(query);
-                    jModOrden.setVisible(false);
-                    log.add(query);
+                    String fecha=""+txtAño.getSelectedItem().toString()+"-"+txtMes.getSelectedItem().toString()+"-"+txtDia.getSelectedItem().toString()+"";
+                    CallableStatement pro = (CallableStatement) con.prepareCall("{call modOrden(?,?,?,?,?,?,?,?)}");
+                    pro.setInt(1, id_orden);
+                    pro.setString(2, id_cliente);
+                    pro.setString(3, txtPais.getText());
+                    pro.setString(4, txtCiudad.getText());                        
+                    pro.setString(5, fecha);
+                    pro.setString(6, txtTiempo.getText());
+                    pro.setString(7, txtEstado.getText());
+                    pro.setString(8, txtNumero.getText());
+                    pro.executeQuery();
                 }
                 }catch(SQLException ex){}
-                
+                jModOrden.setVisible(false);
                 m.paintOrdenes();
                 }
             }
@@ -382,10 +372,9 @@ public class Orden implements QueryLog{
             if(tieneMerca==false && tieneFact==false){
                 try {
                     Connection con=connect.Conexion_SQL();
-                    Statement sentencia=con.createStatement();
-                    String query="DELETE FROM orden WHERE orden.id_orden="+id_orden+";";
-                    sentencia.executeUpdate(query);
-                    log.add(query);
+                    CallableStatement pro = (CallableStatement) con.prepareCall("{call elimOrden(?)}");
+                    pro.setInt(1, id_orden);
+                    pro.execute();
                 }catch(SQLException e){}
             }
         }

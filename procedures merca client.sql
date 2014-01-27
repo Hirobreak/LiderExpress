@@ -105,3 +105,89 @@ create procedure maxMerca()
 	end$$
 
 delimiter ;
+
+/*PROCEDURES PARA ORDEN*/
+
+DELIMITER |
+CREATE PROCEDURE LastIDOrden (OUT maxID INTEGER) BEGIN
+	SELECT max(orden.id_orden)+1 INTO maxID FROM orden;
+END |
+DELIMITER ;
+
+delimiter $$
+create procedure crearOrden(IN newID INTEGER,IN IDCliente INTEGER, IN pais VARCHAR(30), IN ciudad VARCHAR(30), IN fecha DATE, IN tiempo INTEGER, IN estado VARCHAR(30), IN numero INTEGER)
+	begin
+	INSERT INTO orden VALUES(newID,IDCliente,pais,ciudad,fecha,tiempo,estado,numero);
+END $$
+delimiter ;
+
+DELIMITER | 
+CREATE PROCEDURE todasOrdenes() begin
+	SELECT orden.* FROM orden;
+END |
+DELIMITER ;
+
+DELIMITER |
+CREATE PROCEDURE takeOrdenData (IN id INTEGER) 
+	BEGIN
+	SELECT orden.* FROM orden WHERE orden.id_orden=id;
+END |
+DELIMITER ;
+
+DELIMITER $$
+CREATE PROCEDURE modOrden(IN IDOrden decimal, IN IDCliente DECIMAL, IN OPais VARCHAR(20), IN OCiudad VARCHAR(20), IN fecha DATE, IN tiempo INTEGER, IN estado VARCHAR(20), IN rastreo VARCHAR(20))
+	BEGIN 
+	UPDATE orden SET orden.id_cliente=IDCliente, orden.pais=OPais, orden.ciudad=OCiudad, orden.fecha=fecha, orden.t_entrega=tiempo, orden.estado=estado, orden.num_rastreo=rastreo WHERE orden.id_orden=IDOrden;
+END $$
+DELIMITER ;
+
+DELIMITER $$
+CREATE PROCEDURE elimOrden(IN IDOrden DECIMAL)
+	BEGIN 
+	DELETE FROM orden WHERE orden.id_orden=IDOrden;
+END $$
+DELIMITER ;
+/*FIN DE PROCEDURES PARA ORDEN*/
+
+/*PROCEDURES PARA PROVEEDOR*/
+
+DELIMITER $$
+CREATE PROCEDURE crearProv(IN newID DECIMAL, IN comp VARCHAR(40), IN rup VARCHAR(20), IN pais VARCHAR(20), IN ciudad VARCHAR(30), IN dueño VARCHAR(20), IN telf VARCHAR(20))
+	BEGIN
+	INSERT INTO proveedor VALUES(newID,comp,rup,pais,ciudad,dueño,telf);
+END $$
+DELIMITER ;
+
+DELIMITER | 
+CREATE PROCEDURE todosProv() begin
+	SELECT * FROM proveedor;
+END |
+DELIMITER ;
+
+DELIMITER |
+CREATE PROCEDURE LastIDProv (OUT maxID INTEGER) BEGIN
+	SELECT max(proveedor.id_proveedor)+1 INTO maxID FROM proveedor;
+END |
+DELIMITER ;
+
+DELIMITER |
+CREATE PROCEDURE takeProvData (IN id DECIMAL) 
+	BEGIN
+	SELECT proveedor.* FROM proveedor WHERE proveedor.id_proveedor=id;
+END |
+DELIMITER ;
+
+DELIMITER $$
+CREATE PROCEDURE modProv(IN id decimal, IN Com VARCHAR(40), IN RUP VARCHAR(20), IN Pais VARCHAR(20), IN Ciudad VARCHAR(30), IN Dueño VARCHAR(20), IN Telf VARCHAR(20))
+	BEGIN 
+	UPDATE proveedor SET proveedor.compania=Com, proveedor.rup=RUP, proveedor.pais=Pais, proveedor.ciudad=Ciudad, proveedor.dueño=Dueño, proveedor.telf=Telf WHERE proveedor.id_proveedor=id;
+END $$
+DELIMITER ;
+
+DELIMITER $$
+CREATE PROCEDURE elimProv(IN IDProv DECIMAL)
+	BEGIN 
+	DELETE FROM proveedor WHERE proveedor.id_proveedor=IDProv;
+END $$
+DELIMITER ;
+/*FIN DE PROCEDURES PARA PROVEEDOR*/
