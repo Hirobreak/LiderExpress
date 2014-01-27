@@ -1,6 +1,7 @@
 
 package liderexpress;
 
+import com.mysql.jdbc.CallableStatement;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -66,14 +67,14 @@ public class Mercaderia extends Validaciones implements QueryLog {
         Label labelcant=new Label("Cantidad: ", Label.CENTER);
         Button guardar=new Button("Guardar");
         Button cancelar=new Button("Cancelar");
-        final TextField txtEst=new TextField("Estilo", 20);
-        final TextField txtMarc=new TextField("Marca", 20);
-        final TextField txtDesc=new TextField("Descripción", 20);
-        final TextField txtComp=new TextField("Composición", 20);
-        final TextField txtOrg=new TextField("Origen", 20);
-        final TextField txtpp=new TextField("0.00", 20);
-        final TextField txtpc=new TextField("0.00", 20);
-        final TextField txtcant=new TextField("0", 20);
+        final TextField txtEst=new TextField("", 20);
+        final TextField txtMarc=new TextField("", 20);
+        final TextField txtDesc=new TextField("", 20);
+        final TextField txtComp=new TextField("", 20);
+        final TextField txtOrg=new TextField("", 20);
+        final TextField txtpp=new TextField("", 20);
+        final TextField txtpc=new TextField("", 20);
+        final TextField txtcant=new TextField("", 20);
         final JComboBox listaOrd=new JComboBox();
         try{
           ResultSet rs = Orden.todasOrdenes();
@@ -122,7 +123,7 @@ public class Mercaderia extends Validaciones implements QueryLog {
                 String orden = listaOrd.getSelectedItem().toString();
                 String orden1[] = orden.split("\\ ");
                 String id_orden = orden1[1];
-                System.out.println(id_orden);
+                //System.out.println(id_orden);
                 if(largoString(txtEst.getText(),20)==false)
                         JOptionPane.showMessageDialog(null,"Error, el estilo tiene hasta 20 caracteres.Intente de nuevo");
                 if(largoString(txtMarc.getText(),20)==false)
@@ -155,10 +156,18 @@ public class Mercaderia extends Validaciones implements QueryLog {
     public static void nuevaMerca(String estilo,String marca, String dsc, String compos, String cantidad, String origen, String p_venta, String p_compra, String id_orden){
         try {
             Connection con=connect.Conexion_SQL();
-            Statement sentencia=con.createStatement();
-            String query="INSERT INTO mercaderia VALUES("+newID()+",'"+estilo+"','"+marca+"','"+dsc+"','"+compos+"',"+cantidad+",'"+origen+"',"+p_venta+","+p_compra+","+id_orden+");";
-            sentencia.executeUpdate(query);
-            log.add(query);
+            CallableStatement pro = (CallableStatement) con.prepareCall("{call crearMerca(?,?,?,?,?,?,?,?,?,?)}");
+            pro.setInt(1, newID());
+            pro.setString(2, estilo);
+            pro.setString(3, marca);
+            pro.setString(4, dsc);                        
+            pro.setString(5, compos);
+            pro.setInt(6, Integer.parseInt(cantidad));
+            pro.setString(7, origen);                        
+            pro.setFloat(8, Float.parseFloat(p_venta));
+            pro.setFloat(9, Float.parseFloat(p_compra));
+            pro.setInt(10, Integer.parseInt(id_orden));
+            pro.execute();
         }catch(SQLException e){
             JOptionPane.showMessageDialog(null, "Error dato Mercaderia");
         }
@@ -169,9 +178,9 @@ public class Mercaderia extends Validaciones implements QueryLog {
         ResultSet rs = null;
         try {
             Connection con=connect.Conexion_SQL();
-            Statement sentencia=con.createStatement();
-            String query="SELECT max(mercaderia.id_merca)+1 as maxID FROM mercaderia;";
-            rs = sentencia.executeQuery(query);
+            CallableStatement pro = (CallableStatement) con.prepareCall("{call maxMerca()}");
+            pro.execute();
+            rs=pro.getResultSet();
             try{
                 while(rs.next())
                     id = rs.getInt("maxID");
@@ -192,9 +201,9 @@ public class Mercaderia extends Validaciones implements QueryLog {
         try {
             String query;
             Connection con=connect.Conexion_SQL();
-            Statement sentencia=con.createStatement();
-            query="SELECT mercaderia.* FROM mercaderia;";
-            rs=sentencia.executeQuery(query);
+            CallableStatement pro = (CallableStatement) con.prepareCall("{call allMerca()}");
+            pro.execute();
+            rs=pro.getResultSet();
             
         }catch(SQLException e){
             JOptionPane.showMessageDialog(null, "Error dato");
@@ -208,62 +217,26 @@ public class Mercaderia extends Validaciones implements QueryLog {
             String queryMar = "";
             String queryDsc = "";
             String queryCompos = "";
-            String queryCan = "";
+            int queryCan = 0;
             String queryOri = "";
-            String queryVen = "";
-            String queryCompra = "";
+            float queryVen = 0;
+            float queryCompra = 0;
             ResultSet rs1 = null;
             try {
                 Connection con=connect.Conexion_SQL();
-                Statement sentencia=con.createStatement();
-                String query="SELECT (mercaderia.estilo) as estilo FROM mercaderia WHERE mercaderia.id_merca="+id_merca+";";
-                String query1="SELECT (mercaderia.marca) as marca FROM mercaderia WHERE mercaderia.id_merca="+id_merca+";";
-                String query2="SELECT (mercaderia.dsc) as dsc FROM mercaderia WHERE mercaderia.id_merca="+id_merca+";";
-                String query3="SELECT (mercaderia.compos) as compos FROM mercaderia WHERE mercaderia.id_merca="+id_merca+";";
-                String query4="SELECT (mercaderia.cantidad) as cantidad FROM mercaderia WHERE mercaderia.id_merca="+id_merca+";";
-                String query5="SELECT (mercaderia.origen) as origen FROM mercaderia WHERE mercaderia.id_merca="+id_merca+";";
-                String query6="SELECT (mercaderia.precio_venta) as venta FROM mercaderia WHERE mercaderia.id_merca="+id_merca+";";
-                String query7="SELECT (mercaderia.precio_compra) as compra FROM mercaderia WHERE mercaderia.id_merca="+id_merca+";";
-                rs1 = sentencia.executeQuery(query);
-                try{
-                    while(rs1.next())
-                    queryEst = rs1.getString("estilo");
-                }catch (SQLException ex){}
-                rs1 = sentencia.executeQuery(query1);
-                try{
-                     while(rs1.next())
-                     queryMar = rs1.getString("marca");
-                }catch (SQLException ex){}
-                rs1 = sentencia.executeQuery(query2);
-                try{
-                     while(rs1.next())
-                     queryDsc = rs1.getString("dsc");
-                }catch (SQLException ex){}
-                rs1 = sentencia.executeQuery(query3);
-                try{
-                     while(rs1.next())
-                     queryCompos = rs1.getString("compos");
-                }catch (SQLException ex){}
-                rs1 = sentencia.executeQuery(query4);
-                try{
-                     while(rs1.next())
-                     queryCan = rs1.getString("cantidad");
-                }catch (SQLException ex){}
-                 rs1 = sentencia.executeQuery(query5);
-                try{
-                     while(rs1.next())
-                     queryOri = rs1.getString("origen");
-                }catch (SQLException ex){}
-                rs1 = sentencia.executeQuery(query6);
-                try{
-                     while(rs1.next())
-                     queryVen = rs1.getString("venta");
-                }catch (SQLException ex){}
-                rs1 = sentencia.executeQuery(query7);
-                try{
-                     while(rs1.next())
-                     queryCompra = rs1.getString("compra");
-                }catch (SQLException ex){}
+                CallableStatement pro = (CallableStatement) con.prepareCall("{call takeMercaData(?)}");
+                pro.setInt(1, id_merca);
+                pro.execute();
+                ResultSet res = pro.getResultSet();
+                res.next();
+                queryEst = res.getString("estilo");
+                queryMar = res.getString("marca");
+                queryDsc = res.getString("dsc");
+                queryCompos = res.getString("compos");
+                queryCan = res.getInt("cantidad");
+                queryOri = res.getString("origen");
+                queryVen = res.getFloat("precio_venta");
+                queryCompra = res.getFloat("precio_compra");
             }catch(SQLException ex){}
            
         
@@ -297,9 +270,9 @@ public class Mercaderia extends Validaciones implements QueryLog {
         final TextField txtDesc=new TextField(queryDsc, 20);
         final TextField txtComp=new TextField(queryCompos, 20);
         final TextField txtOrg=new TextField(queryOri, 20);
-        final TextField txtpp=new TextField(queryVen, 20);
-        final TextField txtpc=new TextField(queryCompra, 20);
-        final TextField txtcant=new TextField(queryCan, 20);
+        final TextField txtpp=new TextField(String.valueOf(queryVen), 20);
+        final TextField txtpc=new TextField(String.valueOf(queryCompra), 20);
+        final TextField txtcant=new TextField(String.valueOf(queryCan), 20);
         final JComboBox listaOrd=new JComboBox();
         try{
           ResultSet rs = Orden.todasOrdenes();
@@ -373,10 +346,18 @@ public class Mercaderia extends Validaciones implements QueryLog {
  
                     {
                     Connection con=connect.Conexion_SQL();
-                    Statement sentencia=con.createStatement();
-                    String query="UPDATE mercaderia SET mercaderia.estilo="+txtEst.getText()+", mercaderia.marca='"+txtMarc.getText()+"', mercaderia.dsc='"+txtDesc.getText()+"', mercaderia.compos='"+txtComp.getText()+"', mercaderia.cantidad="+txtcant.getText()+", mercaderia.origen='"+txtOrg.getText()+"', mercaderia.precio_venta="+txtpp.getText()+", mercaderia.precio_compra="+txtpc.getText()+", mercaderia.id_orden="+id_orden+" WHERE mercaderia.id_merca="+id_merca+";";
-                    sentencia.executeUpdate(query);
-                    log.add(query);
+                    CallableStatement pro = (CallableStatement) con.prepareCall("{call updateMerca(?,?,?,?,?,?,?,?,?,?)}");
+                    pro.setInt(1, id_merca);
+                    pro.setString(2, txtEst.getText());
+                    pro.setString(3, txtMarc.getText());
+                    pro.setString(4, txtDesc.getText());                        
+                    pro.setString(5, txtComp.getText());
+                    pro.setInt(6, Integer.parseInt(txtcant.getText()));
+                    pro.setString(7, txtOrg.getText());                        
+                    pro.setFloat(8, Float.parseFloat(txtpp.getText()));
+                    pro.setFloat(9, Float.parseFloat(txtpc.getText()));
+                    pro.setInt(10, Integer.parseInt(id_orden));
+                    pro.execute();
                     jCrearMerc.setVisible(false);
                     }
                 }catch(SQLException ex){}
@@ -413,10 +394,9 @@ public class Mercaderia extends Validaciones implements QueryLog {
             if(tieneEmpaq==false){
                 try {
                     Connection con=connect.Conexion_SQL();
-                    Statement sentencia=con.createStatement();
-                    String query="DELETE FROM mercaderia WHERE mercaderia.id_merca="+id_merca+";";
-                    sentencia.executeUpdate(query);
-                    log.add(query);
+                    CallableStatement pro = (CallableStatement) con.prepareCall("{call deleteMerca(?)}");
+                    pro.setInt(1, id_merca);
+                    pro.execute();
                 }catch(SQLException e){}
             }
         }

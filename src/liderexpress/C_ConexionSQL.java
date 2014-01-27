@@ -14,7 +14,7 @@ public class C_ConexionSQL {
         Connection conexion=null;
         try{
             Class.forName("com.mysql.jdbc.Driver").newInstance();
-            conexion=DriverManager.getConnection("jdbc:mysql://localhost:3306/liderexpress", "root", "Dosmillones354879");
+            conexion=DriverManager.getConnection("jdbc:mysql://localhost:3306/liderexpress", "root", "megaman");
         }catch(Exception e){
             JOptionPane.showMessageDialog(null, "Error de Conexion");
         }

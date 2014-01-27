@@ -102,3 +102,8 @@ INSERT INTO importacion VALUES(5,'1', '1','2000-1-1');
 =======
 INSERT INTO cliente VALUES(7,'Nombre', '6487985466', '2314569874569', 'Compañia', '00000000');
 >>>>>>> 528ec8274f05fae07fde032536f84b2ed66863a4
+INSERT INTO cliente VALUES(1,'Jigly', '1234567890', '1234567890123', 'tumama', '1234567890');
+INSERT INTO cliente VALUES(4,'lolo', '1234567890', '1234567890125', 'tulo', '1234567890');
+INSERT INTO cliente VALUES(5,'swag', '1234567892', '1234567890126', 'swagpro', '1234565432');
+UPDATE cliente SET cliente.nombre='tuma', cliente.cedula='1234567987', cliente.ruc='1234321908764', cliente.compania='lol', cliente.telf='1324356789' WHERE cliente.id_cliente=2;
+INSERT INTO orden VALUES(1,1,'regwe','csdgs','2000-4-1',56,'sdfgh','5452');

@@ -60,11 +60,11 @@ public class Cliente extends Validaciones implements QueryLog {
         Button guardar=new Button("Guardar");
         Button cancelar=new Button("Cancelar");
         Button Ordenes=new Button("Ordenes");
-        final TextField txtNombre=new TextField("Nombre", 20);
-        final TextField txtRuc=new TextField("RUC", 20);
-        final TextField txtCedula=new TextField("Cedula", 20);
-        final TextField txtCompa=new TextField("Compañia", 20);
-        final TextField txtTelf1=new TextField("00000000", 20);
+        final TextField txtNombre=new TextField("", 20);
+        final TextField txtRuc=new TextField("", 20);
+        final TextField txtCedula=new TextField("", 20);
+        final TextField txtCompa=new TextField("", 20);
+        final TextField txtTelf1=new TextField("", 20);
         panelnombre.add(labelnom);
         panelnombre.add(txtNombre);
         panelcedula.add(labelced);
@@ -116,11 +116,14 @@ public class Cliente extends Validaciones implements QueryLog {
     public static void NuevoCliente(String nombre, String cedula, String ruc, String emp, String telf){
         try {
             Connection con=connect.Conexion_SQL();
-            Statement sentencia=con.createStatement();
-            
-            String query="INSERT INTO cliente VALUES("+newID()+",'"+nombre+"', '"+cedula+"', '"+ruc+"', '"+emp+"', '"+telf+"');";
-            sentencia.executeUpdate(query);
-            log.add(query);
+            CallableStatement pro = (CallableStatement) con.prepareCall("{call crearCliente(?,?,?,?,?,?)}");
+            pro.setInt(1, newID());
+            pro.setString(2, nombre);
+            pro.setString(3, cedula);
+            pro.setString(4, emp);                        
+            pro.setString(5, ruc);
+            pro.setString(6, telf);
+            pro.executeQuery();
         }catch(SQLException e){
             JOptionPane.showMessageDialog(null, "Error dato");
         }
@@ -151,11 +154,10 @@ public class Cliente extends Validaciones implements QueryLog {
     public static ResultSet todosClientes(){
         ResultSet rs = null;
         try {
-            String query;
             Connection con=connect.Conexion_SQL();
-            Statement sentencia=con.createStatement();
-            query="SELECT cliente.* FROM cliente;";
-            rs=sentencia.executeQuery(query);
+            CallableStatement pro = (CallableStatement) con.prepareCall("{call allClient()}");
+            pro.execute();
+            rs=pro.getResultSet();
             
         }catch(SQLException e){
             JOptionPane.showMessageDialog(null, "Error dato");
@@ -168,9 +170,9 @@ public class Cliente extends Validaciones implements QueryLog {
         ResultSet rs = null;
         try {
             Connection con=connect.Conexion_SQL();
-            Statement sentencia=con.createStatement();
-            String query="SELECT max(cliente.id_cliente)+1 as maxID FROM cliente;";
-            rs = sentencia.executeQuery(query);
+            CallableStatement pro = (CallableStatement) con.prepareCall("{call maxClient()}");
+            pro.execute();
+            rs=pro.getResultSet();
             try{
                 while(rs.next())
                     id = rs.getInt("maxID");
@@ -195,38 +197,20 @@ public class Cliente extends Validaciones implements QueryLog {
             ResultSet rs = null;
             try {
                 Connection con=connect.Conexion_SQL();
-                Statement sentencia=con.createStatement();
-                String query="SELECT (cliente.nombre) as nombre FROM cliente WHERE cliente.id_cliente="+id_cliente+";";
-                String query1="SELECT (cliente.ruc) as ruc FROM cliente WHERE cliente.id_cliente="+id_cliente+";";
-                String query2="SELECT (cliente.compania) as compania FROM cliente WHERE cliente.id_cliente="+id_cliente+";";
-                String query3="SELECT (cliente.telf) as telf FROM cliente WHERE cliente.id_cliente="+id_cliente+";";
-                String query4="SELECT (cliente.cedula) as cedula FROM cliente WHERE cliente.id_cliente="+id_cliente+";";
-                rs = sentencia.executeQuery(query);
-                try{
-                    while(rs.next())
-                    queryNom = rs.getString("nombre");
-                }catch (SQLException ex){}
-                rs = sentencia.executeQuery(query1);
-                try{
-                     while(rs.next())
-                     queryRuc = rs.getString("ruc");
-                }catch (SQLException ex){}
-                rs = sentencia.executeQuery(query2);
-                try{
-                     while(rs.next())
-                     queryCom = rs.getString("compania");
-                }catch (SQLException ex){}
-                rs = sentencia.executeQuery(query3);
-                try{
-                     while(rs.next())
-                     queryTelf = rs.getString("telf");
-                }catch (SQLException ex){}
-                rs = sentencia.executeQuery(query4);
-                try{
-                     while(rs.next())
-                     queryCed = rs.getString("cedula");
-                }catch (SQLException ex){}
+                CallableStatement pro = (CallableStatement) con.prepareCall("{call takeClientData(?)}");
+                pro.setInt(1, id_cliente);
+                pro.execute();
+                ResultSet res = pro.getResultSet();
+                res.next();
+                queryNom = res.getString("nombre");
+                queryCed = res.getString("cedula");
+                queryRuc = res.getString("ruc");
+                queryCom = res.getString("compania");
+                queryTelf = res.getString("telf");
+                
             }catch(SQLException ex){}
+                        
+                
         final JFrame jModCliente = new JFrame("Modificacion de Cliente");
         jModCliente.setSize(500, 300);
         jModCliente.setVisible(true);
@@ -291,10 +275,14 @@ public class Cliente extends Validaciones implements QueryLog {
                 if(confirm==JOptionPane.OK_OPTION){
                 try {
                     Connection con=connect.Conexion_SQL();
-                    Statement sentencia=con.createStatement();
-                    String query="UPDATE cliente SET cliente.nombre='"+txtNombre.getText()+"', cliente.cedula='"+txtCedula.getText()+"', cliente.ruc='"+txtRuc.getText()+"', cliente.compania='"+txtCompa.getText()+"', cliente.telf='"+txtTelf1.getText()+"' WHERE cliente.id_cliente="+id_cliente+";";
-                    sentencia.executeUpdate(query);
-                    log.add(query);
+                    CallableStatement pro = (CallableStatement) con.prepareCall("{call updateClient(?,?,?,?,?,?)}");
+                    pro.setInt(1, id_cliente);
+                    pro.setString(2, txtNombre.getText());
+                    pro.setString(3, txtCedula.getText());
+                    pro.setString(4, txtCompa.getText());                        
+                    pro.setString(5, txtRuc.getText());
+                    pro.setString(6, txtTelf1.getText());
+                    pro.executeQuery();
                 }catch(SQLException ex){}}
                 jModCliente.setVisible(false);
                 m.paintClientes();
@@ -328,10 +316,9 @@ public class Cliente extends Validaciones implements QueryLog {
             if(tieneOrden==false){
                 try {
                     Connection con=connect.Conexion_SQL();
-                    Statement sentencia=con.createStatement();
-                    String query="DELETE FROM cliente WHERE cliente.id_cliente="+id_cliente+";";
-                    sentencia.executeUpdate(query);
-                    log.add(query);
+                    CallableStatement pro = (CallableStatement) con.prepareCall("{call deleteClient(?)}");
+                    pro.setInt(1, id_cliente);
+                    pro.execute();
                 }catch(SQLException e){}
             }
         }
