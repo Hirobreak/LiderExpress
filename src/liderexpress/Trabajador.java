@@ -1,6 +1,7 @@
 
 package liderexpress;
 
+import com.mysql.jdbc.CallableStatement;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -113,10 +114,15 @@ public class Trabajador implements QueryLog {
     public static void nuevoTrab(String nombre, String cedula, String puesto, String telf, String sueldo, String mail){
         try {
             Connection con=connect.Conexion_SQL();
-            Statement sentencia=con.createStatement();
-            String query="INSERT INTO trabajador VALUES("+newID()+",'"+nombre+"', '"+cedula+"', '"+puesto+"', '"+telf+"', "+sueldo+", '"+mail+"');";
-            sentencia.executeUpdate(query);
-            log.add(query);
+            CallableStatement pro = (CallableStatement) con.prepareCall("{call crearTrabajador(?,?,?,?,?,?,?)}");
+            pro.setInt(1, newID());
+            pro.setString(2, nombre);
+            pro.setString(3, cedula);
+            pro.setString(4, puesto);                        
+            pro.setString(5, telf);
+            pro.setString(6, sueldo);
+            pro.setString(7, mail);
+            pro.executeQuery();
         }catch(SQLException e){
             JOptionPane.showMessageDialog(null, "Error dato");
         }
@@ -126,11 +132,10 @@ public class Trabajador implements QueryLog {
     public static ResultSet todosTrab(){
         ResultSet rs = null;
         try {
-            String query;
             Connection con=connect.Conexion_SQL();
-            Statement sentencia=con.createStatement();
-            query="SELECT trabajador.* FROM trabajador;";
-            rs=sentencia.executeQuery(query);
+            CallableStatement pro = (CallableStatement) con.prepareCall("{call todosTrab()}");
+            pro.execute();
+            rs=pro.getResultSet();
             
         }catch(SQLException e){
             JOptionPane.showMessageDialog(null, "Error dato");
@@ -143,9 +148,9 @@ public class Trabajador implements QueryLog {
         ResultSet rs = null;
         try {
             Connection con=connect.Conexion_SQL();
-            Statement sentencia=con.createStatement();
-            String query="SELECT max(trabajador.id_trabajador)+1 as maxID FROM trabajador;";
-            rs = sentencia.executeQuery(query);
+            CallableStatement pro = (CallableStatement) con.prepareCall("{call lastIDTrab()}");
+            pro.execute();
+            rs=pro.getResultSet();
             try{
                 while(rs.next())
                     id = rs.getInt("maxID");
@@ -172,43 +177,17 @@ public class Trabajador implements QueryLog {
             ResultSet rs1 = null;
             try {
                 Connection con=connect.Conexion_SQL();
-                Statement sentencia=con.createStatement();
-                String query="SELECT (trabajador.nombre) as nombre FROM trabajador WHERE trabajador.id_trabajador="+id_trab+";";
-                String query1="SELECT (trabajador.cedula) as cedula FROM trabajador WHERE trabajador.id_trabajador="+id_trab+";";
-                String query2="SELECT (trabajador.puesto) as puesto FROM trabajador WHERE trabajador.id_trabajador="+id_trab+";";
-                String query3="SELECT (trabajador.telf) as telf FROM trabajador WHERE trabajador.id_trabajador="+id_trab+";";
-                String query4="SELECT (trabajador.sueldo) as sueldo FROM trabajador WHERE trabajador.id_trabajador="+id_trab+";";
-                String query5="SELECT (trabajador.mail) as mail FROM trabajador WHERE trabajador.id_trabajador="+id_trab+";";
-                rs1 = sentencia.executeQuery(query);
-                try{
-                    while(rs1.next())
-                    queryNom = rs1.getString("nombre");
-                }catch (SQLException ex){}
-                rs1 = sentencia.executeQuery(query1);
-                try{
-                     while(rs1.next())
-                     queryCed = rs1.getString("cedula");
-                }catch (SQLException ex){}
-                rs1 = sentencia.executeQuery(query2);
-                try{
-                     while(rs1.next())
-                     queryPue = rs1.getString("puesto");
-                }catch (SQLException ex){}
-                rs1 = sentencia.executeQuery(query3);
-                try{
-                     while(rs1.next())
-                     queryTelf = rs1.getString("telf");
-                }catch (SQLException ex){}
-                rs1 = sentencia.executeQuery(query4);
-                try{
-                     while(rs1.next())
-                     querySue = rs1.getString("sueldo");
-                }catch (SQLException ex){}
-                 rs1 = sentencia.executeQuery(query5);
-                try{
-                     while(rs1.next())
-                     queryMail = rs1.getString("mail");
-                }catch (SQLException ex){}
+                CallableStatement pro = (CallableStatement) con.prepareCall("{call takeTrabData(?)}");
+                pro.setInt(1, id_trab);
+                pro.execute();
+                rs1 = pro.getResultSet();
+                rs1.next();
+                queryNom = rs1.getString("nombre");
+                queryCed = rs1.getString("cedula");
+                queryPue = rs1.getString("puesto");
+                queryTelf = rs1.getString("telf");
+                querySue = rs1.getString("sueldo");
+                queryMail = rs1.getString("mail");
             }catch(SQLException ex){}
         final JFrame jModT = new JFrame("Modificacion de Trabajador");
         jModT.setSize(500, 300);
@@ -277,11 +256,16 @@ public class Trabajador implements QueryLog {
                 if(largoString(txtNombre.getText(),40)&&esCEDULA(txtCedula.getText())&&largoString(txtCargo.getText(),20)&&largoInt(txtTelf.getText(),30)&&largoInt(txtSalario.getText(),10)&&esMail(txtCorreo.getText())){
                
                     Connection con=connect.Conexion_SQL();
-                    Statement sentencia=con.createStatement();
-                    String query="UPDATE trabajador SET trabajador.nombre='"+txtNombre.getText()+"', trabajador.cedula='"+txtCedula.getText()+"', trabajador.puesto='"+txtCargo.getText()+"', trabajador.telf='"+txtTelf.getText()+"', trabajador.sueldo="+txtSalario.getText()+", trabajador.mail='"+txtCorreo.getText()+"' WHERE trabajador.id_trabajador="+id_trab+";";
-                    sentencia.executeUpdate(query);
+                    CallableStatement pro = (CallableStatement) con.prepareCall("{call modTrab(?,?,?,?,?,?,?)}");
+                    pro.setInt(1, id_trab);
+                    pro.setString(2, txtNombre.getText());
+                    pro.setString(3, txtCedula.getText());
+                    pro.setString(4, txtCargo.getText());                        
+                    pro.setString(5, txtTelf.getText());
+                    pro.setString(6, txtSalario.getText());
+                    pro.setString(7, txtCorreo.getText());
+                    pro.executeQuery();
                     jModT.setVisible(false);
-                    log.add(query);
                 }
                 }catch(SQLException ex){}
                 m.paintTrabs();
@@ -314,10 +298,9 @@ public class Trabajador implements QueryLog {
             if(tieneImport==false){
                 try {
                     Connection con=connect.Conexion_SQL();
-                    Statement sentencia=con.createStatement();
-                    String query="DELETE FROM trabajador WHERE trabajador.id_trabajador="+id_trab+";";
-                    sentencia.executeUpdate(query);
-                    log.add(query);
+                    CallableStatement pro = (CallableStatement) con.prepareCall("{call elimTrab(?)}");
+                    pro.setInt(1, id_trab);
+                    pro.execute();
                 }catch(SQLException e){}
             }
         }

@@ -1,6 +1,7 @@
 
 package liderexpress;
 
+import com.mysql.jdbc.CallableStatement;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -120,10 +121,13 @@ public class Importacion implements QueryLog{
     public static void nuevaImp(String id_trab, String id_prov, String año, String mes, String dia){
         try {
             Connection con=connect.Conexion_SQL();
-            Statement sentencia=con.createStatement();
-            String query="INSERT INTO importacion VALUES("+newID()+",'"+id_trab+"', '"+id_prov+"','"+año+"-"+mes+"-"+dia+"');";
-            sentencia.executeUpdate(query);
-            log.add(query);
+            String fecha=""+año+"-"+mes+"-"+dia+"";
+            CallableStatement pro = (CallableStatement) con.prepareCall("{call crearImp(?,?,?,?)}");
+            pro.setInt(1, newID());
+            pro.setString(2, id_trab);
+            pro.setString(3, id_prov);
+            pro.setString(4, fecha); 
+            pro.execute();
         }catch(SQLException e){
             JOptionPane.showMessageDialog(null, "Error dato");
         }
@@ -133,11 +137,10 @@ public class Importacion implements QueryLog{
     public static ResultSet todasImport(){
         ResultSet rs = null;
         try {
-            String query;
             Connection con=connect.Conexion_SQL();
-            Statement sentencia=con.createStatement();
-            query="SELECT importacion.* FROM importacion;";
-            rs=sentencia.executeQuery(query);
+            CallableStatement pro = (CallableStatement) con.prepareCall("{call todasImport()}");
+            pro.execute();
+            rs=pro.getResultSet();
             
         }catch(SQLException e){
             JOptionPane.showMessageDialog(null, "Error dato");
@@ -147,12 +150,12 @@ public class Importacion implements QueryLog{
     
     public static int newID(){
         int id = 1;
-        ResultSet rs = null;
+        ResultSet rs = null; 
         try {
             Connection con=connect.Conexion_SQL();
-            Statement sentencia=con.createStatement();
-            String query="SELECT max(importacion.id_import)+1 as maxID FROM importacion;";
-            rs = sentencia.executeQuery(query);
+            CallableStatement pro = (CallableStatement) con.prepareCall("{call lastIDImport()}");
+            pro.execute();
+            rs=pro.getResultSet();
             try{
                 while(rs.next())
                     id = rs.getInt("maxID");
@@ -244,10 +247,13 @@ public class Importacion implements QueryLog{
                 String id_proveedor = prov1[0];
                 try {
                     Connection con=connect.Conexion_SQL();
-                    Statement sentencia=con.createStatement();
-                    String query="UPDATE importacion SET importacion.id_trabajador="+id_trab+", importacion.id_proveedor="+id_proveedor+", importacion.fecha='"+caño.getSelectedItem().toString()+"-"+cmes.getSelectedItem().toString()+"-"+cdia.getSelectedItem().toString()+"' WHERE importacion.id_import="+id_import+";";
-                    sentencia.executeUpdate(query);
-                    log.add(query);
+                    String fecha=""+caño.getSelectedItem().toString()+"-"+cmes.getSelectedItem().toString()+"-"+cdia.getSelectedItem().toString()+"";
+                    CallableStatement pro = (CallableStatement) con.prepareCall("{call modImport(?,?,?,?)}");
+                    pro.setInt(1, id_import);
+                    pro.setString(2, id_trab);
+                    pro.setString(3, id_proveedor);                   
+                    pro.setString(4, fecha);
+                    pro.executeQuery();
                 }catch(SQLException ex){}
                 jModImpo.setVisible(false);
                 m.paintImports();
@@ -290,10 +296,9 @@ public class Importacion implements QueryLog{
             if(tieneEmpaq==false && tieneFact==false){
                 try {
                     Connection con=connect.Conexion_SQL();
-                    Statement sentencia=con.createStatement();
-                    String query="DELETE FROM importacion WHERE importacion.id_import="+id_import+";";
-                    sentencia.executeUpdate(query);
-                    log.add(query);
+                    CallableStatement pro = (CallableStatement) con.prepareCall("{call elimImport(?)}");
+                    pro.setInt(1, id_import);
+                    pro.execute();
                 }catch(SQLException e){}
             }
         }

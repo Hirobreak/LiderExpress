@@ -1,6 +1,7 @@
 
 package liderexpress;
 
+import com.mysql.jdbc.CallableStatement;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -48,9 +49,9 @@ public class Caja extends Validaciones implements QueryLog{
         Label labelEstado=new Label("Estado:", Label.CENTER);
         Button guardar=new Button("Guardar");
         Button cancelar=new Button("Cancelar");
-        final TextField txtNum=new TextField("#", 20);
-        final TextField txtDim=new TextField("Nombre", 20);
-        final TextField txtPeso=new TextField("Cargo", 20);
+        final TextField txtNum=new TextField("", 20);
+        final TextField txtDim=new TextField("", 20);
+        final TextField txtPeso=new TextField("", 20);
         final JComboBox bEstado=new JComboBox();
         bEstado.addItem("Enviado");
         bEstado.addItem("Recibido");
@@ -84,10 +85,10 @@ public class Caja extends Validaciones implements QueryLog{
                    if(largoInt(txtDim.getText(),10)==false)
                         JOptionPane.showMessageDialog(null,"Error, las dimensiones son de hasta 10 digitos.Intente de nuevo");
                    
-                if(largoInt(txtNum.getText(),10)&&largoInt(txtPeso.getText(),10)&&largoString(bEstado.getSelectedItem().toString(),20)&&largoInt(txtDim.getText(),10))                
+                if(largoInt(txtNum.getText(),10)&&largoInt(txtPeso.getText(),10)&&largoString(bEstado.getSelectedItem().toString(),20)&&largoInt(txtDim.getText(),10))   {             
                 nuevaCaja(txtNum.getText(),txtPeso.getText(),bEstado.getSelectedItem().toString(),txtDim.getText());
-                
                 jCrearCaja.setVisible(false);
+                }
                 m.paintCajas();
             }
         });
@@ -102,10 +103,13 @@ public class Caja extends Validaciones implements QueryLog{
     public static void nuevaCaja(String num, String peso, String estado, String dim){
         try {
             Connection con=connect.Conexion_SQL();
-            Statement sentencia=con.createStatement();
-            String query="INSERT INTO caja VALUES("+newID()+",'"+num+"', '"+peso+"', '"+estado+"', '"+dim+"');";
-            sentencia.executeUpdate(query);
-            log.add(query);
+            CallableStatement pro = (CallableStatement) con.prepareCall("{call crearCaja(?,?,?,?,?)}");
+            pro.setInt(1, newID());
+            pro.setString(2, num);
+            pro.setString(3, peso);
+            pro.setString(4, estado);                        
+            pro.setString(5, dim);
+            pro.executeQuery();
         }catch(SQLException e){
             JOptionPane.showMessageDialog(null, "Error dato");
         }
@@ -131,10 +135,9 @@ public class Caja extends Validaciones implements QueryLog{
             if(tieneEmpaq==false){
                 try {
                     Connection con=connect.Conexion_SQL();
-                    Statement sentencia=con.createStatement();
-                    String query="DELETE FROM caja WHERE caja.id_caja="+id_caja+";";
-                    sentencia.executeUpdate(query);
-                    log.add(query);
+                    CallableStatement pro = (CallableStatement) con.prepareCall("{call elimCaja(?)}");
+                    pro.setInt(1, id_caja);
+                    pro.execute();
                 }catch(SQLException e){}
             }
         }
@@ -143,11 +146,10 @@ public class Caja extends Validaciones implements QueryLog{
     public static ResultSet todasCajas(){
         ResultSet rs = null;
         try {
-            String query;
             Connection con=connect.Conexion_SQL();
-            Statement sentencia=con.createStatement();
-            query="SELECT caja.* FROM caja;";
-            rs=sentencia.executeQuery(query);
+            CallableStatement pro = (CallableStatement) con.prepareCall("{call todasCajas()}");
+            pro.execute();
+            rs=pro.getResultSet();
             
         }catch(SQLException e){
             JOptionPane.showMessageDialog(null, "Error dato");
@@ -160,9 +162,9 @@ public class Caja extends Validaciones implements QueryLog{
         ResultSet rs = null;
         try {
             Connection con=connect.Conexion_SQL();
-            Statement sentencia=con.createStatement();
-            String query="SELECT max(caja.id_caja)+1 as maxID FROM caja;";
-            rs = sentencia.executeQuery(query);
+            CallableStatement pro = (CallableStatement) con.prepareCall("{call lastIDCaja()}");
+            pro.execute();
+            rs=pro.getResultSet();
             try{
                 while(rs.next())
                     id = rs.getInt("maxID");

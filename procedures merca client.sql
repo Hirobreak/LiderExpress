@@ -191,3 +191,122 @@ CREATE PROCEDURE elimProv(IN IDProv DECIMAL)
 END $$
 DELIMITER ;
 /*FIN DE PROCEDURES PARA PROVEEDOR*/
+
+
+
+/*PROCEDURES PARA CAJA*/
+
+DELIMITER $$
+CREATE PROCEDURE crearCaja(IN newID decimal, IN num VARCHAR(10), IN peso VARCHAR(10), IN estado VARCHAR(20), IN dim VARCHAR(10))
+	BEGIN
+	INSERT INTO caja VALUES(newID,num, peso, estado, dim);
+END $$
+DELIMITER ;
+
+DELIMITER $$
+CREATE PROCEDURE elimCaja(IN IDCaja decimal)
+	BEGIN 
+	DELETE FROM caja WHERE caja.id_caja=IDCaja;
+END $$
+DELIMITER ;
+
+DELIMITER |
+CREATE PROCEDURE todasCajas ()
+	BEGIN
+	SELECT caja.* FROM caja;
+END |
+DELIMITER ;
+
+DELIMITER |
+CREATE PROCEDURE lastIDCaja()
+	BEGIN
+	SELECT max(caja.id_caja)+1 as maxID FROM caja;
+END |
+DELIMITER ;
+
+/*FIN PROCEDURES PARA CAJA*/
+
+/*PROCEDURES PARA TRABAJADOR*/
+
+DELIMITER $$
+CREATE PROCEDURE crearTrabajador (IN newID DECIMAL, IN nombre VARCHAR(40), IN cedula VARCHAR(20), In puesto VARCHAR(20), IN telf VARCHAR(30), In sueldo FLOAT, IN mail VARCHAR(20))
+	BEGIN
+	INSERT INTO trabajador VALUES(newID, nombre, cedula, puesto, telf, sueldo, mail);
+END $$
+DELIMITER ;
+
+DELIMITER |
+CREATE PROCEDURE todosTrab()
+	BEGIN
+	SELECT trabajador.* FROM trabajador;
+END |
+DELIMITER ;
+
+DELIMITER |
+CREATE PROCEDURE lastIDTrab()
+	BEGIN
+	SELECT max(trabajador.id_trabajador)+1 as maxID FROM trabajador;
+END |
+DELIMITER ;
+
+DELIMITER |
+CREATE PROCEDURE takeTrabData (IN id DECIMAL) 
+	BEGIN
+	SELECT trabajador.* FROM trabajador WHERE trabajador.id_trabajador=id;
+END |
+DELIMITER ;
+
+DELIMITER $$
+CREATE PROCEDURE modTrab (IN IDTrab DECIMAL, IN nombre VARCHAR(40), IN cedula VARCHAR(20), In puesto VARCHAR(20), IN telf VARCHAR(30), In sueldo FLOAT, IN mail VARCHAR(20))
+	BEGIN
+	UPDATE trabajador SET trabajador.nombre=nombre, trabajador.cedula=cedula, trabajador.puesto=puesto, trabajador.telf=telf, trabajador.sueldo=sueldo, trabajador.mail=mail WHERE trabajador.id_trabajador=IDTrab;
+END $$
+DELIMITER ;
+
+DELIMITER $$
+CREATE PROCEDURE elimTrab(IN IDTrab decimal)
+	BEGIN 
+	DELETE FROM trabajador WHERE trabajador.id_trabajador=IDTrab;
+END $$
+DELIMITER ;
+
+/*FIN DE PROCEDURES PARA TRABAJADOR*/
+
+/*PROCEDURES PARA IMPORTACION*/
+
+DELIMITER $$
+CREATE PROCEDURE crearImp (IN newID DECIMAL, IN IDTrab DECIMAL, IN IDProv DECIMAL, IN fecha DATE)
+	BEGIN
+	INSERT INTO importacion VALUES(newID, IDTrab, IDProv, fecha);
+END $$
+DELIMITER ;
+
+DELIMITER |
+CREATE PROCEDURE todasImport()
+	BEGIN
+	SELECT importacion.* FROM importacion;
+END |
+DELIMITER ;
+
+DELIMITER |
+CREATE PROCEDURE lastIDImport()
+	BEGIN
+	SELECT max(importacion.id_import)+1 as maxID FROM importacion;
+END |
+DELIMITER ;
+
+DELIMITER $$
+CREATE PROCEDURE modImport (IN IDImport DECIMAL, IN IDTrab DECIMAL, IN IDProv DECIMAL, IN fecha DATE)
+	BEGIN
+	UPDATE importacion SET importacion.id_trabajador=IDTrab, importacion.id_proveedor=IDProv, importacion.fecha=fecha WHERE importacion.id_import=IDImport;
+END $$
+DELIMITER ;
+
+DELIMITER $$
+CREATE PROCEDURE elimImport(IN IDImport decimal)
+	BEGIN 
+	DELETE FROM importacion WHERE importacion.id_import=IDImport;
+END $$
+DELIMITER ;
+
+/*FIN DE PROCEDURES PARA IMPORTACION*/
