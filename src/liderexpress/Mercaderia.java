@@ -201,8 +201,8 @@ public class Mercaderia extends Validaciones implements QueryLog {
         try {
             Connection con=connect.Conexion_SQL();
             CallableStatement pro = (CallableStatement) con.prepareCall("{call searchMerca(?,?,?,?)}");
-            pro.setString(1, style);
-            pro.setString(2, marca);
+            pro.setString(1, "%"+style+"%");
+            pro.setString(2, "%"+marca+"%");
             pro.setInt(3, cantma);
             pro.setInt(4, cantmen);
             pro.execute();

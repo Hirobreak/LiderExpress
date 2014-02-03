@@ -5,10 +5,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.*;
 import javax.swing.border.*;
+import static liderexpress.Cliente.connect;
 
 public class loginScreen extends JFrame implements ActionListener{
-    TextField usuario=new TextField("pepejefe", 10);
-    TextField password=new TextField("1234567", 10);
+    TextField usuario=new TextField("", 15);
+    TextField password=new TextField("", 15);
     
     loginScreen(){
         Panel panelGeneral=new Panel(new GridLayout(3, 1));
@@ -38,6 +39,8 @@ public class loginScreen extends JFrame implements ActionListener{
     public void actionPerformed(ActionEvent ae){
         //if(this.usuario.getText().equals("Pedro") && this.password.getText().equals("Andres")){
           //  this.setVisible(false);
+            connect.setUser(usuario.getText());
+            connect.setPass(password.getText());
             MainMenu menu=new MainMenu();
             this.dispose();
        // }

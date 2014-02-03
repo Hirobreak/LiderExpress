@@ -1,9 +1,10 @@
-﻿delimiter $$
+﻿
+delimiter /
 
 create procedure crearCliente(id decimal, nombr varchar(40), ced varchar(20), empre varchar(20), rc varchar(30), tele varchar(20))
 	begin 
 		INSERT INTO cliente VALUES(id, nombr, ced, rc, empre, tele);
-	end$$
+	end /
 
 delimiter ;
 
@@ -371,39 +372,40 @@ create procedure searchOrden(clien varchar(40), fech date, est varchar(20), numr
 
 delimiter ;
 
+drop procedure searchMerca;
 
 delimiter $$
 
 create procedure searchMerca(style varchar(40), marc varchar(40), cantma int, cantmen int)
 	begin
-		if (style="" and marc="" and cantma=0) then
+		if (style="%%" and marc="%%" and cantma=0) then
 			Select * from mercaderia m where m.cantidad>cantmen;
-		elseif (style="" and cantmen=0 and cantma=0) then
-			Select * from mercaderia m where m.marca=marc;
-		elseif (style="" and marc=0 and cantmen=0) then
+		elseif (style="%%" and cantmen=0 and cantma=0) then
+			Select * from mercaderia m where m.marca like marc;
+		elseif (style="%%" and marc=0 and cantmen=0) then
 			Select * from mercaderia m where m.cantidad<cantma;
-		elseif (marc="" and cantmen=0 and cantma=0) then
-			Select * from mercaderia m where m.estilo=style;
-		elseif (style="" and marc="") then
+		elseif (marc="%%" and cantmen=0 and cantma=0) then
+			Select * from mercaderia m where m.estilo like style;
+		elseif (style="%%" and marc="%%") then
 			Select * from mercaderia m where m.cantidad>cantmen and m.cantidad<cantma;
-		elseif (style="" and cantma=0) then
-			Select * from mercaderia m where m.cantidad>cantmen and m.marca=marc;
-		elseif (style="" and cantmen=0) then
-			Select * from mercaderia m where m.cantidad<cantma and m.marca=marc;
-		elseif (marc="" and cantma=0) then
-			Select * from mercaderia m where m.cantidad>cantmen and m.estilo=style;
-		elseif (marc="" and cantmen=0) then
-			Select * from mercaderia m where m.cantidad<cantma and m.estilo=style;
+		elseif (style="%%" and cantma=0) then
+			Select * from mercaderia m where m.cantidad>cantmen and m.marca like marc;
+		elseif (style="%%" and cantmen=0) then
+			Select * from mercaderia m where m.cantidad<cantma and m.marca like marc;
+		elseif (marc="%%" and cantma=0) then
+			Select * from mercaderia m where m.cantidad>cantmen and m.estilo like style;
+		elseif (marc="%%" and cantmen=0) then
+			Select * from mercaderia m where m.cantidad<cantma and m.estilo like style;
 		elseif (cantma=0 and cantmen=0) then
-			Select * from mercaderia m where m.estilo=style and m.marca=marc;
-		elseif(style="") then
-			Select * from mercaderia m where m.cantidad>cantmen and m.cantidad<cantma and m.marca=marc;
-		elseif (marc="") then
-			Select * from mercaderia m where m.cantidad>cantmen and m.cantidad<cantma and m.estilo=style;
+			Select * from mercaderia m where m.estilo like style and m.marca like marc;
+		elseif(style="%%") then
+			Select * from mercaderia m where m.cantidad>cantmen and m.cantidad<cantma and m.marca like marc;
+		elseif (marc="%%") then
+			Select * from mercaderia m where m.cantidad>cantmen and m.cantidad<cantma and m.estilo like style;
 		elseif (cantma=0) then
-			Select * from mercaderia m where m.estilo=style and m.marca=marc and m.cantidad<cantma;
+			Select * from mercaderia m where m.estilo like style and m.marca like marc and m.cantidad<cantma;
 		elseif (cantmen=0) then
-			Select * from mercaderia m where m.estilo=style and m.marca=marc and m.cantidad>cantmen;
+			Select * from mercaderia m where m.estilo like style and m.marca like marc and m.cantidad>cantmen;
 		end if;
 	end$$
 
@@ -468,7 +470,8 @@ delimiter $$
 
 create procedure buscarProv(com varchar(40), newRUP varchar(20), newPais varchar(20), ciud varchar(30), due varchar(20), telef varchar(20))
 	begin
-		Select proveedor.* from proveedor where compania like com and rup like newRUP and pais like newPais and ciudad like ciu and dueño like due and telf like telef;
+		Select proveedor.* from proveedor where compania like com and rup like newRUP and pais like newPais and ciudad like ciud and dueño like due and telf like telef;
 	end$$
 
 delimiter ;
+drop procedure buscarProv;

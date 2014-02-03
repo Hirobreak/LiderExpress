@@ -1,5 +1,6 @@
 package liderexpress;
 
+import com.mysql.jdbc.CallableStatement;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -107,10 +108,18 @@ public class Contenedor extends Validaciones implements QueryLog{
     public static void nuevoCont(String dim, String peso, String estado,String id_imp){
         try {
             Connection con=connect.Conexion_SQL();
-            Statement sentencia=con.createStatement();
-            String query="INSERT INTO contenedor VALUES("+newID()+",'"+dim+"', '"+peso+"', '"+estado+"',"+id_imp+");";
-            sentencia.executeUpdate(query);
-            log.add(query);
+           // Statement sentencia=con.createStatement();
+            CallableStatement pro = (CallableStatement) con.prepareCall("{call crearCont(?,?,?,?,?)}");
+            pro.setInt(1, newID());
+            pro.setString(2, dim);
+            pro.setString(3, peso);
+            pro.setString(4, estado);                        
+            pro.setString(5, id_imp);
+          // pro.setString(6, telf);
+            pro.executeQuery();
+            //String query="{call crearCont("+newID()+",'"+dim+"', '"+peso+"', '"+estado+"',"+id_imp+")}";
+           // sentencia.executeUpdate(query);
+           // log.add(query);
         }catch(SQLException e){
             JOptionPane.showMessageDialog(null, "Error dato");
         }
@@ -175,10 +184,15 @@ public class Contenedor extends Validaciones implements QueryLog{
             if(tieneEmpaq==false){
                 try {
                     Connection con=connect.Conexion_SQL();
-                    Statement sentencia=con.createStatement();
-                    String query="DELETE FROM contenedor WHERE contenedor.id_contenedor="+id_cont+";";
-                    sentencia.executeUpdate(query);
-                    log.add(query);
+                  CallableStatement pro = (CallableStatement) con.prepareCall("{call deleteCont(?)}");
+            pro.setInt(1, id_cont);
+            
+          // pro.setString(6, telf);
+            pro.executeQuery();
+      //      String query="{call deleteCont("+newID()+")}";
+           // sentencia.executeUpdate(query);
+           // log.add(query);
+                   // log.add(query);
                 }catch(SQLException e){}
             }
         }
