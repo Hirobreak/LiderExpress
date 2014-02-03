@@ -339,5 +339,23 @@ public class Proveedor implements QueryLog {
         public Object[] arreglo(){
         Object[] arreglo={id, compañia, rup, pais, ciudad, dueño, telf};
         return arreglo;
-    }  
+    }
+    public static ResultSet buscarProve(String txtCom, String txtRUP, String txtDueño, String txtPais, String txtTelf, String txtCiudad){
+        ResultSet rs= null;
+        try {
+            Connection con=connect.Conexion_SQL();
+            CallableStatement pro = (CallableStatement) con.prepareCall("{call buscarProv(?,?,?,?,?,?)}");
+            pro.setString(1, "%"+txtCom+"%");
+            pro.setString(2, "%"+txtRUP+"%");
+            pro.setString(3, "%"+txtPais+"%");                        
+            pro.setString(4, "%"+txtCiudad+"%");
+            pro.setString(5, "%"+txtDueño+"%");
+            pro.setString(6, "%"+txtTelf+"%");
+            pro.execute();
+            rs=pro.getResultSet();
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, "Error busqueda");
+        }
+        return rs;
+     }
 }

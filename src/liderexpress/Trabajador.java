@@ -314,5 +314,22 @@ public class Trabajador implements QueryLog {
         return Integer.parseInt(s);
     }
     
-    
+     public static ResultSet buscarTraba(String txtMail,String txtNom, String txtCedula, String txtCargo, String txtSalario, String txtTelf){
+        ResultSet rs= null;
+        try {
+            Connection con=connect.Conexion_SQL();
+            CallableStatement pro = (CallableStatement) con.prepareCall("{call buscarTrab(?,?,?,?,?,?)}");
+            pro.setString(1, "%"+txtMail+"%");
+            pro.setString(2, "%"+txtNom+"%");
+            pro.setString(3, "%"+txtCedula+"%");
+            pro.setString(4, "%"+txtCargo+"%");                        
+            pro.setString(5, "%"+txtSalario+"%");
+            pro.setString(6, "%"+txtTelf+"%");
+            pro.execute();
+            rs=pro.getResultSet();
+          }catch(SQLException ex){
+            JOptionPane.showMessageDialog(null, "Error busqueda");
+          }
+        return rs;
+    }
 }

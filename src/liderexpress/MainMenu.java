@@ -309,6 +309,12 @@ public class MainMenu extends JFrame implements ActionListener,QueryLog{
         if(ae.getSource()==buscar && entidad==5){
             searchImpo();
         }
+        if(ae.getSource()==buscar && entidad==6){
+            buscarProv();
+        }
+        if(ae.getSource()==buscar && entidad==7){
+            buscarTrab();
+        }
         if(ae.getSource()==impor){
             intervalo();
         }
@@ -394,6 +400,148 @@ public class MainMenu extends JFrame implements ActionListener,QueryLog{
         cancelar.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e){
                 interImpo.dispose();
+            }
+        });
+    }
+    public void buscarProv(){
+        final JFrame jBusProv = new JFrame("Modificacion de Importador");
+        jBusProv.setSize(500, 300);
+        jBusProv.setVisible(true);
+        Panel panelPrin=new Panel(new GridLayout(6, 1));
+        Panel panelCom=new Panel(new GridLayout(1, 2));
+        Panel panelRup=new Panel(new GridLayout(1, 2));
+        Panel panelDueño=new Panel(new GridLayout(1, 2));
+        Panel panelLugar=new Panel(new GridLayout(1, 3));
+        Panel panelTelf=new Panel(new GridLayout(1, 2));
+        Panel panelboton=new Panel(new GridLayout(1, 2));
+        Label labelCom=new Label("Compañia:", Label.CENTER);
+        Label labelRup=new Label("RUP:", Label.CENTER);
+        Label labelDueño=new Label("Dueño:", Label.CENTER);
+        Label labelLugar=new Label("Lugar", Label.CENTER);
+        Label labeltelf=new Label("Telefonos:", Label.CENTER);
+        Button guardar=new Button("Buscar");
+        Button cancelar=new Button("Cancelar");
+        final TextField txtCom=new TextField("", 20);
+        final TextField txtRUP=new TextField("", 20);
+        final TextField txtDueño=new TextField("", 20);
+        final TextField txtPais=new TextField("", 20);
+        final TextField txtTelf=new TextField("", 20);
+        final TextField txtCiudad=new TextField("", 20);
+        panelCom.add(labelCom);
+        panelCom.add(txtCom);
+        panelRup.add(labelRup);
+        panelRup.add(txtRUP);
+        panelDueño.add(labelDueño);
+        panelDueño.add(txtDueño);
+        panelLugar.add(labelLugar);
+        panelLugar.add(txtPais);
+        panelLugar.add(txtCiudad);
+        panelTelf.add(labeltelf);
+        panelTelf.add(txtTelf);
+        panelboton.add(guardar);
+        panelboton.add(cancelar);
+        panelPrin.add(panelCom);
+        panelPrin.add(panelRup);
+        panelPrin.add(panelDueño);
+        panelPrin.add(panelLugar);
+        panelPrin.add(panelTelf);
+        panelPrin.add(panelboton);
+        jBusProv.add(panelPrin);
+        guardar.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent e){
+                panel.setBorder (BorderFactory.createTitledBorder (BorderFactory.createEtchedBorder (), "Proveedores", TitledBorder.CENTER, TitledBorder.TOP));
+                Object[] columns={"id", "Compañia", "RUP", "Pais", "Ciudad", "Dueño", "Telefono"};
+                DefaultTableModel modelo6=new DefaultTableModel(null, columns);
+                if (txtCom.getText().compareTo("")!=0 || txtRUP.getText().compareTo("")!=0 || txtDueño.getText().compareTo("")!=0 || txtPais.getText().compareTo("")!=0 || txtTelf.getText().compareTo("")!=0 || txtCiudad.getText().compareTo("")!=0){
+                    try {
+                        ResultSet rs = Proveedor.buscarProve(txtCom.getText(), txtRUP.getText(), txtDueño.getText(), txtPais.getText(), txtTelf.getText(), txtCiudad.getText());
+                        while(rs.next()){
+                            Object[] fila={rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6), rs.getString(7)};
+                            modelo6.addRow(fila);
+                            }
+                    } catch (SQLException ex) {}
+                }
+                tabla.setModel(modelo6);
+                jBusProv.dispose();
+            }
+        });
+        cancelar.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent e){
+                jBusProv.dispose();
+            }
+        });
+        
+    }
+    public void buscarTrab(){
+        final JFrame jBusT = new JFrame("Buscar Trabajador");
+        jBusT.setSize(500, 300);
+        jBusT.setVisible(true);
+        Panel panelPrin=new Panel(new GridLayout(7, 1));
+        Panel panelNom=new Panel(new GridLayout(1, 2));
+        Panel panelced=new Panel(new GridLayout(1, 2));
+        Panel panelcargo=new Panel(new GridLayout(1, 2));
+        Panel panelsal=new Panel(new GridLayout(1, 2));
+        Panel panelmail=new Panel(new GridLayout(1, 2));
+        Panel paneltelf=new Panel(new GridLayout(1, 3));
+        Panel panelboton=new Panel(new GridLayout(1, 2));
+        Label labelNom=new Label("Nombre:", Label.CENTER);
+        Label labelcargo=new Label("Cargo:", Label.CENTER);
+        Label labelced=new Label("Cedula:", Label.CENTER);
+        Label labelsal=new Label("Salario:", Label.CENTER);
+        Label labelmail=new Label("E-Mail:", Label.CENTER);
+        Label labeltelf=new Label("Telefonos:", Label.CENTER);
+        Button buscar=new Button("Buscar");
+        Button cancelar=new Button("Cancelar");
+        final TextField txtNom=new TextField("", 20);
+        final TextField txtCargo=new TextField("", 20);
+        final TextField txtCedula=new TextField("", 20);
+        final TextField txtSalario=new TextField("", 20);
+        final TextField txtTelf=new TextField("", 20);
+        final TextField txtMail=new TextField("", 20);
+        panelNom.add(labelNom);
+        panelNom.add(txtNom);
+        panelced.add(labelced);
+        panelced.add(txtCedula);
+        panelcargo.add(labelcargo);
+        panelcargo.add(txtCargo);
+        panelsal.add(labelsal);
+        panelsal.add(txtSalario);
+        paneltelf.add(labeltelf);
+        paneltelf.add(txtTelf);
+        panelmail.add(labelmail);
+        panelmail.add(txtMail);
+        panelboton.add(buscar);
+        panelboton.add(cancelar);
+        panelPrin.add(panelNom);
+        panelPrin.add(panelced);
+        panelPrin.add(panelcargo);
+        panelPrin.add(panelsal);
+        panelPrin.add(paneltelf);
+        panelPrin.add(panelmail);
+        panelPrin.add(panelboton);
+        jBusT.add(panelPrin);
+        buscar.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent e){
+                panel.setBorder (BorderFactory.createTitledBorder (BorderFactory.createEtchedBorder (), "Trabajadores", TitledBorder.CENTER, TitledBorder.TOP));
+                Object[] columns={"id", "Nombre", "Cedula", "Puesto", "Telefono", "Sueldo", "E-Mail"};
+                DefaultTableModel modelo7=new DefaultTableModel(null, columns);
+                if (txtMail.getText().compareTo("")!=0 || txtNom.getText().compareTo("")!=0 || txtCedula.getText().compareTo("")!=0 || txtCargo.getText().compareTo("")!=0 || txtSalario.getText().compareTo("")!=0 || txtTelf.getText().compareTo("")!=0){
+                    try{
+                        ResultSet rs=Trabajador.buscarTraba(txtMail.getText(), txtNom.getText(), txtCedula.getText(), txtCargo.getText(), txtSalario.getText(), txtTelf.getText());
+                        while(rs.next()){
+                            Object[] fila={rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6), rs.getString(7)};
+                            modelo7.addRow(fila);
+                        }
+                    } catch (SQLException ex) {}
+                }
+            tabla.setModel(modelo7);
+            jBusT.dispose();
+        }
+            
+        });
+        cancelar.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent e){
+                jBusT.dispose();
             }
         });
     }

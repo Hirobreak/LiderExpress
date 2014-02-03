@@ -1,4 +1,4 @@
-delimiter $$
+﻿delimiter $$
 
 create procedure crearCliente(id decimal, nombr varchar(40), ced varchar(20), empre varchar(20), rc varchar(30), tele varchar(20))
 	begin 
@@ -313,9 +313,7 @@ DELIMITER ;
 /*FIN DE PROCEDURES PARA IMPORTACION*/
 /*Procedures 2 febrero */
 
-drop procedure searchClient;
 delimiter $$
-
 create procedure searchClient(nombr varchar(40), ced varchar(20), tele varchar(20))
 	begin
 		if (ced="" and nombr="") then
@@ -334,8 +332,6 @@ create procedure searchClient(nombr varchar(40), ced varchar(20), tele varchar(2
 	end$$
 
 delimiter ;
-
-call searchClient("swagor", "1234567892", "");
 
 
 delimiter $$
@@ -375,9 +371,7 @@ create procedure searchOrden(clien varchar(40), fech date, est varchar(20), numr
 
 delimiter ;
 
-call searchOrden("Jigly", "2000-04-01", "", "");
 
-drop procedure searchMerca;
 delimiter $$
 
 create procedure searchMerca(style varchar(40), marc varchar(40), cantma int, cantmen int)
@@ -415,7 +409,6 @@ create procedure searchMerca(style varchar(40), marc varchar(40), cantma int, ca
 
 delimiter ;
 
-call searchMerca("lol", "", 0, 0);
 
 delimiter $$
 
@@ -438,9 +431,6 @@ create procedure searchEmpaq(merca varchar(40), box varchar(20), est varchar(20)
 
 delimiter ;
 
-drop procedure searchImpo;
-
-call searchEmpaq("", "", "");
 
 delimiter $$
 
@@ -463,5 +453,22 @@ create procedure searchImpo(trab varchar(40), prov varchar(20), fech DATE)
 
 delimiter ;
 
-call searchImpo("", "Licencia", "0-0-0");
+/*PROCEDURES CROBBY*/
 
+delimiter $$
+
+create procedure buscarTrab(email varchar(20), nom varchar(40), ced varchar(20), pues varchar(20), sal varchar(10), telef varchar(30))
+	begin
+		Select trabajador.* from trabajador where mail like email and nombre like nom and cedula like ced and puesto like pues and sueldo like sal and telf like telef;
+	end$$
+
+delimiter ;
+
+delimiter $$
+
+create procedure buscarProv(com varchar(40), newRUP varchar(20), newPais varchar(20), ciud varchar(30), due varchar(20), telef varchar(20))
+	begin
+		Select proveedor.* from proveedor where compania like com and rup like newRUP and pais like newPais and ciudad like ciu and dueño like due and telf like telef;
+	end$$
+
+delimiter ;
