@@ -38,7 +38,7 @@ public class Importacion implements QueryLog{
         final JFrame jCrearImpo = new JFrame("Creacion de Importación");
         jCrearImpo.setSize(500, 300);
         jCrearImpo.setVisible(true);
-        Panel panelPrin=new Panel(new GridLayout(5, 1));
+        Panel panelPrin=new Panel(new GridLayout(4, 1));
         Panel panelTrab=new Panel(new GridLayout(1, 2));
         Panel panelProv=new Panel(new GridLayout(1, 2));
         Panel panelFecha=new Panel(new GridLayout(1, 4));
@@ -133,6 +133,24 @@ public class Importacion implements QueryLog{
         }
         //return fa;
     } 
+    
+    public static ResultSet consultarImpo(String trab, String prov, String año, String mes, String dia){
+        ResultSet rs = null;
+        try {
+            String fecha=""+año+"-"+mes+"-"+dia+"";
+            Connection con=connect.Conexion_SQL();
+            CallableStatement pro = (CallableStatement) con.prepareCall("{call searchImpo(?,?,?)}");
+            pro.setString(1, trab);
+            pro.setString(2, prov);
+            pro.setString(3, fecha);
+            pro.execute();
+            rs=pro.getResultSet();
+        }catch(SQLException e){
+            JOptionPane.showMessageDialog(null, "Error dato");
+        }
+        return rs;
+
+    }
     
     public static ResultSet todasImport(){
         ResultSet rs = null;

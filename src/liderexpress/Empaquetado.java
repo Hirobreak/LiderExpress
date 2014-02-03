@@ -1,6 +1,7 @@
 
 package liderexpress;
 
+import com.mysql.jdbc.CallableStatement;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -99,7 +100,7 @@ public class Empaquetado implements QueryLog {
         panelPrin.add(panelCont);
         panelPrin.add(panelEst);
         panelPrin.add(panelboton);
-        panelPrin.add(panelRefresh);
+        //panelPrin.add(panelRefresh);
         jCrearEmp.add(panelPrin);
         guardar.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e){
@@ -137,6 +138,23 @@ public class Empaquetado implements QueryLog {
         //return fa;
     } 
     
+    public static ResultSet consultaEmpq(String style, String box, String est){
+        ResultSet rs = null;
+        try {
+            Connection con=connect.Conexion_SQL();
+            CallableStatement pro = (CallableStatement) con.prepareCall("{call searchEmpaq(?,?,?)}");
+            pro.setString(1, style);
+            pro.setString(2, box);
+            pro.setString(3, est);
+            pro.execute();
+            rs=pro.getResultSet();
+        }catch(SQLException e){
+            JOptionPane.showMessageDialog(null, "Error dato");
+        }
+        return rs;
+
+    }
+        
     public static ResultSet todosEmpaqs(){
         ResultSet rs = null;
         try {

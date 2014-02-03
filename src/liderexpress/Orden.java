@@ -42,7 +42,7 @@ public class Orden implements QueryLog{
         final JFrame jCrearOrden = new JFrame("Creacion de Orden");
         jCrearOrden.setSize(500, 300);
         jCrearOrden.setVisible(true);
-        Panel panelPrin=new Panel(new GridLayout(7, 1));
+        Panel panelPrin=new Panel(new GridLayout(8, 1));
         Panel panelpais=new Panel(new GridLayout(1, 2));
         Panel panelciud=new Panel(new GridLayout(1, 2));
         Panel panelfecha = new Panel(new GridLayout(1,2));
@@ -183,6 +183,25 @@ public class Orden implements QueryLog{
         }catch(SQLException e){
             JOptionPane.showMessageDialog(null, "Error dato Orden");
         }
+    }
+    
+    public static ResultSet ConsultaOrden(String cliente, String año, String mes, String dia, String estado, String numrast){
+        ResultSet rs = null;
+        try {
+            String fecha=""+año+"-"+mes+"-"+dia+"";
+            Connection con=connect.Conexion_SQL();
+            CallableStatement pro = (CallableStatement) con.prepareCall("{call searchOrden(?,?,?,?)}");
+            pro.setString(1, cliente);
+            pro.setString(2, fecha);
+            pro.setString(3, estado);
+            pro.setString(4, numrast);
+            pro.execute();
+            rs=pro.getResultSet();
+        }catch(SQLException e){
+            JOptionPane.showMessageDialog(null, "Error dato");
+        }
+        return rs;
+
     }
     
     public static ResultSet todasOrdenes(){

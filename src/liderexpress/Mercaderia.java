@@ -196,6 +196,24 @@ public class Mercaderia extends Validaciones implements QueryLog {
         return id;
     }    
     
+    public static ResultSet consultaMerca(String style, String marca, int cantma, int cantmen){
+        ResultSet rs = null;
+        try {
+            Connection con=connect.Conexion_SQL();
+            CallableStatement pro = (CallableStatement) con.prepareCall("{call searchMerca(?,?,?,?)}");
+            pro.setString(1, style);
+            pro.setString(2, marca);
+            pro.setInt(3, cantma);
+            pro.setInt(4, cantmen);
+            pro.execute();
+            rs=pro.getResultSet();
+        }catch(SQLException e){
+            JOptionPane.showMessageDialog(null, "Error dato");
+        }
+        return rs;
+
+    }
+    
     public static ResultSet todasMercas(){
         ResultSet rs = null;
         try {

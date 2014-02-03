@@ -294,6 +294,21 @@ public class MainMenu extends JFrame implements ActionListener,QueryLog{
             Contenedor.eliminarCont(id);
             paintConts();
         }
+        if(ae.getSource()==buscar && entidad==1){
+            consultaClient();
+        }
+        if(ae.getSource()==buscar && entidad==2){
+            searchOrden();
+        }
+        if(ae.getSource()==buscar && entidad==3){
+            consultaMerca();
+        }
+        if(ae.getSource()==buscar && entidad==4){
+            consultaEmp();
+        }
+        if(ae.getSource()==buscar && entidad==5){
+            searchImpo();
+        }
         if(ae.getSource()==impor){
             intervalo();
         }
@@ -383,37 +398,42 @@ public class MainMenu extends JFrame implements ActionListener,QueryLog{
         });
     }
     public void consultaClient(){
-        final JFrame consClien = new JFrame("Escriba Cedula/Nombre Cliente");
-        consClien.setSize(500, 100);
+        final JFrame consClien = new JFrame("Busqueda de Clientes");
+        consClien.setSize(500, 150);
         consClien.setVisible(true);
-        Panel panelPrin=new Panel(new GridLayout(3, 1));
+        Panel panelPrin=new Panel(new GridLayout(4, 1));
         Panel panelced=new Panel(new GridLayout(1, 2));
         Panel panelnom=new Panel(new GridLayout(1, 2));
+        Panel paneltel=new Panel(new GridLayout(1, 2));
         Panel panelboton=new Panel(new GridLayout(1, 2));
         Label labelnom=new Label("Nombre:", Label.CENTER);
         Label labelced=new Label("Cedula:", Label.CENTER);
+        Label labeltelf=new Label("Telefono:", Label.CENTER);
         final TextField txtced=new TextField("", 20);
         final TextField txtnom=new TextField("", 20);
+        final TextField txttelf=new TextField("", 20);
         Button guardar=new Button("Consultar");
         Button cancelar=new Button("Cancelar");
         panelced.add(labelced);
         panelced.add(txtced);
         panelnom.add(labelnom);
         panelnom.add(txtnom);
+        paneltel.add(labeltelf);
+        paneltel.add(txttelf);
         panelboton.add(guardar);
         panelboton.add(cancelar);
         panelPrin.add(panelnom);
         panelPrin.add(panelced);
+        panelPrin.add(paneltel);
         panelPrin.add(panelboton);
         consClien.add(panelPrin);   
         guardar.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e){
-                entidad=0;
-                panel.setBorder (BorderFactory.createTitledBorder (BorderFactory.createEtchedBorder (), "Importaciones", TitledBorder.CENTER, TitledBorder.TOP));
+                panel.setBorder (BorderFactory.createTitledBorder (BorderFactory.createEtchedBorder (), "Resultado de Clientes", TitledBorder.CENTER, TitledBorder.TOP));
                 Object[] columns={"id", "Nombre", "Cedula", "Ruc", "Compañia", "Telf1"};
                 DefaultTableModel modelo5=new DefaultTableModel(null, columns);
                 try{
-                    ResultSet rs=Cliente.ConsultaCliente(txtnom.getText(), txtced.getText());
+                    ResultSet rs=Cliente.ConsultaCliente(txtnom.getText(), txtced.getText(), txttelf.getText());
                     
                     while(rs.next()){
                         Object[] fila={rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6)};
@@ -433,6 +453,275 @@ public class MainMenu extends JFrame implements ActionListener,QueryLog{
         });
     }
     
+    public void searchOrden(){
+        final JFrame consClien = new JFrame("Busqueda de Clientes");
+        consClien.setSize(600, 200);
+        consClien.setVisible(true);
+        Panel panelPrin=new Panel(new GridLayout(5, 1));
+        Panel panelclien=new Panel(new GridLayout(1, 2));
+        Panel panelfecha=new Panel(new GridLayout(1, 4));
+        Panel panelest=new Panel(new GridLayout(1, 2));
+        Panel panelnum=new Panel(new GridLayout(1, 2));
+        Panel panelboton=new Panel(new GridLayout(1, 2));
+        Label labelclien=new Label("Cliente:", Label.CENTER);
+        Label labelfech=new Label("Fecha:", Label.CENTER);
+        Label labelest=new Label("Estado:", Label.CENTER);
+        Label labelnum=new Label("Numero de Rastreo:", Label.CENTER);
+        final TextField txtclien=new TextField("", 20);
+        final TextField txtnumr=new TextField("", 20);
+        final JComboBox txtest=new JComboBox();
+        final JComboBox txtAño=new JComboBox();
+        final JComboBox txtMes=new JComboBox();
+        final JComboBox txtDia=new JComboBox();
+        txtest.addItem("");
+        txtest.addItem("Pendiente");
+        txtest.addItem("Tramitada");
+        txtest.addItem("Entregada");
+        txtAño.addItem(0);
+        for (int i=2000; i<2015; i++){
+            txtAño.addItem(i);
+        }
+        for (int j=0; j<13; j++){
+            txtMes.addItem(j);
+        }
+        for (int i=0; i<32; i++){
+            txtDia.addItem(i);
+        }
+        Button guardar=new Button("Consultar");
+        Button cancelar=new Button("Cancelar");
+        panelclien.add(labelclien);
+        panelclien.add(txtclien);
+        panelfecha.add(labelfech);
+        panelfecha.add(txtAño);
+        panelfecha.add(txtMes);
+        panelfecha.add(txtDia);
+        panelest.add(labelest);
+        panelest.add(txtest);
+        panelnum.add(labelnum);
+        panelnum.add(txtnumr);
+        panelboton.add(guardar);
+        panelboton.add(cancelar);
+        panelPrin.add(panelclien);
+        panelPrin.add(panelfecha);
+        panelPrin.add(panelest);
+        panelPrin.add(panelnum);
+        panelPrin.add(panelboton);
+        consClien.add(panelPrin);   
+        guardar.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent e){
+                panel.setBorder (BorderFactory.createTitledBorder (BorderFactory.createEtchedBorder (), "Resultados de Ordenes", TitledBorder.CENTER, TitledBorder.TOP));
+                Object[] columns={"id", "Cliente", "Pais", "Ciudad", "Fecha", "Tiempo", "Estado", "Numero"};
+                DefaultTableModel modelo11=new DefaultTableModel(null, columns);
+                try{
+                    ResultSet rs=Orden.ConsultaOrden(txtclien.getText(), txtAño.getSelectedItem().toString(),txtMes.getSelectedItem().toString(),txtDia.getSelectedItem().toString(), txtest.getSelectedItem().toString(), txtnumr.getText());
+                    
+                    while(rs.next()){
+                        Object[] fila={rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6), rs.getString(7), rs.getString(8)};
+                        modelo11.addRow(fila);
+                    }
+                }catch(Exception ex){
+                    
+                }
+                tabla.setModel(modelo11);
+                consClien.dispose();
+            }
+        });
+        cancelar.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent e){
+                consClien.dispose();
+            }
+        });
+    }
+    
+    public void consultaMerca(){
+        final JFrame consClien = new JFrame("Busqueda de Mercaderia");
+        consClien.setSize(500, 150);
+        consClien.setVisible(true);
+        Panel panelPrin=new Panel(new GridLayout(4, 1));
+        Panel panelsty=new Panel(new GridLayout(1, 2));
+        Panel panelmar=new Panel(new GridLayout(1, 2));
+        Panel panelmm=new Panel(new GridLayout(1, 4));
+        Panel panelboton=new Panel(new GridLayout(1, 2));
+        Label labelsty=new Label("Estilo:", Label.CENTER);
+        Label labelmar=new Label("Marca:", Label.CENTER);
+        Label labelma=new Label("Menor que:", Label.CENTER);
+        Label labelme=new Label(", Mayor que:", Label.CENTER);
+        final TextField txtsty=new TextField("", 20);
+        final TextField txtmar=new TextField("", 20);
+        final TextField txtma=new TextField("0", 20);
+        final TextField txtme=new TextField("0", 20);
+        Button guardar=new Button("Consultar");
+        Button cancelar=new Button("Cancelar");
+        panelsty.add(labelsty);
+        panelsty.add(txtsty);
+        panelmar.add(labelmar);
+        panelmar.add(txtmar);
+        panelmm.add(labelma);
+        panelmm.add(txtma);
+        panelmm.add(labelme);
+        panelmm.add(txtme);
+        panelboton.add(guardar);
+        panelboton.add(cancelar);
+        panelPrin.add(panelsty);
+        panelPrin.add(panelmar);
+        panelPrin.add(panelmm);
+        panelPrin.add(panelboton);
+        consClien.add(panelPrin);   
+        guardar.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent e){
+                panel.setBorder (BorderFactory.createTitledBorder (BorderFactory.createEtchedBorder (), "Resultado de Mercaderia", TitledBorder.CENTER, TitledBorder.TOP));
+                Object[] columns={"id", "Estilo", "Marca", "Descripcion", "Composicion", "Cantidad", "Origen", "PVP", "Precio Compra", "idOrden"};
+                DefaultTableModel modelo14=new DefaultTableModel(null, columns);
+                try{
+                    ResultSet rs=Mercaderia.consultaMerca(txtsty.getText(), txtmar.getText(), Integer.parseInt(txtma.getText()), Integer.parseInt(txtme.getText()));
+                    
+                    while(rs.next()){
+                        Object[] fila={rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6), rs.getString(7), rs.getString(8), rs.getString(9), rs.getString(10)};
+                        modelo14.addRow(fila);
+                    }
+                }catch(Exception ex){
+                    
+                }
+                tabla.setModel(modelo14);
+                consClien.dispose();
+            }
+        });
+        cancelar.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent e){
+                consClien.dispose();
+            }
+        });
+    }
+    
+    public void consultaEmp(){
+        final JFrame consClien = new JFrame("Busqueda de Empaques");
+        consClien.setSize(600, 150);
+        consClien.setVisible(true);
+        Panel panelPrin=new Panel(new GridLayout(4, 1));
+        Panel panelest=new Panel(new GridLayout(1, 2));
+        Panel panelnum=new Panel(new GridLayout(1, 2));
+        Panel panelsta=new Panel(new GridLayout(1, 2));
+        Panel panelboton=new Panel(new GridLayout(1, 2));
+        Label labelest=new Label("Estilo Mercaderia:", Label.CENTER);
+        Label labelnum=new Label("Numero de Caja:", Label.CENTER);
+        Label labelsta=new Label("Estado:", Label.CENTER);
+        final TextField txtest=new TextField("", 20);
+        final TextField txtnum=new TextField("", 20);
+        final JComboBox estados=new JComboBox();
+        estados.addItem("");
+        estados.addItem("Embarcado");
+        estados.addItem("Desmontado");
+        Button guardar=new Button("Consultar");
+        Button cancelar=new Button("Cancelar");
+        panelest.add(labelest);
+        panelest.add(txtest);
+        panelnum.add(labelnum);
+        panelnum.add(txtnum);
+        panelsta.add(labelsta);
+        panelsta.add(estados);
+        panelboton.add(guardar);
+        panelboton.add(cancelar);
+        panelPrin.add(panelnum);
+        panelPrin.add(panelest);
+        panelPrin.add(panelsta);
+        panelPrin.add(panelboton);
+        consClien.add(panelPrin);   
+        guardar.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent e){
+                panel.setBorder (BorderFactory.createTitledBorder (BorderFactory.createEtchedBorder (), "Resultado de Empaques", TitledBorder.CENTER, TitledBorder.TOP));
+                Object[] columns={"id", "Contenedor", "Mercaderia", "Caja", "Estado"};
+                DefaultTableModel modelo16=new DefaultTableModel(null, columns);
+                try{
+                    ResultSet rs=Empaquetado.consultaEmpq(txtest.getText(), txtnum.getText(), estados.getSelectedItem().toString());
+                    
+                    while(rs.next()){
+                        Object[] fila={rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5)};
+                        modelo16.addRow(fila);
+                    }
+                }catch(Exception ex){
+                    
+                }
+                tabla.setModel(modelo16);
+                consClien.dispose();
+            }
+        });
+        cancelar.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent e){
+                consClien.dispose();
+            }
+        });
+    }
+    
+    public void searchImpo(){
+        final JFrame consClien = new JFrame("Busqueda de Clientes");
+        consClien.setSize(600, 200);
+        consClien.setVisible(true);
+        Panel panelPrin=new Panel(new GridLayout(4, 1));
+        Panel paneltrab=new Panel(new GridLayout(1, 2));
+        Panel panelfecha=new Panel(new GridLayout(1, 4));
+        Panel panelprov=new Panel(new GridLayout(1, 2));
+        Panel panelboton=new Panel(new GridLayout(1, 2));
+        Label labeltrab=new Label("Cedula Trabajador:", Label.CENTER);
+        Label labelfech=new Label("Fecha:", Label.CENTER);
+        Label labelprov=new Label("Nombre Compañia:", Label.CENTER);
+        final TextField txttrab=new TextField("", 20);
+        final TextField txtprov=new TextField("", 20);
+        final JComboBox txtAño=new JComboBox();
+        final JComboBox txtMes=new JComboBox();
+        final JComboBox txtDia=new JComboBox();
+        txtAño.addItem(0);
+        for (int i=2000; i<2015; i++){
+            txtAño.addItem(i);
+        }
+        for (int j=0; j<13; j++){
+            txtMes.addItem(j);
+        }
+        for (int i=0; i<32; i++){
+            txtDia.addItem(i);
+        }
+        Button guardar=new Button("Consultar");
+        Button cancelar=new Button("Cancelar");
+        paneltrab.add(labeltrab);
+        paneltrab.add(txttrab);
+        panelfecha.add(labelfech);
+        panelfecha.add(txtAño);
+        panelfecha.add(txtMes);
+        panelfecha.add(txtDia);
+        panelprov.add(labelprov);
+        panelprov.add(txtprov);
+        panelboton.add(guardar);
+        panelboton.add(cancelar);
+        panelPrin.add(paneltrab);
+        panelPrin.add(panelprov);
+        panelPrin.add(panelfecha);
+        panelPrin.add(panelboton);
+        consClien.add(panelPrin);   
+        guardar.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent e){
+                panel.setBorder (BorderFactory.createTitledBorder (BorderFactory.createEtchedBorder (), "Resultados de Ordenes", TitledBorder.CENTER, TitledBorder.TOP));
+                Object[] columns={"id", "Trabajador", "Proveedor", "Fecha"};
+                DefaultTableModel modelo17=new DefaultTableModel(null, columns);
+                try{
+                    ResultSet rs=Importacion.consultarImpo(txttrab.getText(), txtprov.getText().toString(), txtAño.getSelectedItem().toString(),txtMes.getSelectedItem().toString(),txtDia.getSelectedItem().toString());
+                    
+                    while(rs.next()){
+                        Object[] fila={rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4)};
+                        modelo17.addRow(fila);
+                    }
+                }catch(Exception ex){
+                    
+                }
+                tabla.setModel(modelo17);
+                consClien.dispose();
+            }
+        });
+        cancelar.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent e){
+                consClien.dispose();
+            }
+        });
+    }
+   
     public void paintOrdenesCliente(int id_cliente){
         ResultSet rs = Cliente.ordenesDeCliente(id_cliente);
         panel.setBorder (BorderFactory.createTitledBorder (BorderFactory.createEtchedBorder (), "Ordenes del Cliente ID: "+id_cliente, TitledBorder.CENTER, TitledBorder.TOP));

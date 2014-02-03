@@ -128,22 +128,16 @@ public class Cliente extends Validaciones implements QueryLog {
             JOptionPane.showMessageDialog(null, "Error dato");
         }
     }
-    public static ResultSet ConsultaCliente(String nombre, String cedula){
+    public static ResultSet ConsultaCliente(String nombre, String cedula, String telf){
         ResultSet rs = null;
         try {
-            String query;
             Connection con=connect.Conexion_SQL();
-            Statement sentencia=con.createStatement();
-            if (cedula.equals("")){
-                query="SELECT cliente.* FROM cliente WHERE cliente.nombre LIKE '"+nombre+"';";
-            }else if (nombre.equals("")){
-                query="SELECT cliente.* FROM cliente WHERE cliente.cedula LIKE '"+cedula+"';";
-            }else{
-                query="SELECT cliente.* FROM cliente WHERE cliente.nombre LIKE '"+nombre+"' AND cliente.cedula LIKE '" +cedula+"';";
-            }
-
-            rs=sentencia.executeQuery(query);
-            
+            CallableStatement pro = (CallableStatement) con.prepareCall("{call searchClient(?,?,?)}");
+            pro.setString(1, nombre);
+            pro.setString(2, cedula);
+            pro.setString(3, telf);
+            pro.execute();
+            rs=pro.getResultSet();
         }catch(SQLException e){
             JOptionPane.showMessageDialog(null, "Error dato");
         }

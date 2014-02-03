@@ -37,7 +37,7 @@ public class Caja extends Validaciones implements QueryLog{
         final JFrame jCrearCaja = new JFrame("Creacion de Caja");
         jCrearCaja.setSize(500, 300);
         jCrearCaja.setVisible(true);
-        Panel panelPrin=new Panel(new GridLayout(4, 1));
+        Panel panelPrin=new Panel(new GridLayout(5, 1));
         Panel panelNum=new Panel(new GridLayout(1, 2));
         Panel panelDim=new Panel(new GridLayout(1, 2));
         Panel panelPeso=new Panel(new GridLayout(1, 2));

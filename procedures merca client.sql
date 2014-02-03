@@ -107,10 +107,11 @@ create procedure maxMerca()
 delimiter ;
 
 /*PROCEDURES PARA ORDEN*/
+drop procedure LastIDProv;
 
 DELIMITER |
-CREATE PROCEDURE LastIDOrden (OUT maxID INTEGER) BEGIN
-	SELECT max(orden.id_orden)+1 INTO maxID FROM orden;
+CREATE PROCEDURE LastIDOrden () BEGIN
+	SELECT max(orden.id_orden)+1 as maxID FROM orden;
 END |
 DELIMITER ;
 
@@ -165,8 +166,8 @@ END |
 DELIMITER ;
 
 DELIMITER |
-CREATE PROCEDURE LastIDProv (OUT maxID INTEGER) BEGIN
-	SELECT max(proveedor.id_proveedor)+1 INTO maxID FROM proveedor;
+CREATE PROCEDURE LastIDProv () BEGIN
+	SELECT max(proveedor.id_proveedor)+1 as maxID FROM proveedor;
 END |
 DELIMITER ;
 
@@ -310,3 +311,157 @@ END $$
 DELIMITER ;
 
 /*FIN DE PROCEDURES PARA IMPORTACION*/
+/*Procedures 2 febrero */
+
+drop procedure searchClient;
+delimiter $$
+
+create procedure searchClient(nombr varchar(40), ced varchar(20), tele varchar(20))
+	begin
+		if (ced="" and nombr="") then
+			Select * from cliente where cliente.telf=tele;
+		elseif (tele="" and nombr="") then
+			Select * from cliente where cliente.cedula=ced;
+		elseif (tele="" and ced="") then
+			Select * from cliente where cliente.nombre=nombr;
+		elseif(nombr="") then
+			Select * from cliente where cliente.cedula=ced and cliente.telf=tele;
+		elseif (ced="") then
+			Select * from cliente where cliente.nombre=nombr and cliente.telf=tele;
+		elseif (tele="") then
+			Select * from cliente where cliente.nombre=nombr and cliente.cedula=ced;
+		end if;
+	end$$
+
+delimiter ;
+
+call searchClient("swagor", "1234567892", "");
+
+
+delimiter $$
+
+create procedure searchOrden(clien varchar(40), fech date, est varchar(20), numr varchar(20))
+	begin
+		if (fech="0-0-0" and est="" and numr="") then
+			Select orden.* from orden, cliente where orden.id_orden=cliente.id_cliente and cliente.nombre=clien;
+		elseif (clien="" and est="" and numr="") then
+			Select orden.* from orden, cliente where orden.id_orden=cliente.id_cliente and orden.fecha=fech;
+		elseif (fech="0-0-0" and clien="" and numr="") then
+			Select orden.* from orden, cliente where orden.id_orden=cliente.id_cliente and orden.estado=est;
+		elseif (fech="0-0-0" and est="" and clien="") then
+			Select orden.* from orden, cliente where orden.id_orden=cliente.id_cliente and orden.num_rastreo=numr;
+		elseif (fech="0-0-0" and est="") then
+			Select orden.* from orden, cliente where orden.id_orden=cliente.id_cliente and cliente.nombre=clien and orden.num_rastreo=numr;
+		elseif (fech="0-0-0" and numr="") then
+			Select orden.* from orden, cliente where orden.id_orden=cliente.id_cliente and cliente.nombre=clien and orden.estado=est;
+		elseif (est="" and numr="") then
+			Select orden.* from orden, cliente where orden.id_orden=cliente.id_cliente and cliente.nombre=clien and orden.fecha=fech;
+		elseif (clien="" and est="") then
+			Select orden.* from orden, cliente where orden.id_orden=cliente.id_cliente and orden.num_rastreo=numr and orden.fecha=fech;
+		elseif (clien="" and numr="") then
+			Select orden.* from orden, cliente where orden.id_orden=cliente.id_cliente and orden.estado=est and orden.fecha=fech;
+		elseif (clien="" and fech="0-0-0") then
+			Select orden.* from orden, cliente where orden.id_orden=cliente.id_cliente and orden.estado=est and orden.num_rastreo=numr;
+		elseif(clien="") then
+			Select orden.* from orden, cliente where orden.id_orden=cliente.id_cliente and orden.fecha=fech and orden.estado=est and orden.num_rastreo=numr;
+		elseif (numr="") then
+			Select orden.* from orden, cliente where orden.id_orden=cliente.id_cliente and cliente.nombre=clien and orden.estado=est and orden.fecha=fech;
+		elseif (est="") then
+			Select orden.* from orden, cliente where orden.id_orden=cliente.id_cliente and cliente.nombre=clien and orden.fecha=fech and orden.num_rastreo=numr;
+		elseif (fech="0-0-0") then
+			Select orden.* from orden, cliente where orden.id_orden=cliente.id_cliente and cliente.nombre=clien and orden.estado=est and orden.num_rastreo=numr;
+		end if;
+	end$$
+
+delimiter ;
+
+call searchOrden("Jigly", "2000-04-01", "", "");
+
+drop procedure searchMerca;
+delimiter $$
+
+create procedure searchMerca(style varchar(40), marc varchar(40), cantma int, cantmen int)
+	begin
+		if (style="" and marc="" and cantma=0) then
+			Select * from mercaderia m where m.cantidad>cantmen;
+		elseif (style="" and cantmen=0 and cantma=0) then
+			Select * from mercaderia m where m.marca=marc;
+		elseif (style="" and marc=0 and cantmen=0) then
+			Select * from mercaderia m where m.cantidad<cantma;
+		elseif (marc="" and cantmen=0 and cantma=0) then
+			Select * from mercaderia m where m.estilo=style;
+		elseif (style="" and marc="") then
+			Select * from mercaderia m where m.cantidad>cantmen and m.cantidad<cantma;
+		elseif (style="" and cantma=0) then
+			Select * from mercaderia m where m.cantidad>cantmen and m.marca=marc;
+		elseif (style="" and cantmen=0) then
+			Select * from mercaderia m where m.cantidad<cantma and m.marca=marc;
+		elseif (marc="" and cantma=0) then
+			Select * from mercaderia m where m.cantidad>cantmen and m.estilo=style;
+		elseif (marc="" and cantmen=0) then
+			Select * from mercaderia m where m.cantidad<cantma and m.estilo=style;
+		elseif (cantma=0 and cantmen=0) then
+			Select * from mercaderia m where m.estilo=style and m.marca=marc;
+		elseif(style="") then
+			Select * from mercaderia m where m.cantidad>cantmen and m.cantidad<cantma and m.marca=marc;
+		elseif (marc="") then
+			Select * from mercaderia m where m.cantidad>cantmen and m.cantidad<cantma and m.estilo=style;
+		elseif (cantma=0) then
+			Select * from mercaderia m where m.estilo=style and m.marca=marc and m.cantidad<cantma;
+		elseif (cantmen=0) then
+			Select * from mercaderia m where m.estilo=style and m.marca=marc and m.cantidad>cantmen;
+		end if;
+	end$$
+
+delimiter ;
+
+call searchMerca("lol", "", 0, 0);
+
+delimiter $$
+
+create procedure searchEmpaq(merca varchar(40), box varchar(20), est varchar(20))
+	begin
+		if (box="" and merca="") then
+			Select e.* from empaquetado e, caja c, mercaderia m where e.id_caja=c.id_caja and m.id_merca=e.id_merca and e.estado=est;
+		elseif (box="" and est="") then
+			Select e.* from empaquetado e, caja c, mercaderia m where e.id_caja=c.id_caja and m.id_merca=e.id_merca and m.estilo=merca;
+		elseif (merca="" and est="") then
+			Select e.* from empaquetado e, caja c, mercaderia m where e.id_caja=c.id_caja and m.id_merca=e.id_merca and c.num=box;
+		elseif(box="") then
+			Select e.* from empaquetado e, caja c, mercaderia m where e.id_caja=c.id_caja and m.id_merca=e.id_merca and e.estado=est and m.estilo=est;
+		elseif (merca="") then
+			Select e.* from empaquetado e, caja c, mercaderia m where e.id_caja=c.id_caja and m.id_merca=e.id_merca and e.estado=est and c.num=box;
+		elseif (est="") then
+			Select e.* from empaquetado e, caja c, mercaderia m where e.id_caja=c.id_caja and m.id_merca=e.id_merca and m.estilo=est and c.num=box;
+		end if;
+	end$$
+
+delimiter ;
+
+drop procedure searchImpo;
+
+call searchEmpaq("", "", "");
+
+delimiter $$
+
+create procedure searchImpo(trab varchar(40), prov varchar(20), fech DATE)
+	begin
+		if (trab="" and prov="") then
+			Select i.* from importacion i, trabajador t, proveedor p where i.id_trabajador=t.id_trabajador and p.id_proveedor=i.id_import and i.fecha=fech;
+		elseif (trab="" and fech="0-0-0") then
+			Select i.* from importacion i, trabajador t, proveedor p where i.id_trabajador=t.id_trabajador and p.id_proveedor=i.id_import and p.compania=prov;
+		elseif (prov="" and fech="0-0-0") then
+			Select i.* from importacion i, trabajador t, proveedor p where i.id_trabajador=t.id_trabajador and p.id_proveedor=i.id_import and trab.cedula=trab;
+		elseif(trab="") then
+			Select i.* from importacion i, trabajador t, proveedor p where i.id_trabajador=t.id_trabajador and p.id_proveedor=i.id_import and i.fecha=fech and p.compania=prov;
+		elseif (prov="") then
+			Select i.* from importacion i, trabajador t, proveedor p where i.id_trabajador=t.id_trabajador and p.id_proveedor=i.id_import and i.fecha=fech and trab.cedula=trab;
+		elseif (fech="") then
+			Select i.* from importacion i, trabajador t, proveedor p where i.id_trabajador=t.id_trabajador and p.id_proveedor=i.id_import and p.compania=prov and trab.cedula=trab;
+		end if;
+	end$$
+
+delimiter ;
+
+call searchImpo("", "Licencia", "0-0-0");
+
