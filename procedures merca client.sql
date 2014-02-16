@@ -475,3 +475,167 @@ create procedure buscarProv(com varchar(40), newRUP varchar(20), newPais varchar
 
 delimiter ;
 drop procedure buscarProv;
+
+/* Factura 1*/
+
+delimiter /
+
+create procedure crearFac(id decimal, vp float, iv float, des float, fech date, vf float, idimpo decimal)
+	begin 
+		INSERT INTO factura1 VALUES(id, vp, iv, des, fech, vf, idimpo);
+	end /
+
+delimiter ;
+
+delimiter /
+
+create trigger factimpo after insert on importacion
+	for each row begin
+	declare id int;
+	set id=(SELECT max(f.id_factura)+1 as maxID FROM factura1 f);
+	call crearFac(id, 0, 0, 0, new.fecha, 0, new.id_import);
+end/
+
+delimiter ;
+
+delimiter $$
+
+create procedure editFac1(id decimal)
+	begin 
+		declare valorp float;
+		set valorp=(Select sum(m.precio_compra) from mercaderia m, empaquetado e, contenedor c, importacion i where m.id_merca=e.id_merca and e.id_contenedor=c.id_contenedor and c.id_import=i.id_import and e.id_contenedor=id);
+		update factura1 set valor_p=valorp where id_import in (select c.id_import from contenedor c where c.id_contenedor=id);
+	end$$
+
+delimiter ;
+
+use liderexpress;
+
+call crearImp(20, 1, 1, '2013-12-12');
+
+drop trigger factimpo;
+
+DELIMITER |
+CREATE PROCEDURE lastIDfact1()
+	BEGIN
+	SELECT max(f.id_factura)+1 as maxID FROM factura1 f;
+END |
+DELIMITER ;
+
+call lastIDfact1();
+
+delimiter /
+
+create trigger edfactimpo after insert on empaquetado
+	for each row begin
+	call editFac1(new.id_contenedor);
+end/
+
+delimiter ;
+
+
+Select * from mercaderia m, empaquetado e, contenedor c, importacion i where m.id_merca=e.id_merca and e.id_contenedor=c.id_contenedor and c.id_import=i.id_import and e.id_contenedor=1;
+call editFac1(1);
+select c.id_import from contenedor c where c.id_contenedor=1;
+
+
+
+
+/* factura 2 */
+
+delimiter /
+
+create procedure crearFac2(id decimal, vp float, iv float, des float, fech date, vf float, idimpo decimal)
+	begin 
+		INSERT INTO factura2 VALUES(id, vp, iv, des, fech, vf, idimpo);
+	end /
+
+delimiter ;
+
+DELIMITER |
+CREATE PROCEDURE lastIDfact2()
+	BEGIN
+	SELECT max(f.id_factura)+1 as maxID FROM factura2 f;
+END |
+DELIMITER ;
+
+delimiter /
+
+create trigger factorden after insert on orden
+	for each row begin
+	declare id int;
+	set id=(SELECT max(f.id_factura)+1 as maxID FROM factura2 f);
+	if id is null then 
+		set id=1;
+	end if;
+	call crearFac2(id, 0, 0, 0, new.fecha, 0, new.id_orden);
+end/
+
+delimiter ;
+
+drop trigger factorden;
+
+delimiter $$
+
+create procedure editFac2(id decimal)
+	begin 
+		declare valorp float;
+		set valorp=(Select sum(m.precio_venta*m.cantidad) from mercaderia m, orden o where m.id_orden=o.id_orden and o.id_orden=id);
+		update factura2 f set f.valor_p=valorp, f.iva=0.12*valorp, valor_final=valorp*1.12 where f.id_orden=id;
+	end$$
+
+delimiter ;
+
+delimiter /
+
+create trigger edfactord after insert on mercaderia
+	for each row begin
+	call editFac2(new.id_orden);
+end/
+
+delimiter ;
+
+delimiter /
+
+create trigger edfactordup after update on mercaderia
+	for each row begin
+	call editFac2(new.id_orden);
+end/
+
+delimiter ;
+
+delimiter /
+
+create trigger edfactorddel after delete on mercaderia
+	for each row begin
+	call editFac2(old.id_orden);
+end/
+
+delimiter ;
+
+drop trigger edfactord;
+drop procedure editFac2;
+
+Select sum(m.precio_venta*m.cantidad) from mercaderia m, orden o where m.id_orden=o.id_orden and o.id_orden=3;
+call editFac2(3);
+update factura2 set valor_p=1 where id_orden=3;
+
+delimiter $$
+
+create procedure deletefact2(id decimal)
+	begin 
+		DELETE FROM factura2 WHERE factura2.id_orden=id;
+	end$$
+
+delimiter ;
+
+delimiter /
+
+create trigger delfactord before delete on orden
+	for each row begin
+	call deleteFac2(old.id_orden);
+end/
+
+delimiter ;
+
+drop trigger delfactord;

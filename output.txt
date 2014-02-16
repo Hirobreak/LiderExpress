@@ -110,3 +110,5 @@ INSERT INTO orden VALUES(1,1,'regwe','csdgs','2000-4-1',56,'sdfgh','5452');
 INSERT INTO orden VALUES(5,1,'ec','gr','2000-1-1',12,'es','12');
 INSERT INTO contenedor VALUES(1,'1234567890', '123', 'Recibido',1);
 INSERT INTO empaquetado VALUES(1,1, 2, 1,'Embarcado');
+INSERT INTO empaquetado VALUES(2,1, 3, 1,'Embarcado');
+DELETE FROM empaquetado WHERE empaquetado.id_empaquetado=2;

@@ -129,7 +129,7 @@ public class Importacion implements QueryLog{
             pro.setString(4, fecha); 
             pro.execute();
         }catch(SQLException e){
-            JOptionPane.showMessageDialog(null, "Error dato");
+            JOptionPane.showMessageDialog(null, "Error dato :(");
         }
         //return fa;
     } 
