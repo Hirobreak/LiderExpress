@@ -4,6 +4,7 @@ package liderexpress;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -15,6 +16,7 @@ import java.util.Date;
 import javax.swing.table.DefaultTableModel;
 import static liderexpress.Cliente.connect;
 import static liderexpress.QueryLog.log;
+import static liderexpress.Validaciones.*;
 
 public class Pago implements QueryLog {
     int id;
@@ -39,14 +41,24 @@ public class Pago implements QueryLog {
         Panel paneltipo=new Panel(new GridLayout(1, 2));
         Panel panelfech=new Panel(new GridLayout(1, 4));
         Panel panelvalor=new Panel(new GridLayout(1, 2));
+        Panel panelfacts = new Panel(new GridLayout(1,2));
         Panel panelbot=new Panel(new GridLayout(1, 2));
         Label labelfech=new Label("Fecha:", Label.CENTER);
         Label labelvalor=new Label("Valor $:", Label.CENTER);
         Label labeltipo=new Label("Tipo:", Label.CENTER);
-        TextField txtvalor=new TextField("$", 20);
-        JComboBox cdia=new JComboBox();
-        JComboBox cmes=new JComboBox();
-        JComboBox caño=new JComboBox();
+        Label labelfacts = new Label("Factura: ", Label.CENTER);
+        final TextField txtvalor=new TextField("$", 20);
+        final JComboBox facts=new JComboBox();
+        try{
+          ResultSet rs = Factura.todasFacts();
+          while(rs.next()){
+              int id = rs.getInt(1);
+              facts.addItem(id);
+          }  
+        }catch(Exception ex){}
+        final JComboBox cdia=new JComboBox();
+        final JComboBox cmes=new JComboBox();
+        final JComboBox caño=new JComboBox();
         Button guardar=new Button("Eliminar");
         Button cancelar=new Button("Cancelar");
         for (int i=2000; i<2015; i++){
@@ -58,7 +70,7 @@ public class Pago implements QueryLog {
         for (int i=1; i<32; i++){
             cdia.addItem(i);
         }
-        JComboBox ctipo=new JComboBox();
+        final JComboBox ctipo=new JComboBox();
         ctipo.addItem("Efectivo");
         ctipo.addItem("Cheque");
         ctipo.addItem("Deposito");
@@ -70,26 +82,67 @@ public class Pago implements QueryLog {
         panelfech.add(caño);
         panelfech.add(cmes);
         panelfech.add(cdia);
+        panelfacts.add(labelfacts);
+        panelfacts.add(facts);
         panelbot.add(guardar);
         panelbot.add(cancelar);
         panelPrin.add(panelvalor);
         panelPrin.add(paneltipo);
         panelPrin.add(panelfech);
+        panelPrin.add(panelfacts);
         panelPrin.add(panelbot);
         pag.add(panelPrin);
         guardar.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e){
-                pag.dispose();
+                if(largoInt(txtvalor.getText(),20)==false)
+                    JOptionPane.showMessageDialog(null,"Error, el valor debe tener hasta 20 digitos. Intente de nuevo");
+                else
+                    nuevoPago(txtvalor.getText(),ctipo.getSelectedItem().toString(),facts.getSelectedItem().toString(),caño.getSelectedItem().toString(),cmes.getSelectedItem().toString(),cdia.getSelectedItem().toString());
             }
         });
         cancelar.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e){
                 pag.dispose();
             }
-        });
+        });  
+    }
+    
+    public static void nuevoPago(String cantidad, String tipo, String id_factura, String año, String mes, String dia){
+        try {
+            String fecha=""+año+"-"+mes+"-"+dia+"";
+            Connection con=connect.Conexion_SQL();
+            CallableStatement pro = (CallableStatement) con.prepareCall("{call crearPago1(?,?,?,?,?)}");
+            pro.setInt(1, newID());
+            pro.setString(2, cantidad);
+            pro.setString(3, tipo);
+            pro.setString(4, id_factura);                        
+            pro.setString(5, fecha);
+            pro.executeQuery();
+        }catch(SQLException e){
+            JOptionPane.showMessageDialog(null, "Error dato");
+        }
+    }
         
-        
-        
+    public static int newID(){
+        int id = 1;
+        ResultSet rs = null;
+        try {
+            Connection con=connect.Conexion_SQL();
+            CallableStatement pro = (CallableStatement) con.prepareCall("{call maxPago1()}");
+            pro.execute();
+            rs=pro.getResultSet();
+            try{
+                while(rs.next())
+                    id = rs.getInt("maxID");
+            }catch(SQLException e){}
+            if(id==0)
+                id++;
+            return id;
+        }
+        catch(SQLException e){
+            JOptionPane.showMessageDialog(null, "Error dato ID");
+        }
+        return id;
     }
     
     public static void verPagos(){

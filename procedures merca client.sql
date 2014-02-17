@@ -711,6 +711,24 @@ CREATE PROCEDURE modPago2 (in id decimal, in cant decimal, in tip varchar(20), i
 END $$
 DELIMITER ;
 
+delimiter $$
+
+create procedure maxPago1()
+	begin 
+		SELECT max(pago1.id_pago)+1 as maxID FROM pago1;
+	end$$
+
+delimiter ;
+
+delimiter $$
+
+create procedure maxPago2()
+	begin 
+		SELECT max(pago2.id_pago)+1 as maxID FROM pago2;
+	end$$
+
+delimiter ;
+
 SELECT m.estilo, m.dsc, m.cantidad, m.precio_venta FROM orden o, mercaderia m WHERE o.id_orden=3 and o.id_orden=m.id_orden;
 
 call factMerca(3);
