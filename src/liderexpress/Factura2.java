@@ -40,7 +40,7 @@ public class Factura2 implements QueryLog {
         ResultSet rs = null;
         try {
             Connection con=connect.Conexion_SQL();
-            CallableStatement pro = (CallableStatement) con.prepareCall("{call searchfact1(?)}");
+            CallableStatement pro = (CallableStatement) con.prepareCall("{call searchfact2(?)}");
             pro.setInt(1, idimpo);
             pro.execute();
             rs=pro.getResultSet();
@@ -161,7 +161,7 @@ public class Factura2 implements QueryLog {
             String query;
             Connection con=connect.Conexion_SQL();
             Statement sentencia=con.createStatement();
-            query="SELECT factura1.* FROM factura1;";
+            query="SELECT factura2.* FROM factura2;";
             rs=sentencia.executeQuery(query);
             
         }catch(SQLException e){
@@ -191,7 +191,7 @@ public class Factura2 implements QueryLog {
                 try {
                     Connection con=connect.Conexion_SQL();
                     Statement sentencia=con.createStatement();
-                    String query="DELETE FROM factura1 WHERE factura1.id_factura="+id_fact+";";
+                    String query="DELETE FROM factura2 WHERE factura2.id_factura="+id_fact+";";
                     sentencia.executeUpdate(query);
                     log.add(query);
                 }catch(SQLException e){}
