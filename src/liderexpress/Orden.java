@@ -379,14 +379,14 @@ public class Orden implements QueryLog{
                         }
                     }
                 }catch(SQLException e){}
-                try{
+                /*try{
                     while(facts.next()){
                         if(facts.getInt(7)==id_orden){
                             tieneFact=true;
                             JOptionPane.showMessageDialog(null,"Error al intentar eliminar Orden ID: "+id_orden+"\nOrden ID: "+id_orden+" tiene asignada una Factura ID: "+facts.getInt(1));
                         }
                     }
-                }catch(SQLException e){}  
+                }catch(SQLException e){} */ 
             }catch(SQLException e){}
             if(tieneMerca==false && tieneFact==false){
                 try {
