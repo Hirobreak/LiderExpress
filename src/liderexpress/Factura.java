@@ -48,7 +48,7 @@ public class Factura implements QueryLog {
             rs.next();
             //System.out.println(idorden);
         }catch(SQLException e){
-            JOptionPane.showMessageDialog(null, "Error dato");
+            JOptionPane.showMessageDialog(null, "Error dato 1");
         }
         final JFrame fact=new JFrame("Factura");
         fact.setResizable(false);
@@ -86,7 +86,7 @@ public class Factura implements QueryLog {
             labeldsc2=new Label("0%", Label.CENTER);
             labelvf2=new Label(rs.getString("valor_final"), Label.CENTER);   
         }catch(SQLException e){
-             JOptionPane.showMessageDialog(null, "Error dato");
+             JOptionPane.showMessageDialog(null, "Error dato 2");
         }
         JButton regen=new JButton("Actualizar");
         JButton agregarp=new JButton("Agregar Pago");
@@ -103,7 +103,7 @@ public class Factura implements QueryLog {
             pro.execute();
             res=pro.getResultSet();
         }catch(SQLException e){
-            JOptionPane.showMessageDialog(null, "Error dato");
+            JOptionPane.showMessageDialog(null, "Error dato 3");
         }
         try {
             while(res.next()){
@@ -111,7 +111,7 @@ public class Factura implements QueryLog {
                 modelo2.addRow(fila);
             }
         } catch (SQLException ex) {
-            JOptionPane.showMessageDialog(null, "Error dato");
+            JOptionPane.showMessageDialog(null, "Error dato 4");
         }
         tabla.setModel(modelo2);
         paneltabla.setPreferredSize(new Dimension(315, 100));
@@ -166,7 +166,7 @@ public class Factura implements QueryLog {
             rs=sentencia.executeQuery(query);
             
         }catch(SQLException e){
-            JOptionPane.showMessageDialog(null, "Error dato");
+            JOptionPane.showMessageDialog(null, "Error dato 5");
         }
         return rs;
     }

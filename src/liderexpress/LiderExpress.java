@@ -12,6 +12,9 @@ public class LiderExpress {
 
     public static void main(String[] args) {
         loginScreen login=new loginScreen();
-        
+        System.out.println("0");
+        pdf reporte = new pdf();
+        reporte.newpdf();
+        System.out.println("a");
     }
 }

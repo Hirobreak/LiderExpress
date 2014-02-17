@@ -198,7 +198,7 @@ public class Orden implements QueryLog{
             pro.execute();
             rs=pro.getResultSet();
         }catch(SQLException e){
-            JOptionPane.showMessageDialog(null, "Error dato");
+            JOptionPane.showMessageDialog(null, "Error dato cons");
         }
         return rs;
 
@@ -213,7 +213,7 @@ public class Orden implements QueryLog{
             rs=pro.getResultSet();
             
         }catch(SQLException e){
-            JOptionPane.showMessageDialog(null, "Error dato");
+            JOptionPane.showMessageDialog(null, "Error dato tods");
         }
         return rs;
     }
