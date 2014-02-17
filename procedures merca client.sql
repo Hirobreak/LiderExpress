@@ -108,7 +108,6 @@ create procedure maxMerca()
 delimiter ;
 
 /*PROCEDURES PARA ORDEN*/
-drop procedure LastIDProv;
 
 DELIMITER |
 CREATE PROCEDURE LastIDOrden () BEGIN
@@ -372,8 +371,6 @@ create procedure searchOrden(clien varchar(40), fech date, est varchar(20), numr
 
 delimiter ;
 
-drop procedure searchMerca;
-
 delimiter $$
 
 create procedure searchMerca(style varchar(40), marc varchar(40), cantma int, cantmen int)
@@ -474,7 +471,6 @@ create procedure buscarProv(com varchar(40), newRUP varchar(20), newPais varchar
 	end$$
 
 delimiter ;
-drop procedure buscarProv;
 
 delimiter $$
 
@@ -483,8 +479,6 @@ create procedure crearCont(id int, dim varchar(20), peso varchar(10), estado var
 		insert into contenedor values (id, dim, peso, estado, id_impo);
 	end$$
 delimiter ;
-
-drop procedure crearCont;
 
 /* Factura 1*/
 
@@ -532,8 +526,6 @@ CREATE PROCEDURE lastIDfact1()
 	SELECT max(f.id_factura)+1 as maxID FROM factura1 f;
 END |
 DELIMITER ;
-
-call lastIDfact1();
 
 delimiter /
 
@@ -677,15 +669,53 @@ create procedure factMerca(id decimal)
 
 delimiter ;
 
+delimiter /
+create procedure crearPago1(id decimal, cant decimal, tip varchar(20), id_fac decimal, fech date)
+	begin 
+		INSERT INTO pago1 VALUES(id, cant, tip, id_fac, fech);
+	end /
+delimiter ;
 
+delimiter /
+create procedure crearPago2(id decimal, cant decimal, tip varchar(20), inter float, fech date, id_fac decimal)
+	begin 
+		INSERT INTO pago2 VALUES(id, cant, tip, inter, fech, id_fac);
+	end /
+delimiter ;
 
+delimiter $$
+create procedure deletePago1(id decimal)
+	begin 
+		DELETE FROM pago1 WHERE pago1.id_pago=id;
+	end$$
+delimiter ;
+
+delimiter $$
+create procedure deletePago2(id decimal)
+	begin 
+		DELETE FROM pago2 WHERE pago2.id_pago=id;
+	end$$
+delimiter ;
+
+DELIMITER $$
+CREATE PROCEDURE modPago1 (in id decimal, in cant decimal, in tip varchar(20), in id_fac decimal, in fech date)
+	BEGIN
+	UPDATE pago1 SET pago1.id_pago=id, pago1.cantidad=cant, pago1.tipo=tip, pago1.id_factura=id_fac, pago1.fecha=fech WHERE pago1.id_pago=id;
+END $$
+DELIMITER ;
+
+DELIMITER $$
+CREATE PROCEDURE modPago2 (in id decimal, in cant decimal, in tip varchar(20), in inter float, in fech date, in id_fac decimal)
+	BEGIN
+	UPDATE pago2 SET pago2.id_pago=id, pago2.cantidad=cant, pago2.tipo=tip, pago2.id_factura=id_fac, pago2.fecha=fech, pago2.interes=inter where pago2.id_pago=id;
+END $$
+DELIMITER ;
 
 SELECT m.estilo, m.dsc, m.cantidad, m.precio_venta FROM orden o, mercaderia m WHERE o.id_orden=3 and o.id_orden=m.id_orden;
 
 call factMerca(3);
 SELECT c.nombre, f.* FROM factura2 f, orden o, cliente c WHERE f.id_orden=3 and o.id_orden=f.id_orden and c.id_cliente=o.id_cliente;
 
-drop procedure searchfact2;
 delete from contenedor where id_contenedor=2;
 drop trigger factorden;
 drop trigger delfactord;
