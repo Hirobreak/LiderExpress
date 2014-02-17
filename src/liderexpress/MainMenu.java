@@ -162,7 +162,7 @@ public class MainMenu extends JFrame implements ActionListener,QueryLog{
         if(ae.getSource()==orden){
             entidad=2;
             paintOrdenes();
-            accion.setLabel("Detalle");
+            accion.setLabel("Detalle Factura");
         }
         if(ae.getSource()==merca){
             entidad=3;
@@ -175,6 +175,7 @@ public class MainMenu extends JFrame implements ActionListener,QueryLog{
         if(ae.getSource()==impo){
             entidad=5;
             paintImports();
+            accion.setLabel("Detalle Factura");
         }
         if(ae.getSource()==provee){
             entidad=6;
@@ -319,7 +320,12 @@ public class MainMenu extends JFrame implements ActionListener,QueryLog{
             intervalo();
         }
         if(ae.getSource()==exe && entidad==2){
-            Factura.mostrarFact();
+            int id = (int)tabla.getValueAt(tabla.getSelectedRow(),0);
+            Factura.mostrarFact(id);
+        }
+        if(ae.getSource()==exe && entidad==5){
+            int id = (int)tabla.getValueAt(tabla.getSelectedRow(),0);
+            Factura2.mostrarFact(id);
         }
         if(ae.getSource()==exe && entidad==1){
             int id = (int)tabla.getValueAt(tabla.getSelectedRow(),0);

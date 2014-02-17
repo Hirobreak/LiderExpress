@@ -114,7 +114,8 @@ public class Contenedor extends Validaciones implements QueryLog{
             pro.setString(2, dim);
             pro.setString(3, peso);
             pro.setString(4, estado);                        
-            pro.setString(5, id_imp);
+            pro.setInt(5, Integer.parseInt(id_imp));
+            System.out.println(Integer.parseInt(id_imp));
           // pro.setString(6, telf);
             pro.executeQuery();
             //String query="{call crearCont("+newID()+",'"+dim+"', '"+peso+"', '"+estado+"',"+id_imp+")}";

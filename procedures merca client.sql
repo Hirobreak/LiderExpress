@@ -476,6 +476,16 @@ create procedure buscarProv(com varchar(40), newRUP varchar(20), newPais varchar
 delimiter ;
 drop procedure buscarProv;
 
+delimiter $$
+
+create procedure crearCont(id int, dim varchar(20), peso varchar(10), estado varchar(20), id_impo int)
+	begin
+		insert into contenedor values (id, dim, peso, estado, id_impo);
+	end$$
+delimiter ;
+
+drop procedure crearCont;
+
 /* Factura 1*/
 
 delimiter /
@@ -493,6 +503,9 @@ create trigger factimpo after insert on importacion
 	for each row begin
 	declare id int;
 	set id=(SELECT max(f.id_factura)+1 as maxID FROM factura1 f);
+	if id is null then 
+		set id=1;
+	end if;
 	call crearFac(id, 0, 0, 0, new.fecha, 0, new.id_import);
 end/
 
@@ -503,17 +516,15 @@ delimiter $$
 create procedure editFac1(id decimal)
 	begin 
 		declare valorp float;
-		set valorp=(Select sum(m.precio_compra) from mercaderia m, empaquetado e, contenedor c, importacion i where m.id_merca=e.id_merca and e.id_contenedor=c.id_contenedor and c.id_import=i.id_import and e.id_contenedor=id);
-		update factura1 set valor_p=valorp where id_import in (select c.id_import from contenedor c where c.id_contenedor=id);
+		set valorp=(Select sum(m.precio_compra*m.cantidad) from mercaderia m, empaquetado e, contenedor c, importacion i where m.id_merca=e.id_merca and e.id_contenedor=c.id_contenedor and c.id_import=i.id_import and e.id_contenedor=id);
+		update factura1 set valor_p=valorp, iva=valorp*0.12, valor_final=valorp*1.12  where id_import in (select c.id_import from contenedor c where c.id_contenedor=id);
 	end$$
 
 delimiter ;
 
 use liderexpress;
 
-call crearImp(20, 1, 1, '2013-12-12');
 
-drop trigger factimpo;
 
 DELIMITER |
 CREATE PROCEDURE lastIDfact1()
@@ -538,9 +549,23 @@ Select * from mercaderia m, empaquetado e, contenedor c, importacion i where m.i
 call editFac1(1);
 select c.id_import from contenedor c where c.id_contenedor=1;
 
+delimiter $$
 
+create procedure searchfact1(id decimal)
+	begin 
+		SELECT p.compania, f.* FROM factura1 f, importacion i, proveedor p WHERE f.id_import=id and i.id_import=f.id_import and p.id_proveedor=i.id_proveedor;
+	end$$
 
+delimiter ;
 
+delimiter $$
+
+create procedure factiMerca(id decimal)
+	begin 
+		SELECT m.estilo, m.dsc, m.cantidad, m.precio_compra FROM mercaderia m, empaquetado e, contenedor c, importacion i where m.id_merca=e.id_merca and e.id_contenedor=c.id_contenedor and c.id_import=i.id_import and i.id_import=id;
+	end$$
+
+delimiter ;
 /* factura 2 */
 
 delimiter /
@@ -573,7 +598,6 @@ end/
 
 delimiter ;
 
-drop trigger factorden;
 
 delimiter $$
 
@@ -613,13 +637,6 @@ end/
 
 delimiter ;
 
-drop trigger edfactord;
-drop procedure editFac2;
-
-Select sum(m.precio_venta*m.cantidad) from mercaderia m, orden o where m.id_orden=o.id_orden and o.id_orden=3;
-call editFac2(3);
-update factura2 set valor_p=1 where id_orden=3;
-
 delimiter $$
 
 create procedure deletefact2(id decimal)
@@ -638,4 +655,49 @@ end/
 
 delimiter ;
 
+
+/* devuelve los campos a mostrar en la factura */
+delimiter $$
+
+create procedure searchfact2(id decimal)
+	begin 
+		SELECT c.nombre, f.* FROM factura2 f, orden o, cliente c WHERE f.id_orden=id and o.id_orden=f.id_orden and c.id_cliente=o.id_cliente;
+	end$$
+
+delimiter ;
+
+
+
+delimiter $$
+
+create procedure factMerca(id decimal)
+	begin 
+		SELECT m.estilo, m.dsc, m.cantidad, m.precio_venta FROM orden o, mercaderia m WHERE o.id_orden=id and o.id_orden=m.id_orden;
+	end$$
+
+delimiter ;
+
+
+
+
+SELECT m.estilo, m.dsc, m.cantidad, m.precio_venta FROM orden o, mercaderia m WHERE o.id_orden=3 and o.id_orden=m.id_orden;
+
+call factMerca(3);
+SELECT c.nombre, f.* FROM factura2 f, orden o, cliente c WHERE f.id_orden=3 and o.id_orden=f.id_orden and c.id_cliente=o.id_cliente;
+
+drop procedure searchfact2;
+delete from contenedor where id_contenedor=2;
+drop trigger factorden;
 drop trigger delfactord;
+call crearImp(20, 1, 1, '2013-12-12');
+drop trigger edfactord;
+drop procedure editFac2;
+call factiMerca(21);
+drop procedure factiMerca;
+Select sum(m.precio_venta*m.cantidad) from mercaderia m, orden o where m.id_orden=o.id_orden and o.id_orden=3;
+call editFac2(3);
+update factura2 set valor_p=1 where id_orden=3;
+drop trigger factimpo;
+drop procedure searchfact1;
+call searchfact1(21);
+drop procedure editFac1;

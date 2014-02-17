@@ -1,6 +1,7 @@
 
 package liderexpress;
 
+import com.mysql.jdbc.CallableStatement;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -12,9 +13,10 @@ import java.util.ArrayList;
 import javax.swing.*;
 import javax.swing.border.*;
 import java.util.Date;
+import javax.swing.table.DefaultTableModel;
 import static liderexpress.Cliente.connect;
 import static liderexpress.QueryLog.log;
-
+//factura orden
 public class Factura implements QueryLog {
     int id;
     float valorp;
@@ -35,12 +37,25 @@ public class Factura implements QueryLog {
     }
     
     
-    public static void mostrarFact(){
+    public static void mostrarFact(int idorden){
+        ResultSet rs = null;
+        try {
+            Connection con=connect.Conexion_SQL();
+            CallableStatement pro = (CallableStatement) con.prepareCall("{call searchfact2(?)}");
+            pro.setInt(1, idorden);
+            pro.execute();
+            rs=pro.getResultSet();
+            rs.next();
+            //System.out.println(idorden);
+        }catch(SQLException e){
+            JOptionPane.showMessageDialog(null, "Error dato");
+        }
         final JFrame fact=new JFrame("Factura");
+        fact.setResizable(false);
         JTable tabla=new JTable();
-        fact.setSize(500, 300);
+        fact.setSize(315, 310);
         fact.setVisible(true);
-        Panel panelPrin=new Panel(new GridLayout(9, 1));
+        Panel panelPrin=new Panel(new FlowLayout());
         Panel panelclien=new Panel(new GridLayout(1, 2));
         Panel panelfech=new Panel(new GridLayout(1, 2));
         Panel panelvp=new Panel(new GridLayout(1, 2));
@@ -55,16 +70,52 @@ public class Factura implements QueryLog {
         Label labeliv=new Label("IVA 12%:", Label.CENTER);
         Label labeldsc=new Label("Dscto:", Label.CENTER);
         Label labelvf=new Label("Valor Final:", Label.CENTER);
+        
         Label labelclien2=new Label("Fulanito", Label.CENTER);
         Label labelfech2=new Label("12/12/2012", Label.CENTER);
         Label labelvp2=new Label("$3009.91", Label.CENTER);
         Label labeliv2=new Label("$120.23", Label.CENTER);
-        Label labeldsc2=new Label("$0.0", Label.CENTER);
-        Label labelvf2=new Label("$3302.45", Label.CENTER);
+        Label labeldsc2=new Label("0%", Label.CENTER);
+        Label labelvf2=new Label("$3302.45", Label.CENTER); 
+        try{
+            //System.out.println(rs.getString("nombre"));
+            labelclien2=new Label(rs.getString("nombre"), Label.CENTER);
+            labelfech2=new Label(rs.getString("fecha"), Label.CENTER);
+            labelvp2=new Label(rs.getString("valor_p"), Label.CENTER);
+            labeliv2=new Label(rs.getString("iva"), Label.CENTER);
+            labeldsc2=new Label("0%", Label.CENTER);
+            labelvf2=new Label(rs.getString("valor_final"), Label.CENTER);   
+        }catch(SQLException e){
+             JOptionPane.showMessageDialog(null, "Error dato");
+        }
         JButton regen=new JButton("Actualizar");
         JButton agregarp=new JButton("Agregar Pago");
         JButton verp=new JButton("Ver Pagos");
+        
         paneltabla.setBorder(BorderFactory.createTitledBorder (BorderFactory.createEtchedBorder (), "Mercadería", TitledBorder.CENTER, TitledBorder.TOP));
+        Object[] columns={"Estilo", "Descripcion", "Cantidad", "Precio"};
+        DefaultTableModel modelo2=new DefaultTableModel(null, columns);
+        ResultSet res = null;
+        try {
+            Connection con=connect.Conexion_SQL();
+            CallableStatement pro = (CallableStatement) con.prepareCall("{call factMerca(?)}");
+            pro.setInt(1, idorden);
+            pro.execute();
+            res=pro.getResultSet();
+        }catch(SQLException e){
+            JOptionPane.showMessageDialog(null, "Error dato");
+        }
+        try {
+            while(res.next()){
+                Object[] fila={res.getString(1), res.getString(2), res.getString(3), res.getString(4)};
+                modelo2.addRow(fila);
+            }
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, "Error dato");
+        }
+        tabla.setModel(modelo2);
+        paneltabla.setPreferredSize(new Dimension(315, 100));
+        
         panelclien.add(labelclien);
         panelclien.add(labelclien2);
         panelfech.add(labelfech);
@@ -87,7 +138,7 @@ public class Factura implements QueryLog {
         panelPrin.add(paneldsc);
         panelPrin.add(panelvf);
         panelPrin.add(paneltabla);
-        panelPrin.add(regen);
+        //panelPrin.add(regen);
         panelPrin.add(panelpagos);
         fact.add(panelPrin);
         agregarp.addActionListener(new ActionListener(){
@@ -100,6 +151,9 @@ public class Factura implements QueryLog {
                 Pago.verPagos();
             }
         });
+        
+        
+        
     }
     
     public static ResultSet todasFacts(){

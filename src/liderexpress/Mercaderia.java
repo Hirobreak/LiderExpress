@@ -62,8 +62,8 @@ public class Mercaderia extends Validaciones implements QueryLog {
         Label labelComp=new Label("Composición:", Label.CENTER);
         Label labelOrd=new Label("Pertenece a la Orden: ", Label.CENTER);
         Label labelOrg=new Label("Origen:", Label.CENTER);
-        Label labelpp=new Label("Precio Proveedor $:", Label.CENTER);
-        Label labelpc=new Label("Precio Venta $: ", Label.CENTER);
+        Label labelpp=new Label("Precio Venta $:", Label.CENTER);
+        Label labelpc=new Label("Precio Compra $: ", Label.CENTER);
         Label labelcant=new Label("Cantidad: ", Label.CENTER);
         Button guardar=new Button("Guardar");
         Button cancelar=new Button("Cancelar");
@@ -278,8 +278,8 @@ public class Mercaderia extends Validaciones implements QueryLog {
         Label labelComp=new Label("Composición:", Label.CENTER);
         Label labelOrd=new Label("Pertenece a la Orden: ", Label.CENTER);
         Label labelOrg=new Label("Origen:", Label.CENTER);
-        Label labelpp=new Label("Precio Proveedor $:", Label.CENTER);
-        Label labelpc=new Label("Precio Venta $: ", Label.CENTER);
+        Label labelpp=new Label("Precio Venta $:", Label.CENTER);
+        Label labelpc=new Label("Precio Compra $: ", Label.CENTER);
         Label labelcant=new Label("Cantidad: ", Label.CENTER);
         Button guardar=new Button("Guardar");
         Button cancelar=new Button("Cancelar");
