@@ -33,7 +33,7 @@ public class Pago implements QueryLog {
         idFact=fact;
     }
     
-    public static void crearPago(int idF){
+    public static void crearPago(final int idF){
         final JFrame pag=new JFrame("Agregar Pago");
         pag.setSize(500, 300);
         pag.setVisible(true);
@@ -89,7 +89,7 @@ public class Pago implements QueryLog {
         panelPrin.add(panelvalor);
         panelPrin.add(paneltipo);
         panelPrin.add(panelfech);
-        panelPrin.add(panelfacts);
+        //panelPrin.add(panelfacts);
         panelPrin.add(panelbot);
         pag.add(panelPrin);
         guardar.addActionListener(new ActionListener(){
@@ -97,7 +97,7 @@ public class Pago implements QueryLog {
                 if(largoInt(txtvalor.getText(),20)==false)
                     JOptionPane.showMessageDialog(null,"Error, el valor debe tener hasta 20 digitos. Intente de nuevo");
                 else
-                    nuevoPago(txtvalor.getText(),ctipo.getSelectedItem().toString(),facts.getSelectedItem().toString(),caño.getSelectedItem().toString(),cmes.getSelectedItem().toString(),cdia.getSelectedItem().toString());
+                    nuevoPago(txtvalor.getText(),ctipo.getSelectedItem().toString(),String.valueOf(idF),caño.getSelectedItem().toString(),cmes.getSelectedItem().toString(),cdia.getSelectedItem().toString());
             }
         });
         cancelar.addActionListener(new ActionListener(){
@@ -111,7 +111,7 @@ public class Pago implements QueryLog {
         try {
             String fecha=""+año+"-"+mes+"-"+dia+"";
             Connection con=connect.Conexion_SQL();
-            CallableStatement pro = (CallableStatement) con.prepareCall("{call crearPago1(?,?,?,?,?)}");
+            CallableStatement pro = (CallableStatement) con.prepareCall("{call crearPago2(?,?,?,?,?,?)}");
             pro.setInt(1, newID());
             pro.setString(2, cantidad);
             pro.setString(3, tipo);

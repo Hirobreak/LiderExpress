@@ -143,12 +143,12 @@ public class Factura implements QueryLog {
         fact.add(panelPrin);
         agregarp.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e){
-                Pago.crearPago(1);
+                Pago2.crearPago("");
             }
         });
         verp.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e){
-                Pago.verPagos();
+                //Pago.verPagos();
             }
         });
         

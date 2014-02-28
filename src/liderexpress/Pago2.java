@@ -31,7 +31,7 @@ import static liderexpress.Validaciones.*;
 public class Pago2 implements QueryLog {
     
     
-      public static void crearPago(int idF){
+      public static void crearPago(final String idF){
         final JFrame pag=new JFrame("Agregar Pago");
         pag.setSize(500, 300);
         pag.setVisible(true);
@@ -60,7 +60,7 @@ public class Pago2 implements QueryLog {
         final JComboBox cdia=new JComboBox();
         final JComboBox cmes=new JComboBox();
         final JComboBox caño=new JComboBox();
-        Button guardar=new Button("Eliminar");
+        Button guardar=new Button("Guardar");
         Button cancelar=new Button("Cancelar");
         for (int i=2000; i<2015; i++){
             caño.addItem(i);
@@ -93,6 +93,7 @@ public class Pago2 implements QueryLog {
         panelPrin.add(paneltipo);
         panelPrin.add(panelfech);
         panelPrin.add(panelfacts);
+        panelPrin.add(panelinter);
         panelPrin.add(panelbot);
         pag.add(panelPrin);
         guardar.addActionListener(new ActionListener(){
@@ -100,7 +101,7 @@ public class Pago2 implements QueryLog {
                 if(largoInt(txtvalor.getText(),20)==false)
                     JOptionPane.showMessageDialog(null,"Error, el valor debe tener hasta 20 digitos. Intente de nuevo");
                 else
-                    nuevoPago(txtvalor.getText(),ctipo.getSelectedItem().toString(),txtinter.getText(),caño.getSelectedItem().toString(),cmes.getSelectedItem().toString(),cdia.getSelectedItem().toString(),facts.getSelectedItem().toString());
+                    nuevoPago(txtvalor.getText(),ctipo.getSelectedItem().toString(),txtinter.getText(),caño.getSelectedItem().toString(),cmes.getSelectedItem().toString(),cdia.getSelectedItem().toString(),idF);
             }
         });
         cancelar.addActionListener(new ActionListener(){
@@ -123,7 +124,7 @@ public class Pago2 implements QueryLog {
             pro.setString(6, id_factura);
             pro.executeQuery();
         }catch(SQLException e){
-            JOptionPane.showMessageDialog(null, "Error dato");
+            JOptionPane.showMessageDialog(null, "Error dato 1111");
         }
     }
         

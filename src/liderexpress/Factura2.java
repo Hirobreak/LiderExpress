@@ -36,7 +36,7 @@ public class Factura2 implements QueryLog {
     }
     
     
-    public static void mostrarFact(int idimpo){
+    public static void mostrarFact(final int idimpo){
         ResultSet rs = null;
         try {
             Connection con=connect.Conexion_SQL();
@@ -142,7 +142,7 @@ public class Factura2 implements QueryLog {
         fact.add(panelPrin);
         agregarp.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e){
-                //Pago.crearPago(1);
+                Pago.crearPago(idimpo);
             }
         });
         verp.addActionListener(new ActionListener(){

@@ -22,6 +22,9 @@ import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 import javax.swing.table.TableCellRenderer;
+import static liderexpress.Cliente.connect;
+import static liderexpress.Empaquetado.newID;
+import static liderexpress.QueryLog.log;
 
 public class MainMenu extends JFrame implements ActionListener,QueryLog{
         ArrayList<Cliente> clientes = new ArrayList<Cliente>();
@@ -47,13 +50,14 @@ public class MainMenu extends JFrame implements ActionListener,QueryLog{
         int entidad=0;
         MenuBar entidades=new MenuBar();
         Menu mostrar=new Menu("Mostrar");
+        Menu imprimir=new Menu("Imprimir");
         Menu opciones=new Menu("Opciones");
         Menu consulta=new Menu("Consultas");
         Menu accion=new Menu("No hay posible Accion");
         MenuItem cliente, orden, merca, empaq, impo, provee, trab, caja, contenedor;
         MenuItem nuevo, editar, eliminar, buscar;
         MenuItem client, impor;
-        MenuItem exe;
+        MenuItem exe, pdf;
         DefaultTableModel model;
         JTable tabla;
         JPanel panel;
@@ -123,11 +127,13 @@ public class MainMenu extends JFrame implements ActionListener,QueryLog{
         opciones.add(buscar=new MenuItem("Buscar"));
         consulta.add(client=new MenuItem("Clientes"));
         consulta.add(impor=new MenuItem("Importaciones Por Fecha"));
+        imprimir.add(pdf=new MenuItem("PDF"));
         accion.add(exe=new MenuItem("Ejecutar"));
         entidades.add(mostrar);
         entidades.add(opciones);
         entidades.add(consulta);
         entidades.add(accion);
+        entidades.add(imprimir);
         setMenuBar(entidades);
         JScrollPane listScroller = new JScrollPane(tabla);
         listScroller.setPreferredSize(new Dimension(650, 200));
@@ -150,6 +156,7 @@ public class MainMenu extends JFrame implements ActionListener,QueryLog{
         impor.addActionListener(this);
         client.addActionListener(this);
         exe.addActionListener(this);
+        pdf.addActionListener(this);
     }
     
     @Override
@@ -337,6 +344,14 @@ public class MainMenu extends JFrame implements ActionListener,QueryLog{
         if(ae.getSource()==client){
             consultaClient();
         }
+        if(ae.getSource()==pdf && entidad==1){
+            int id = (int)tabla.getValueAt(tabla.getSelectedRow(),0);
+            pdf reporte;
+            reporte = new pdf();
+            reporte.newpdf(String.valueOf(id));
+           
+        }
+        
     }
     
     public void intervalo(){

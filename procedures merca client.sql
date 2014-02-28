@@ -504,6 +504,7 @@ create trigger factimpo after insert on importacion
 end/
 
 delimiter ;
+show triggers;
 
 delimiter $$
 
@@ -536,7 +537,7 @@ end/
 
 delimiter ;
 
-
+pago2
 Select * from mercaderia m, empaquetado e, contenedor c, importacion i where m.id_merca=e.id_merca and e.id_contenedor=c.id_contenedor and c.id_import=i.id_import and e.id_contenedor=1;
 call editFac1(1);
 select c.id_import from contenedor c where c.id_contenedor=1;
