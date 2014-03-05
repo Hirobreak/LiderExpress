@@ -120,3 +120,5 @@ INSERT INTO empaquetado VALUES(9,1, 1, 1,'Embarcado');
 INSERT INTO empaquetado VALUES(10,1, 7, 4,'Embarcado');
 INSERT INTO empaquetado VALUES(1,1, 3, 1,'Embarcado');
 INSERT INTO empaquetado VALUES(2,1, 3, 1,'Desmontado');
+INSERT INTO empaquetado VALUES(3,1, 5, 1,'Embarcado');
+INSERT INTO empaquetado VALUES(4,1, 4, 1,'Embarcado');

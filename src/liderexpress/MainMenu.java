@@ -344,7 +344,7 @@ public class MainMenu extends JFrame implements ActionListener,QueryLog{
         if(ae.getSource()==client){
             consultaClient();
         }
-        if(ae.getSource()==pdf && entidad==1){
+        if(ae.getSource()==pdf){
             int id = (int)tabla.getValueAt(tabla.getSelectedRow(),0);
             pdf reporte;
             reporte = new pdf();
