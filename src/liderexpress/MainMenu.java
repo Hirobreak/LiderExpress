@@ -348,7 +348,7 @@ public class MainMenu extends JFrame implements ActionListener,QueryLog{
             int id = (int)tabla.getValueAt(tabla.getSelectedRow(),0);
             pdf reporte;
             reporte = new pdf();
-            reporte.newpdf(String.valueOf(id));
+            reporte.newpdf(String.valueOf(id),entidad);
            
         }
         

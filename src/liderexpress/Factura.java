@@ -46,10 +46,12 @@ public class Factura implements QueryLog {
             pro.execute();
             rs=pro.getResultSet();
             rs.next();
+           // System.out.println("a");
             //System.out.println(idorden);
         }catch(SQLException e){
             JOptionPane.showMessageDialog(null, "Error dato 1");
         }
+      //  System.out.println("b");
         final JFrame fact=new JFrame("Factura");
         fact.setResizable(false);
         JTable tabla=new JTable();
@@ -70,21 +72,28 @@ public class Factura implements QueryLog {
         Label labeliv=new Label("IVA 12%:", Label.CENTER);
         Label labeldsc=new Label("Dscto:", Label.CENTER);
         Label labelvf=new Label("Valor Final:", Label.CENTER);
-        
+       // System.out.println("c");
         Label labelclien2=new Label("Fulanito", Label.CENTER);
         Label labelfech2=new Label("12/12/2012", Label.CENTER);
         Label labelvp2=new Label("$3009.91", Label.CENTER);
         Label labeliv2=new Label("$120.23", Label.CENTER);
         Label labeldsc2=new Label("0%", Label.CENTER);
         Label labelvf2=new Label("$3302.45", Label.CENTER); 
+       // System.out.println("d");
         try{
-            //System.out.println(rs.getString("nombre"));
+            //System.out.println(rs.getString("e"));
             labelclien2=new Label(rs.getString("nombre"), Label.CENTER);
+           // System.out.println(rs.getString("b"));
             labelfech2=new Label(rs.getString("fecha"), Label.CENTER);
+           //System.out.println(rs.getString("c"));
             labelvp2=new Label(rs.getString("valor_p"), Label.CENTER);
+          // System.out.println(rs.getString("d"));
             labeliv2=new Label(rs.getString("iva"), Label.CENTER);
+           // System.out.println(rs.getString("f"));
             labeldsc2=new Label("0%", Label.CENTER);
+          // System.out.println(rs.getString("g"));
             labelvf2=new Label(rs.getString("valor_final"), Label.CENTER);   
+            //System.out.println(rs.getString("h"));
         }catch(SQLException e){
              JOptionPane.showMessageDialog(null, "Error dato 2");
         }
@@ -141,9 +150,12 @@ public class Factura implements QueryLog {
         //panelPrin.add(regen);
         panelPrin.add(panelpagos);
         fact.add(panelPrin);
+     
         agregarp.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e){
-                Pago2.crearPago("");
+            
+                
+                Pago2.crearPago(String.valueOf(1));
             }
         });
         verp.addActionListener(new ActionListener(){

@@ -113,16 +113,27 @@ public class Pago2 implements QueryLog {
     
     public static void nuevoPago(String cantidad, String tipo, String interes, String año, String mes, String dia, String id_factura){
         try {
+            System.out.println("1");
             String fecha=""+año+"-"+mes+"-"+dia+"";
             Connection con=connect.Conexion_SQL();
             CallableStatement pro = (CallableStatement) con.prepareCall("{call crearPago2(?,?,?,?,?,?)}");
-            pro.setInt(1, newID());
+            System.out.println("2");
+            int id =  newID();
+            pro.setInt(1,id);
+            System.out.println(id);
             pro.setString(2, cantidad);
+            System.out.println(cantidad);
             pro.setString(3, tipo);
-            pro.setString(4, interes);                        
+            System.out.println(tipo);
+            pro.setString(4, interes); 
+            System.out.println(interes);
             pro.setString(5, fecha);
+            System.out.println(fecha);
             pro.setString(6, id_factura);
+            System.out.println(id_factura);
+            System.out.println("3");
             pro.executeQuery();
+            System.out.println("4");
         }catch(SQLException e){
             JOptionPane.showMessageDialog(null, "Error dato 1111");
         }
